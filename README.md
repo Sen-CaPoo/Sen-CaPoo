@@ -113,24 +113,24 @@
 <table>
 <tr>
 <td align="center" width="25%">
-<h3>🎯 <strong>專案成功率</strong></h3>
+<h3>🎯 <strong>專案成功率　</strong></h3>
 <h2><strong>98%+</strong></h2>
 <p>準時交付，品質保證</p>
 </td>
 <td align="center" width="25%">
 <h3>⚡ <strong>平均效能提升</strong></h3>
 <h2><strong>40%</strong></h2>
-<p>系統效能顯著改善</p>
+<p>系統效能　顯著改善</p>
 </td>
 <td align="center" width="25%">
-<h3>🛡️ <strong>安全事件</strong></h3>
+<h3>🛡️ <strong>　安全事件　</strong></h3>
 <h2><strong>0</strong></h2>
-<p>零重大安全漏洞</p>
+<p>　零重大安全漏洞　</p>
 </td>
 <td align="center" width="25%">
-<h3>📞 <strong>技術支援</strong></h3>
+<h3>📞 <strong>　技術支援　</strong></h3>
 <h2><strong>24/7</strong></h2>
-<p>全天候專業支援</p>
+<p>　全天候專業支援　</p>
 </td>
 </tr>
 </table>
@@ -344,13 +344,6 @@ Monday - Friday: 09:00 - 18:00 (GMT+8)
 
 ## 🔧 **技術細節與完整資訊 | Technical Details**
 
-<details>
-<summary><strong>📖 點擊展開完整技術資訊與認證列表</strong></summary>
-
-<br>
-
-## 🛠️ **Complete Tech Stack | 完整技術棧**
-
 ### 🏗️ **Backend Development | 後端開發**
 
 [![.NET 8](https://img.shields.io/badge/.NET_8-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
@@ -481,8 +474,6 @@ Monday - Friday: 09:00 - 18:00 (GMT+8)
 </tr>
 </table>
 
-</details>
-
 ---
 
 <div align="center">
@@ -511,4 +502,7 @@ Monday - Friday: 09:00 - 18:00 (GMT+8)
 <small><i>⚡ Professional Excellence in Software Development | 軟體開發專業卓越 ⚡</i></small>
 
 </div>
+
+
+
 
