@@ -1,9 +1,7 @@
 # 環友科技股份有限公司 | UTK Technology Corporation
 
 <div align="center">
-
-[![UTK Technology](https://www.utk.com.tw/Content/images/logo_blue.svg)]([https://www.utk.com.tw/](https://www.utk.com.tw/Content/images/logo_blue.svg))
-
+  
 ## 企業數位轉型的可靠夥伴 | Your Trusted Partner in Digital Transformation
 
 **透過創新技術與專業服務，加速您的數位轉型之旅，提升營運效率與市場競爭力**
