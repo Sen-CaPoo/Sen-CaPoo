@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![UTK Technology](https://www.utk.com.tw/Content/images/logo_blue.svg)](https://www.utk.com.tw/)
+[![UTK Technology](https://www.utk.com.tw/Content/images/logo_blue.svg)]([https://www.utk.com.tw/](https://www.utk.com.tw/Content/images/logo_blue.svg))
 
 ## 企業數位轉型的可靠夥伴 | Your Trusted Partner in Digital Transformation
 
