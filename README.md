@@ -1,506 +1,459 @@
 # 環友科技股份有限公司 | UTK Technology Corporation
 
 <div align="center">
-  
-## 企業數位轉型的可靠夥伴 | Your Trusted Partner in Digital Transformation
 
-**透過創新技術與專業服務，加速您的數位轉型之旅，提升營運效率與市場競爭力**
+## 會員經濟與數位生態系的技術夥伴
 
-[![Microsoft Partner](https://img.shields.io/badge/Microsoft-Gold_Partner-FFB900?style=for-the-badge&logo=microsoft&logoColor=white)](https://www.utk.com.tw/)
-[![Azure Certified](https://img.shields.io/badge/Azure-Solution_Partner-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)](https://www.utk.com.tw/)
-[![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core_8-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://www.utk.com.tw/)
+**從點數、票券、會員到 AI 智能應用 — 一站打通**
 
-### 🏆 **Proven Results | 實績證明**
-| **50+** 企業客戶 | **100+** 成功專案 | **99.9%** 系統可用性 | **10+** 專業團隊 |
-|:-:|:-:|:-:|:-:|
+[![ISO 27001 Certified](https://img.shields.io/badge/ISO_27001-SGS_Certified-0F4C81?style=for-the-badge&logo=iso&logoColor=white)](https://www.iso.org/standard/27001)
+[![.NET 10 LTS](https://img.shields.io/badge/.NET_10_LTS-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![Microsoft Foundry](https://img.shields.io/badge/Microsoft_Foundry-AI_Native-412991?style=for-the-badge&logo=microsoft&logoColor=white)](https://azure.microsoft.com/en-us/products/ai-foundry)
 
-[![立即諮詢](https://img.shields.io/badge/🚀_立即開始數位轉型-contact@utk.com.tw-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@utk.com.tw)
-[![查看案例](https://img.shields.io/badge/📊_查看成功案例-www.utk.com.tw-0078D4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://www.utk.com.tw/)
-
-</div>
-
----
-
-## 🚀 **Core Services | 核心服務**
-
-<div align="center">
-
-### **為什麼選擇UTK？| Why Choose UTK Technology?**
-
-**我們不只是技術服務商，更是您數位轉型路上的策略夥伴**
-
-</div>
-
-<table>
-<tr>
-<td width="50%">
-
-### **🌐 企業級Web應用系統**
-**助您建立高效、安全、可擴展的企業應用**
-
-**商業價值：**
-- ⚡ 提升營運效率 30-50%
-- 🛡️ 企業級安全與合規
-- 📱 跨平台無縫體驗
-- 🔄 自動化業務流程
-
-[![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core_8-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://www.utk.com.tw/)
-[![Blazor](https://img.shields.io/badge/Blazor_WASM-512BD4?style=flat-square&logo=blazor&logoColor=white)](https://www.utk.com.tw/)
-
-</td>
-<td width="50%">
-
-### **⚡ API服務與微服務架構**
-**構建靈活、高性能的現代化系統架構**
-
-**商業價值：**
-- 📈 系統擴展性提升 200%
-- 🔧 維護成本降低 40%
-- 🚀 上市時間縮短 50%
-- 🔗 輕鬆整合第三方服務
-
-[![RESTful API](https://img.shields.io/badge/RESTful_APIs-FF6C37?style=flat-square&logo=postman&logoColor=white)](https://www.utk.com.tw/)
-[![gRPC](https://img.shields.io/badge/gRPC-4285F4?style=flat-square&logo=grpc&logoColor=white)](https://www.utk.com.tw/)
-
-</td>
-</tr>
-<tr>
-<td>
-
-### **☁️ 雲端基礎設施與DevOps**
-**加速部署，確保系統穩定與安全**
-
-**商業價值：**
-- ⏱️ 部署時間從天縮短至分鐘
-- 💰 基礎設施成本節省 30%
-- 🎯 99.9% 服務可用性保證
-- 🔄 自動化監控與恢復
-
-[![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://www.utk.com.tw/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.utk.com.tw/)
-
-</td>
-<td>
-
-### **🗄️ 數據管理與分析解決方案**
-**讓數據成為您的競爭優勢**
-
-**商業價值：**
-- 📊 數據驅動決策支持
-- 🔍 客戶洞察與行為分析
-- 📈 業務預測準確度提升
-- 🛡️ 數據安全與合規保護
-
-[![SQL Server](https://img.shields.io/badge/SQL_Server_2022-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)](https://www.utk.com.tw/)
-[![Azure SQL](https://img.shields.io/badge/Azure_SQL-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://www.utk.com.tw/)
-
-</td>
-</tr>
-</table>
-
----
-
-## 🌟 **Why UTK? | 為什麼選擇我們**
-
-<div align="center">
-
-### **🏆 客戶成功就是我們的成功 | Your Success is Our Success**
-
-</div>
-
-<table>
-<tr>
-<td align="center" width="25%">
-<h3>🎯 <strong>專案成功率　</strong></h3>
-<h2><strong>98%+</strong></h2>
-<p>準時交付，品質保證</p>
-</td>
-<td align="center" width="25%">
-<h3>⚡ <strong>平均效能提升</strong></h3>
-<h2><strong>40%</strong></h2>
-<p>系統效能　顯著改善</p>
-</td>
-<td align="center" width="25%">
-<h3>🛡️ <strong>　安全事件　</strong></h3>
-<h2><strong>0</strong></h2>
-<p>　零重大安全漏洞　</p>
-</td>
-<td align="center" width="25%">
-<h3>📞 <strong>　技術支援　</strong></h3>
-<h2><strong>24/7</strong></h2>
-<p>　全天候專業支援　</p>
-</td>
-</tr>
-</table>
-
-### **🤝 信賴夥伴 | Trusted Partnerships**
-
-[![Microsoft Gold Partner](https://img.shields.io/badge/Microsoft-Gold_Partner-FFB900?style=for-the-badge&logo=microsoft&logoColor=white)](https://www.utk.com.tw/)
-[![Azure Solution Partner](https://img.shields.io/badge/Azure-Solution_Partner-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)](https://www.utk.com.tw/)
+[![立即諮詢](https://img.shields.io/badge/🚀_開啟數位轉型-sen@utk.com.tw-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:sen@utk.com.tw)
+[![造訪官網](https://img.shields.io/badge/🌐_www.utk.com.tw-0078D4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://www.utk.com.tw/)
 [![GitHub Organization](https://img.shields.io/badge/GitHub-UTK--TW-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/UTK-TW)
 
-### **⚡ 服務承諾 | Service Commitment**
-
-[![一般查詢 24H](https://img.shields.io/badge/一般查詢-24小時內回覆-28A745?style=flat-square&logo=clock&logoColor=white)](#)
-[![技術支援 4H](https://img.shields.io/badge/技術支援-4小時內回覆-FF6B35?style=flat-square&logo=tools&logoColor=white)](#)
-[![緊急問題 2H](https://img.shields.io/badge/緊急問題-2小時內回覆-DC3545?style=flat-square&logo=alert&logoColor=white)](#)
+</div>
 
 ---
 
-## 🛠️ **Our Approach | 我們的方法**
+## 🎯 我們做什麼 | Core Solutions
+
+> 我們不是泛用顧問。**我們專注在會員經濟與數位生態系** — 把點數、儲值、票券、會員、行銷與 AI 智能應用,在企業級架構上一次打通。
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🪙 點數 & 儲值金生態系統
+**Loyalty Points & Stored Value Engine**
+
+跨通路發點、消費扣抵、儲值加值、點儲互轉、批次清算對帳 — 我們把會員資產系統當作金流核心系統來設計。
+
+**設計亮點**
+- 全異動稽核留痕 (Event Sourcing)
+- 高併發發點與防重複扣抵
+- 跨子公司 / 跨品牌的清結算機制
+
+[![.NET 10](https://img.shields.io/badge/.NET_10-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![Service Bus](https://img.shields.io/badge/Azure_Service_Bus-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![SQL Server 2025](https://img.shields.io/badge/SQL_Server_2025-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)](#)
+
+</td>
+<td width="50%" valign="top">
+
+### 🎫 電子票券平台
+**Digital Voucher Platform**
+
+從發券、領券、核銷、過期回收到防偽溯源 — 涵蓋零售、餐飲、文旅、活動票券的全生命週期。
+
+**設計亮點**
+- QR / 條碼 / 動態 OTP 多種核銷方式
+- 多層防偽 (簽章 + 時間漂移 + 一次性)
+- 高併發核銷不重複、不漏單
+
+[![ASP.NET Core 10](https://img.shields.io/badge/ASP.NET_Core_10-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![Azure Functions](https://img.shields.io/badge/Azure_Functions-0062AD?style=flat-square&logo=azure-functions&logoColor=white)](#)
+[![Cosmos DB](https://img.shields.io/badge/Cosmos_DB-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 👥 CRM 會員行銷自動化
+**Membership & Marketing Automation**
+
+會員 360° 整合、智能分群、生命週期旅程設計、跨通路觸發 (App Push / SMS / Email / LINE)、A/B 測試與成效歸因。
+
+**設計亮點**
+- 即時行為觸發 (Event-Driven Journey)
+- AI 推薦下一最佳行動 (Next Best Action)
+- 一鍵串接 LINE / Email / SMS 通路
+
+[![Foundry Agent](https://img.shields.io/badge/Foundry_Agent_Service-412991?style=flat-square&logo=microsoft&logoColor=white)](#)
+[![Communication Services](https://img.shields.io/badge/Azure_Communication-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![LINE Messaging](https://img.shields.io/badge/LINE_Messaging_API-00C300?style=flat-square&logo=line&logoColor=white)](#)
+
+</td>
+<td valign="top">
+
+### 📊 BI 商業智慧分析
+**Business Intelligence & Analytics**
+
+會員 360° 視圖、消費行為洞察、RFM 分群、預測模型 (流失、客單、終身價值),以高管儀表板與營運看板呈現。
+
+**設計亮點**
+- 一份資料、多端共用 (OneLake)
+- 即時與批次混合資料管線
+- 可內嵌的 Embedded Analytics
+
+[![Microsoft Fabric](https://img.shields.io/badge/Microsoft_Fabric-F2C811?style=flat-square&logo=microsoft&logoColor=black)](#)
+[![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=flat-square&logo=powerbi&logoColor=black)](#)
+[![Synapse](https://img.shields.io/badge/Synapse_Analytics-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### 📱 行動應用 (APP)
+**Mobile & Cross-Platform Apps**
+
+從 iOS / Android 原生體驗到跨平台一次開發,結合會員、點數、票券、推播與 LINE Login,打造完整使用者旅程。
+
+**設計亮點**
+- 一份程式碼跨 iOS / Android / Web
+- 深層連結 (Deep Link / Universal Link)
+- 智能推播分眾與時段最佳化
+
+[![.NET MAUI](https://img.shields.io/badge/.NET_MAUI-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![Blazor Hybrid](https://img.shields.io/badge/Blazor_Hybrid-512BD4?style=flat-square&logo=blazor&logoColor=white)](#)
+[![Notification Hubs](https://img.shields.io/badge/Notification_Hubs-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+
+</td>
+<td valign="top">
+
+### 🤖 AI 智能應用
+**AI-Native Applications**
+
+以 Microsoft Foundry 為基底,從 RAG 知識庫、Copilot 整合、AI Agent 自動化、智能客服到內部生產力工具,把 GenAI 真正落地到日常營運。
+
+**設計亮點**
+- 企業級資料隔離與合規
+- Foundry Agent 多步驟工具呼叫
+- RAG with Vector Search & Re-ranking
+
+[![Microsoft Foundry](https://img.shields.io/badge/Microsoft_Foundry-412991?style=flat-square&logo=microsoft&logoColor=white)](#)
+[![GPT-5.5](https://img.shields.io/badge/GPT--5.5-412991?style=flat-square&logo=openai&logoColor=white)](#)
+[![Semantic Kernel](https://img.shields.io/badge/Semantic_Kernel-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🌟 為什麼選擇環友 | Why UTK
 
 <div align="center">
 
-### **🎯 以結果為導向的軟體工程方法論**
-**結合敏捷開發與企業治理，確保專案成功交付**
+> **客戶要的不是技術堆疊,是一個能解決問題的團隊**
 
 </div>
 
 <table>
 <tr>
-<td align="center" width="25%">
+<td align="center" width="25%" valign="top">
 
-### **1️⃣ 需求分析**
-**深度了解業務需求**
+### 🎯
+**會員經濟 Domain Know-how**
 
-🔍 業務流程分析  
-📋 需求收集與驗證  
-🎯 成功指標定義  
-⚖️ 風險評估與緩解  
+不只懂技術,更懂點數扣抵、儲值對帳、票券生命週期等業務邏輯細節 — 從第一次會議就能對焦。
 
 </td>
-<td align="center" width="25%">
+<td align="center" width="25%" valign="top">
 
-### **2️⃣ 架構設計**
-**設計可擴展的技術架構**
+### 🏗️
+**企業級架構思維**
 
-🏗️ 系統架構規劃  
-🔧 技術選型評估  
-📊 效能規格制定  
-🛡️ 安全機制設計  
+高併發發券、跨系統對帳、稽核留痕、合規保護 — 把會員資產系統當金融系統來做,不留技術債。
 
 </td>
-<td align="center" width="25%">
+<td align="center" width="25%" valign="top">
 
-### **3️⃣ 敏捷開發**
-**快速迭代，持續交付**
+### 🤖
+**AI Native by Default**
 
-🚀 Sprint規劃執行  
-🔄 持續整合部署  
+從第一天就把 GenAI 視為架構一等公民,而非事後加裝 — 讓 Foundry / Agent / RAG 真正進入生產而非 Demo。
+
+</td>
+<td align="center" width="25%" valign="top">
+
+### 🔄
+**全週期單一夥伴**
+
+從需求訪談、架構設計、開發交付到維運監控,單一夥伴貫通 — 不切片轉手、不互相推諉。
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🛠️ 服務方法論 | How We Deliver
+
+<div align="center">
+
+### 結合敏捷開發與企業治理,讓專案可預期、可驗證、可維運
+
+</div>
+
+<table>
+<tr>
+<td align="center" width="25%" valign="top">
+
+### 1️⃣ 需求釐清
+**Discover**
+
+🔍 業務流程訪談  
+📋 痛點與機會盤點  
+🎯 KPI 與成功定義  
+⚖️ 風險與依賴評估  
+
+</td>
+<td align="center" width="25%" valign="top">
+
+### 2️⃣ 架構設計
+**Design**
+
+🏗️ 系統架構藍圖  
+🔧 技術選型決策  
+📊 容量與規格規劃  
+🛡️ 資安與合規設計  
+
+</td>
+<td align="center" width="25%" valign="top">
+
+### 3️⃣ 敏捷交付
+**Deliver**
+
+🚀 Sprint 規劃執行  
+🔄 CI/CD 持續部署  
 🧪 自動化測試  
 📈 進度透明追蹤  
 
 </td>
-<td align="center" width="25%">
+<td align="center" width="25%" valign="top">
 
-### **4️⃣ 維運支援**
-**確保系統穩定運行**
+### 4️⃣ 維運共好
+**Operate**
 
-📊 系統監控告警  
-🛠️ 主動維護優化  
-📞 24/7技術支援  
+📊 可觀測性監控  
+🛠️ 主動效能調校  
+📞 SLA 技術支援  
 📚 知識轉移培訓  
 
 </td>
 </tr>
 </table>
 
-### **🏆 品質保證標準 | Quality Assurance Standards**
+### 🏆 工程品質基線 | Engineering Quality Baseline
 
 <div align="center">
 
-| **品質面向** | **標準要求** | **驗證方式** |
+| 品質面向 | 設計目標 | 驗證方式 |
 |:-:|:-:|:-:|
 | **程式碼品質** | SonarQube Grade A | 自動化程式碼審查 |
-| **測試覆蓋率** | ≥ 85% | 單元測試 + 整合測試 |
-| **效能標準** | 回應時間 < 200ms | 效能測試與監控 |
-| **安全合規** | OWASP Top 10 | 安全掃描與稽核 |
-| **可用性** | 99.9% SLA | 系統監控與告警 |
+| **測試覆蓋率** | 單元 + 整合 ≥ 85% | xUnit / Playwright |
+| **API 效能** | P95 回應 < 200ms | 負載測試與監控 |
+| **資安合規** | OWASP Top 10 對齊 | SAST / DAST 掃描 |
+| **可用性** | 以 99.9% SLA 為設計目標 | 多區部署 + 健康監控 |
 
 </div>
 
 ---
 
-## 🎖️ **Professional Excellence | 專業認證與能力**
+## ⚡ 技術能量 | Technology Stack (2026)
 
-<div align="center">
+> 我們不追新,但永遠站在 Microsoft 生態系最新基線上 — **.NET 10 LTS、C# 14、Visual Studio 2026、Microsoft Foundry**。
 
-### **🏅 核心專業認證 | Key Professional Certifications**
+### 🏗️ Backend & Application Framework
 
-**我們的專業團隊擁有業界頂尖認證，確保服務品質與技術領先性**
+[![.NET 10 LTS](https://img.shields.io/badge/.NET_10_LTS-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![C# 14](https://img.shields.io/badge/C%23_14-239120?style=flat-square&logo=c-sharp&logoColor=white)](https://learn.microsoft.com/en-us/dotnet/csharp/)
+[![ASP.NET Core 10](https://img.shields.io/badge/ASP.NET_Core_10-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![EF Core 10](https://img.shields.io/badge/EF_Core_10-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=flat-square&logo=blazor&logoColor=white)](#)
+[![.NET Aspire](https://img.shields.io/badge/.NET_Aspire-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![Minimal APIs](https://img.shields.io/badge/Minimal_APIs-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![.NET MAUI](https://img.shields.io/badge/.NET_MAUI-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
 
-</div>
+### 🤖 AI / GenAI Platform
 
-<table>
-<tr>
-<td align="center" width="33%">
+[![Microsoft Foundry](https://img.shields.io/badge/Microsoft_Foundry-412991?style=flat-square&logo=microsoft&logoColor=white)](https://azure.microsoft.com/en-us/products/ai-foundry)
+[![GPT-5.5](https://img.shields.io/badge/GPT--5.5-412991?style=flat-square&logo=openai&logoColor=white)](#)
+[![Foundry Agent Service](https://img.shields.io/badge/Foundry_Agent_Service-412991?style=flat-square&logo=microsoft&logoColor=white)](#)
+[![Microsoft Agent Framework](https://img.shields.io/badge/Microsoft_Agent_Framework-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![Semantic Kernel](https://img.shields.io/badge/Semantic_Kernel-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![Azure AI Search](https://img.shields.io/badge/Azure_AI_Search-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![M365 Copilot](https://img.shields.io/badge/M365_Copilot-0078D4?style=flat-square&logo=microsoft&logoColor=white)](#)
+[![GitHub Copilot](https://img.shields.io/badge/GitHub_Copilot-100000?style=flat-square&logo=githubcopilot&logoColor=white)](#)
 
-### **☁️ Microsoft & Azure**
-[![Azure Solutions Architect](https://img.shields.io/badge/Azure_Solutions_Architect-AZ--305-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)](https://www.utk.com.tw/)
-[![Azure Developer](https://img.shields.io/badge/Azure_Developer-AZ--204-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)](https://www.utk.com.tw/)
-[![.NET Developer](https://img.shields.io/badge/.NET_Developer-Associate-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://www.utk.com.tw/)
+### 🗄️ Data Platform
 
-</td>
-<td align="center" width="33%">
+[![SQL Server 2025](https://img.shields.io/badge/SQL_Server_2025-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)](#)
+[![Azure SQL](https://img.shields.io/badge/Azure_SQL-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![Cosmos DB](https://img.shields.io/badge/Cosmos_DB-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![Microsoft Fabric](https://img.shields.io/badge/Microsoft_Fabric-F2C811?style=flat-square&logo=microsoft&logoColor=black)](#)
+[![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=flat-square&logo=powerbi&logoColor=black)](#)
+[![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)](#)
 
-### **🛡️ Security & Compliance**
-[![Azure Security Engineer](https://img.shields.io/badge/Azure_Security_Engineer-AZ--500-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)](https://www.utk.com.tw/)
-[![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-E30613?style=for-the-badge&logo=comptia&logoColor=white)](https://www.utk.com.tw/)
+### ☁️ Cloud & Integration
 
-</td>
-<td align="center" width="33%">
+[![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![Container Apps](https://img.shields.io/badge/Container_Apps-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![AKS](https://img.shields.io/badge/AKS-0078D4?style=flat-square&logo=kubernetes&logoColor=white)](#)
+[![Azure Functions](https://img.shields.io/badge/Azure_Functions-0062AD?style=flat-square&logo=azure-functions&logoColor=white)](#)
+[![App Service](https://img.shields.io/badge/App_Service-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![Service Bus](https://img.shields.io/badge/Service_Bus-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![API Management](https://img.shields.io/badge/API_Management-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![Logic Apps](https://img.shields.io/badge/Logic_Apps-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
 
-### **⚙️ DevOps & Infrastructure**
-[![Azure DevOps Engineer](https://img.shields.io/badge/Azure_DevOps_Engineer-AZ--400-0078D4?style=for-the-badge&logo=azure-devops&logoColor=white)](https://www.utk.com.tw/)
-[![Docker Certified](https://img.shields.io/badge/Docker-Certified_Associate-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.utk.com.tw/)
+### 🔄 DevOps & Observability
 
-</td>
-</tr>
-</table>
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white)](#)
+[![Azure DevOps](https://img.shields.io/badge/Azure_DevOps-0078D7?style=flat-square&logo=azure-devops&logoColor=white)](#)
+[![Bicep](https://img.shields.io/badge/Bicep-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![Terraform](https://img.shields.io/badge/Terraform-623CE4?style=flat-square&logo=terraform&logoColor=white)](#)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](#)
+[![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-425CC7?style=flat-square&logo=opentelemetry&logoColor=white)](#)
+[![App Insights](https://img.shields.io/badge/App_Insights-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](#)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-F3702A?style=flat-square&logo=sonarcloud&logoColor=white)](#)
 
-### **💼 團隊專業能力 | Team Expertise**
+### 🎨 Frontend & Mobile
 
-<div align="center">
+[![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=flat-square&logo=blazor&logoColor=white)](#)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](#)
+[![React 19](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)](#)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)](#)
+[![.NET MAUI](https://img.shields.io/badge/.NET_MAUI-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](#)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](#)
 
-| **專業領域** | **資深工程師** | **平均經驗** | **專案實績** |
-|:-:|:-:|:-:|:-:|
-| **企業應用開發** | 5+ 人 | 8+ 年 | 80+ 專案 |
-| **雲端架構設計** | 3+ 人 | 6+ 年 | 50+ 專案 |
-| **DevOps自動化** | 2+ 人 | 5+ 年 | 30+ 專案 |
-| **資料庫設計** | 4+ 人 | 7+ 年 | 60+ 專案 |
-| **資訊安全** | 2+ 人 | 6+ 年 | 40+ 專案 |
+### 🧰 Developer Tooling
 
-</div>
+[![Visual Studio 2026](https://img.shields.io/badge/Visual_Studio_2026-5C2D91?style=flat-square&logo=visual-studio&logoColor=white)](https://visualstudio.microsoft.com/)
+[![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white)](#)
+[![JetBrains Rider](https://img.shields.io/badge/JetBrains_Rider-000000?style=flat-square&logo=rider&logoColor=white)](#)
+[![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)](#)
+[![PowerShell 7](https://img.shields.io/badge/PowerShell_7-5391FE?style=flat-square&logo=powershell&logoColor=white)](#)
+[![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white)](#)
 
 ---
 
-## 🚀 **Get Started | 開始合作**
+## 🎖️ 認證與夥伴關係 | Certifications & Partnership
+
+### 🛡️ ISO/IEC 27001 資訊安全管理系統認證
+
+我們通過 **SGS (台灣檢驗科技)** 第三方稽核,取得 **ISO/IEC 27001 資訊安全管理系統 (ISMS)** 認證 — 從機密性、完整性到可用性,把客戶資料當作最高等級資產來保護。
+
+[![ISO 27001](https://img.shields.io/badge/ISO%2FIEC_27001-Certified-0F4C81?style=for-the-badge&logo=iso&logoColor=white)](https://www.iso.org/standard/27001)
+[![SGS Audited](https://img.shields.io/badge/SGS-Audited-EE3D42?style=for-the-badge&logo=sgs&logoColor=white)](https://www.sgs.com/)
+[![ISMS](https://img.shields.io/badge/ISMS-Information_Security_Management-28A745?style=for-the-badge&logo=shield&logoColor=white)](#)
+
+**認證範疇涵蓋:**
+- 🔐 資料機密性 — 加密、存取控制、最小權限原則
+- ✅ 資料完整性 — 變更管控、版本管理、稽核留痕
+- ☁️ 服務可用性 — 備援架構、災害復原、業務持續
+- 📋 法遵管理 — 個資法 / GDPR / OWASP 對齊
+
+### 🏅 團隊個人認證 | Individual Certifications
+
+**Azure Platform**
+
+[![AZ-204](https://img.shields.io/badge/AZ--204-Azure_Developer-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/credentials/certifications/azure-developer/)
+[![AZ-305](https://img.shields.io/badge/AZ--305-Solutions_Architect-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/credentials/certifications/azure-solutions-architect/)
+[![AZ-400](https://img.shields.io/badge/AZ--400-DevOps_Engineer-0078D7?style=flat-square&logo=azure-devops&logoColor=white)](https://learn.microsoft.com/credentials/certifications/devops-engineer/)
+[![AZ-500](https://img.shields.io/badge/AZ--500-Security_Engineer-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/credentials/certifications/azure-security-engineer/)
+
+**AI & Data**
+
+[![AI-102](https://img.shields.io/badge/AI--102-AI_Engineer-412991?style=flat-square&logo=microsoft&logoColor=white)](https://learn.microsoft.com/credentials/certifications/azure-ai-engineer/)
+[![DP-300](https://img.shields.io/badge/DP--300-DB_Administrator-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)](https://learn.microsoft.com/credentials/certifications/azure-database-administrator-associate/)
+[![DP-600](https://img.shields.io/badge/DP--600-Fabric_Analytics_Engineer-F2C811?style=flat-square&logo=microsoft&logoColor=black)](https://learn.microsoft.com/credentials/certifications/fabric-analytics-engineer-associate/)
+
+**Application Development**
+
+[![.NET](https://img.shields.io/badge/.NET-Developer-512BD4?style=flat-square&logo=dotnet&logoColor=white)](#)
+[![C#](https://img.shields.io/badge/C%23-Expert-239120?style=flat-square&logo=c-sharp&logoColor=white)](#)
+
+---
+
+## 🚀 開始合作 | Get Started
 
 <div align="center">
 
-### **📞 立即聯繫，開啟您的數位轉型之路**
-
-**我們提供免費初步諮詢，協助您評估專案需求與最適合的解決方案**
+### 從一場 30 分鐘的免費諮詢開始,讓我們一起把點子變成可上線的系統
 
 </div>
 
 <table>
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
-### **🏢 企業聯絡資訊**
+### 🏢 企業聯絡資訊
 
 **📍 總公司地址**  
 台北市內湖區新湖二路172號3樓  
-3F, No.172, Xinhu 2nd Rd., Neihu Dist., Taipei City 114065, Taiwan  
+3F, No.172, Xinhu 2nd Rd., Neihu Dist.,  
+Taipei City 114065, Taiwan  
 
 **🕒 營業時間**  
-週一至週五：09:00 - 18:00 (GMT+8)  
-Monday - Friday: 09:00 - 18:00 (GMT+8)  
+週一至週五 09:00 – 18:00 (GMT+8)  
 
-**📧 聯繫方式**  
-[![Email](https://img.shields.io/badge/_商務合作-sen@utk.com.tw-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:sen@utk.com.tw)  
-[![Phone](https://img.shields.io/badge/📞_業務專線-+886--958--716--800-28A745?style=for-the-badge&logo=phone&logoColor=white)](tel:+886958716800)  
+**📧 商務聯絡**
+
+[![Email](https://img.shields.io/badge/Email-sen@utk.com.tw-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:sen@utk.com.tw)
+
+**📞 業務專線**
+
+[![Phone](https://img.shields.io/badge/Phone-+886--958--716--800-28A745?style=for-the-badge&logo=whatsapp&logoColor=white)](tel:+886958716800)
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
-### **⚡ 快速回應承諾**
+### ⚡ 回應承諾 | SLA Commitment
 
-我們承諾以下回應時間：
+🟢 **一般業務查詢** — 24 小時內回覆  
+🟡 **技術支援需求** — 4 小時內回覆  
+🔴 **緊急問題處理** — 2 小時內回覆  
 
-🟢 **一般業務查詢**: 24小時內回覆  
-🟡 **技術支援需求**: 4小時內回覆  
-🔴 **緊急技術問題**: 2小時內回覆  
+### 🌐 線上據點
 
-### **🤝 專業社群**
-
-[![Official Website](https://img.shields.io/badge/🌐_官方網站-www.utk.com.tw-0078D4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://www.utk.com.tw/)
+[![Official Website](https://img.shields.io/badge/官方網站-www.utk.com.tw-0078D4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://www.utk.com.tw/)
 [![GitHub](https://img.shields.io/badge/GitHub-UTK--TW-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/UTK-TW)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-UTK_Technology-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/company/utk-technology)
 
-
-
 </td>
 </tr>
 </table>
 
-### **📋 服務諮詢流程 | Consultation Process**
+### 📋 諮詢與合作流程
 
 <div align="center">
 
-| **步驟** | **內容** | **時間** |
-|:-:|:-:|:-:|
-| **1. 初步聯繫** | 需求了解與評估 | 30分鐘 |
-| **2. 方案建議** | 技術方案與報價 | 3-5個工作天 |
-| **3. 合約簽署** | 專案啟動準備 | 1-2個工作天 |
-| **4. 專案執行** | 敏捷開發交付 | 依專案規模 |
+| 階段 | 內容 | 您會得到 |
+|:-:|:-|:-|
+| **1️⃣ 初步聯繫** | 30 分鐘線上會議,釐清需求 | 業務輪廓與可行性初判 |
+| **2️⃣ 方案建議** | 撰寫技術方案與報價 | 架構建議書、時程、預算 |
+| **3️⃣ 合約簽署** | 確認範圍、SOW 與里程碑 | 專案章程、開工準備 |
+| **4️⃣ 敏捷交付** | Sprint 開發與透明追蹤 | 可運作系統、可驗證成果 |
 
 </div>
 
 ---
 
-## 🔧 **技術細節與完整資訊 | Technical Details**
-
-### 🏗️ **Backend Development | 後端開發**
-
-[![.NET 8](https://img.shields.io/badge/.NET_8-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![C# 12](https://img.shields.io/badge/C%23_12-239120?style=flat-square&logo=c-sharp&logoColor=white)](https://docs.microsoft.com/en-us/dotnet/csharp/)
-[![ASP.NET Core 8](https://img.shields.io/badge/ASP.NET_Core_8-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://docs.microsoft.com/en-us/aspnet/core/)
-[![Entity Framework Core 8](https://img.shields.io/badge/EF_Core_8-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://docs.microsoft.com/en-us/ef/)
-[![Blazor Server/WASM](https://img.shields.io/badge/Blazor-512BD4?style=flat-square&logo=blazor&logoColor=white)](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)
-[![MVC & Razor Pages](https://img.shields.io/badge/MVC_&_Razor_Pages-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://docs.microsoft.com/en-us/aspnet/mvc/)
-[![Minimal APIs](https://img.shields.io/badge/Minimal_APIs-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis)
-
-### 🎨 **Frontend & Web Technologies | 前端與網頁技術**
-
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-
-### 🗄️ **Database & Data Management | 資料庫與資料管理**
-
-[![SQL Server 2022](https://img.shields.io/badge/SQL_Server_2022-CC2927?style=flat-square&logo=microsoft-sql-server&logoColor=white)](https://www.microsoft.com/en-us/sql-server)
-[![Azure SQL Database](https://img.shields.io/badge/Azure_SQL-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/en-us/services/sql-database/)
-[![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)](https://redis.io/)
-[![Azure Cosmos DB](https://img.shields.io/badge/Cosmos_DB-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/en-us/services/cosmos-db/)
-
-### ☁️ **Cloud Infrastructure | 雲端基礎設施**
-
-[![Microsoft Azure](https://img.shields.io/badge/Microsoft_Azure-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/)
-[![Azure Container Apps](https://img.shields.io/badge/Container_Apps-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/en-us/services/container-apps/)
-[![Azure Functions](https://img.shields.io/badge/Azure_Functions-0062AD?style=flat-square&logo=azure-functions&logoColor=white)](https://azure.microsoft.com/en-us/services/functions/)
-[![Azure App Service](https://img.shields.io/badge/App_Service-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/en-us/services/app-service/)
-[![Azure Logic Apps](https://img.shields.io/badge/Logic_Apps-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/en-us/services/logic-apps/)
-[![Azure Service Bus](https://img.shields.io/badge/Service_Bus-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/en-us/services/service-bus/)
-
-### 🔄 **DevOps & CI/CD | 開發營運與自動化**
-
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
-[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white)](https://github.com/features/actions)
-[![Azure DevOps](https://img.shields.io/badge/Azure_DevOps-0078D7?style=flat-square&logo=azure-devops&logoColor=white)](https://dev.azure.com/)
-[![Terraform](https://img.shields.io/badge/Terraform-623CE4?style=flat-square&logo=terraform&logoColor=white)](https://www.terraform.io/)
-
-### 🔧 **Development Tools | 開發工具**
-
-[![Visual Studio 2022](https://img.shields.io/badge/Visual_Studio_2022-5C2D91?style=flat-square&logo=visual-studio&logoColor=white)](https://visualstudio.microsoft.com/)
-[![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com/)
-[![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)](https://git-scm.com/)
-[![PowerShell 7](https://img.shields.io/badge/PowerShell_7-5391FE?style=flat-square&logo=powershell&logoColor=white)](https://docs.microsoft.com/en-us/powershell/)
-[![JetBrains Rider](https://img.shields.io/badge/JetBrains_Rider-000000?style=flat-square&logo=rider&logoColor=white)](https://www.jetbrains.com/rider/)
-[![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white)](https://www.postman.com/)
-[![Azure Data Studio](https://img.shields.io/badge/Azure_Data_Studio-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://docs.microsoft.com/en-us/sql/azure-data-studio/)
-
-### 🧪 **Testing & Quality Assurance | 測試與品質保證**
-
-[![xUnit](https://img.shields.io/badge/xUnit-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://xunit.net/)
-[![NUnit](https://img.shields.io/badge/NUnit-25A162?style=flat-square&logo=nunit&logoColor=white)](https://nunit.org/)
-[![Moq](https://img.shields.io/badge/Moq-FF6347?style=flat-square&logo=dotnet&logoColor=white)](https://github.com/moq/moq4)
-[![SonarCloud](https://img.shields.io/badge/SonarCloud-F3702A?style=flat-square&logo=sonarcloud&logoColor=white)](https://sonarcloud.io/)
-[![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
-[![Selenium](https://img.shields.io/badge/Selenium-43B02A?style=flat-square&logo=selenium&logoColor=white)](https://www.selenium.dev/)
-[![Azure Load Testing](https://img.shields.io/badge/Load_Testing-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://azure.microsoft.com/en-us/services/load-testing/)
-[![Application Insights](https://img.shields.io/badge/App_Insights-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview)
-
----
-
-## 🏆 **Complete Professional Certifications | 完整專業認證**
-
-### **Microsoft Technologies**
-[![Azure Fundamentals](https://img.shields.io/badge/Azure_Fundamentals-AZ--900-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/en-us/certifications/azure-fundamentals/)
-[![Azure Developer](https://img.shields.io/badge/Azure_Developer-AZ--204-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/en-us/certifications/azure-developer/)
-[![Azure Solutions Architect](https://img.shields.io/badge/Azure_Solutions_Architect-AZ--305-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/en-us/certifications/azure-solutions-architect/)
-[![Azure DevOps Engineer](https://img.shields.io/badge/Azure_DevOps_Engineer-AZ--400-0078D4?style=flat-square&logo=azure-devops&logoColor=white)](https://learn.microsoft.com/en-us/certifications/devops-engineer/)
-[![Azure Security Engineer](https://img.shields.io/badge/Azure_Security_Engineer-AZ--500-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/en-us/certifications/azure-security-engineer/)
-[![Azure Database Administrator](https://img.shields.io/badge/Azure_Database_Administrator-DP--300-0078D4?style=flat-square&logo=microsoft-azure&logoColor=white)](https://learn.microsoft.com/en-us/certifications/azure-database-administrator-associate/)
-[![.NET Developer](https://img.shields.io/badge/.NET_Developer-Associate-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/certifications/dotnet-developer/)
-[![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-Specialist-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/aspnet/core/)
-[![C# Programming](https://img.shields.io/badge/C%23_Programming-Expert-239120?style=flat-square&logo=c-sharp&logoColor=white)](https://learn.microsoft.com/en-us/dotnet/csharp/)
-[![Entity Framework](https://img.shields.io/badge/Entity_Framework-Core-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/ef/)
-
-### **Cloud Platforms**
-[![AWS Solutions Architect](https://img.shields.io/badge/AWS_Solutions_Architect-Associate-FF9900?style=flat-square&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/certification/certified-solutions-architect-associate/)
-[![AWS Developer](https://img.shields.io/badge/AWS_Developer-Associate-FF9900?style=flat-square&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/certification/certified-developer-associate/)
-[![Google Cloud Professional](https://img.shields.io/badge/GCP_Cloud_Architect-Professional-4285F4?style=flat-square&logo=google-cloud&logoColor=white)](https://cloud.google.com/certification/cloud-architect)
-[![Google Cloud Developer](https://img.shields.io/badge/GCP_Cloud_Developer-Professional-4285F4?style=flat-square&logo=google-cloud&logoColor=white)](https://cloud.google.com/certification/cloud-developer)
-
-### **DevOps & Infrastructure**
-[![Docker Certified](https://img.shields.io/badge/Docker-Certified_Associate-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/certification/)
-[![Kubernetes Administrator](https://img.shields.io/badge/Kubernetes-Administrator_CKA-326CE5?style=flat-square&logo=kubernetes&logoColor=white)](https://www.cncf.io/certification/cka/)
-[![Terraform Associate](https://img.shields.io/badge/Terraform-Associate-623CE4?style=flat-square&logo=terraform&logoColor=white)](https://www.hashicorp.com/certification/terraform-associate)
-[![Jenkins Engineer](https://img.shields.io/badge/Jenkins-Certified_Engineer-D33833?style=flat-square&logo=jenkins&logoColor=white)](https://www.cloudbees.com/jenkins/certification)
-
-### **Security & Compliance**
-[![CISSP](https://img.shields.io/badge/CISSP-Information_Security-00A651?style=flat-square&logo=isc2&logoColor=white)](https://www.isc2.org/Certifications/CISSP)
-[![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-E30613?style=flat-square&logo=comptia&logoColor=white)](https://www.comptia.org/certifications/security)
-[![CISM](https://img.shields.io/badge/CISM-Information_Security_Manager-00A651?style=flat-square&logo=isaca&logoColor=white)](https://www.isaca.org/credentialing/cism)
-
-### **Project Management & Agile**
-[![PMP](https://img.shields.io/badge/PMP-Project_Management_Professional-FF6B35?style=flat-square&logo=pmi&logoColor=white)](https://www.pmi.org/certifications/project-management-pmp)
-[![Scrum Master](https://img.shields.io/badge/Certified_Scrum_Master-CSM-FF6B35?style=flat-square&logo=scrumalliance&logoColor=white)](https://www.scrumalliance.org/get-certified/scrum-master-track/certified-scrummaster)
-[![SAFe Agilist](https://img.shields.io/badge/SAFe-Scaled_Agilist-0052CC?style=flat-square&logo=scaled-agile&logoColor=white)](https://www.scaledagile.com/certification/safe-agilist/)
-[![ITIL Foundation](https://img.shields.io/badge/ITIL-Foundation_v4-5C4EE5?style=flat-square&logo=axelos&logoColor=white)](https://www.axelos.com/certifications/itil-service-management)
-
----
-
-## 📋 **Project Types & Service Categories | 專案類型與服務分類**
-
-<table>
-<tr>
-<td align="center" width="20%">
-  🌐<br><strong>企業Web應用</strong>
-  <br><small>ASP.NET Core MVC/Razor Pages</small>
-</td>
-<td align="center" width="20%">
-  ⚡<br><strong>API服務</strong>
-  <br><small>RESTful API與微服務</small>
-</td>
-<td align="center" width="20%">
-  🔧<br><strong>自動化工具</strong>
-  <br><small>企業流程自動化</small>
-</td>
-<td align="center" width="20%">
-  📚<br><strong>技術諮詢</strong>
-  <br><small>架構設計與最佳實踐</small>
-</td>
-<td align="center" width="20%">
-  🔗<br><strong>系統整合</strong>
-  <br><small>第三方服務整合</small>
-</td>
-</tr>
-</table>
-
----
-
 <div align="center">
 
-### **🌟 企業願景與使命 | Vision & Mission**
+### 🌟 願景與使命 | Vision & Mission
 
-**🎯 企業使命**: 透過卓越的軟體工程技術與專業諮詢服務，協助企業實現數位化目標，提升營運效率與競爭優勢
+**🎯 使命** — 以工程紀律與商業洞察,讓每一個會員、每一張票券、每一筆點數,都有最佳體驗與最少摩擦  
 
-**🌟 企業願景**: 成為台灣領先的企業級軟體解決方案提供商，以創新技術驅動數位轉型
+**🌟 願景** — 成為亞太地區會員經濟與數位生態系最值得信賴的技術夥伴  
 
-### **🎖️ 核心價值觀 | Core Values**
+### 💎 核心價值
 
-[![Innovation](https://img.shields.io/badge/創新驅動-Innovation_Driven-FF6B35?style=flat-square&logo=lightbulb&logoColor=white)](#)
-[![Quality](https://img.shields.io/badge/品質第一-Quality_First-28A745?style=flat-square&logo=verified&logoColor=white)](#)
-[![Collaboration](https://img.shields.io/badge/團隊合作-Team_Collaboration-17A2B8?style=flat-square&logo=users&logoColor=white)](#)
-[![Excellence](https://img.shields.io/badge/追求卓越-Pursuit_of_Excellence-6F42C1?style=flat-square&logo=trophy&logoColor=white)](#)
-
----
-
-**⭐ 感謝您對環友科技的關注與支持！**
-
-**🚀 準備好開始您的數位轉型之旅了嗎？立即聯繫我們！**
+[![Customer First](https://img.shields.io/badge/客戶價值優先-Customer_First-FF6B35?style=flat-square&logo=heart&logoColor=white)](#)
+[![Engineering Excellence](https://img.shields.io/badge/工程嚴謹-Engineering_Excellence-28A745?style=flat-square&logo=verified&logoColor=white)](#)
+[![Honest Partnership](https://img.shields.io/badge/誠信長伴-Honest_Partnership-17A2B8?style=flat-square&logo=handshake&logoColor=white)](#)
+[![AI Native](https://img.shields.io/badge/AI_Native_思維-AI_Native_Mindset-412991?style=flat-square&logo=openai&logoColor=white)](#)
 
 ---
 
-<small><i>⚡ Professional Excellence in Software Development | 軟體開發專業卓越 ⚡</i></small>
+**準備好讓會員經濟與 AI 應用一次到位了嗎?**
+
+[![立即聯繫](https://img.shields.io/badge/✉️_預約_30_分鐘免費諮詢-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:sen@utk.com.tw?subject=UTK諮詢預約)
 
 </div>
-
-
-
-
