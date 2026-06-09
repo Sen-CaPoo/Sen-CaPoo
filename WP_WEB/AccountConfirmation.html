@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台帳號管理機制－需求核對表</title>
+<style>
+  :root{
+    --ink:#1f2733;
+    --ink-soft:#48535f;
+    --line:#dfe3e8;
+    --line-soft:#eceef1;
+    --paper:#ffffff;
+    --bg:#eef1f4;
+    --ok:#2f8f5b;
+    --ok-bg:#eaf5ee;
+    --adjust:#c0780f;
+    --adjust-bg:#fbf2e2;
+    --decide:#2f6db0;
+    --decide-bg:#e9f1fa;
+    --idle:#aab2bb;
+    --accent:#27384b;
+    --warn-bg:#fff8ec;
+    --warn-line:#e7c98a;
+    --mono:"SFMono-Regular",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei","Noto Sans TC","Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.65;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 120px;}
+
+  /* ---------- header ---------- */
+  .masthead{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 28px;
+    margin-bottom:18px;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 8px;
+  }
+  .masthead h1{
+    font-size:25px;
+    line-height:1.3;
+    margin:0 0 6px;
+    letter-spacing:.01em;
+  }
+  .subtitle{color:var(--ink-soft);font-size:14px;margin:0 0 16px;}
+  .meta-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px 18px;
+    border-top:1px solid var(--line-soft);
+    padding-top:16px;
+  }
+  .meta-field label{
+    display:block;
+    font-size:11px;
+    font-family:var(--mono);
+    letter-spacing:.1em;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .meta-field input{
+    width:100%;
+    border:none;
+    border-bottom:1.5px solid var(--line);
+    padding:5px 2px;
+    font-family:var(--sans);
+    font-size:15px;
+    color:var(--ink);
+    background:transparent;
+  }
+  .meta-field input:focus{outline:none;border-bottom-color:var(--accent);}
+
+  .howto{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    background:var(--line-soft);
+    border-radius:10px;
+    padding:11px 14px;
+    margin-top:16px;
+  }
+  .howto b{color:var(--ink);}
+
+  /* ---------- progress bar ---------- */
+  .statusbar{
+    position:sticky;top:0;z-index:40;
+    background:rgba(238,241,244,.92);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    margin:0 -20px 18px;
+    padding:12px 20px;
+    border-bottom:1px solid var(--line);
+  }
+  .statusbar-inner{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .progress-track{flex:1;min-width:160px;height:8px;border-radius:6px;background:#dde2e7;overflow:hidden;}
+  .progress-fill{height:100%;width:0;background:var(--ok);border-radius:6px;transition:width .25s ease;}
+  .progress-label{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);white-space:nowrap;}
+  .progress-label b{color:var(--ink);font-size:15px;}
+  .legend{display:flex;gap:14px;font-size:11.5px;color:var(--ink-soft);flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .dot.ok{background:var(--ok);}
+  .dot.adjust{background:var(--adjust);}
+  .dot.decide{background:var(--decide);}
+  .dot.idle{background:var(--idle);}
+
+  /* ---------- section ---------- */
+  .section{margin-bottom:22px;}
+  .section-head{
+    display:flex;align-items:baseline;gap:12px;
+    padding:0 4px 10px;
+    border-bottom:2px solid var(--accent);
+    margin-bottom:14px;
+  }
+  .section-num{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--paper);
+    background:var(--accent);
+    border-radius:6px;
+    padding:2px 9px;
+    letter-spacing:.05em;
+  }
+  .section-head h2{font-size:17px;margin:0;letter-spacing:.02em;}
+  .section-count{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+
+  /* ---------- item ---------- */
+  .item{
+    position:relative;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 18px 16px 22px;
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .item::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:var(--idle);transition:background .2s;
+  }
+  .item.is-ok::before{background:var(--ok);}
+  .item.is-adjust::before{background:var(--adjust);}
+  .item.is-decide::before{background:var(--decide);}
+
+  .item-top{display:flex;gap:12px;align-items:flex-start;}
+  .item-num{
+    flex:none;
+    font-family:var(--mono);
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    background:var(--line-soft);
+    border-radius:6px;
+    min-width:30px;
+    text-align:center;
+    padding:3px 6px;
+    margin-top:1px;
+  }
+  .item-body{flex:1;}
+  .item-body p{margin:0 0 2px;}
+  .item-body strong{font-weight:650;color:var(--ink);}
+  .item-body ul{margin:6px 0 2px;padding-left:18px;}
+  .item-body li{margin:2px 0;}
+  .item-note-inline{
+    display:block;font-size:12.5px;color:var(--ink-soft);
+    background:var(--line-soft);border-radius:8px;padding:8px 11px;margin-top:9px;
+  }
+  .item.warn{background:var(--warn-bg);border-color:var(--warn-line);}
+
+  /* choices */
+  .choices{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  .choice{position:relative;}
+  .choice input{position:absolute;opacity:0;width:0;height:0;}
+  .choice label{
+    display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+    border:1.5px solid var(--line);border-radius:9px;
+    padding:7px 14px;font-size:13.5px;color:var(--ink-soft);
+    background:var(--paper);transition:all .15s;user-select:none;
+  }
+  .choice label::before{
+    content:"";width:14px;height:14px;border-radius:50%;
+    border:2px solid var(--idle);flex:none;transition:all .15s;
+  }
+  .choice label:hover{border-color:#c3ccd5;}
+  .choice input:focus-visible + label{outline:2px solid var(--accent);outline-offset:2px;}
+  /* ok */
+  .choice.c-ok input:checked + label{color:var(--ok);border-color:var(--ok);background:var(--ok-bg);}
+  .choice.c-ok input:checked + label::before{border-color:var(--ok);background:var(--ok);box-shadow:inset 0 0 0 2.5px var(--ok-bg);}
+  /* adjust */
+  .choice.c-adjust input:checked + label{color:var(--adjust);border-color:var(--adjust);background:var(--adjust-bg);}
+  .choice.c-adjust input:checked + label::before{border-color:var(--adjust);background:var(--adjust);box-shadow:inset 0 0 0 2.5px var(--adjust-bg);}
+  /* decide */
+  .choice.c-decide input:checked + label{color:var(--decide);border-color:var(--decide);background:var(--decide-bg);}
+  .choice.c-decide input:checked + label::before{border-color:var(--decide);background:var(--decide);box-shadow:inset 0 0 0 2.5px var(--decide-bg);}
+
+  .note-row{margin-top:11px;display:none;}
+  .note-row.show{display:block;}
+  .note-row label{display:block;font-size:11.5px;font-family:var(--mono);color:var(--adjust);letter-spacing:.08em;margin-bottom:5px;}
+  .note-row textarea{
+    width:100%;border:1.5px solid var(--warn-line);border-radius:9px;
+    padding:9px 11px;font-family:var(--sans);font-size:14px;color:var(--ink);
+    background:var(--warn-bg);resize:none;overflow:hidden;line-height:1.55;min-height:42px;
+  }
+  .note-row textarea:focus{outline:none;border-color:var(--adjust);}
+
+  /* ---------- summary ---------- */
+  .summary{
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:22px 26px;margin-top:26px;
+  }
+  .summary h2{font-size:18px;margin:0 0 4px;}
+  .summary .subtitle{margin-bottom:14px;}
+  .sum-block{margin-bottom:16px;}
+  .sum-block h3{font-size:14px;margin:0 0 8px;color:var(--accent);font-family:var(--mono);letter-spacing:.06em;}
+  .sum-list{margin:0;padding:0;list-style:none;}
+  .sum-list li{
+    border-left:3px solid var(--adjust);background:var(--adjust-bg);
+    border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:7px;font-size:13.5px;
+  }
+  .sum-list li .sl-num{font-family:var(--mono);font-weight:600;color:var(--adjust);margin-right:8px;}
+  .sum-list li .sl-note{display:block;color:var(--ink-soft);font-size:12.5px;margin-top:3px;}
+  .sum-empty{font-size:13px;color:var(--ink-soft);background:var(--line-soft);border-radius:8px;padding:10px 12px;}
+  .sum-decision{border-left:3px solid var(--decide);background:var(--decide-bg);border-radius:0 8px 8px 0;padding:10px 12px;font-size:13.5px;}
+  .sum-decision .sl-num{font-family:var(--mono);font-weight:600;color:var(--decide);margin-right:8px;}
+
+  .footnote{
+    margin-top:20px;font-size:12.5px;color:var(--ink-soft);
+    background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:12px 15px;
+  }
+
+  /* ---------- action bar ---------- */
+  .actionbar{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+    padding:11px 20px;
+  }
+  .actionbar-inner{max-width:920px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .saved-hint{font-size:12px;color:var(--ink-soft);font-family:var(--mono);margin-right:auto;}
+  .btn{
+    font-family:var(--sans);font-size:14px;cursor:pointer;border-radius:9px;
+    padding:9px 16px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);
+    transition:all .15s;
+  }
+  .btn:hover{border-color:#c3ccd5;}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  .btn-primary:hover{background:#1c2a3a;border-color:#1c2a3a;}
+  .btn-ghost{color:var(--ink-soft);}
+
+  /* ---------- print ---------- */
+  @page{size:A4;margin:14mm 13mm 16mm;}
+  .print-only{display:none;}
+  @media print{
+    :root{--bg:#fff;}
+    body{background:#fff;font-size:11.5px;line-height:1.5;}
+    .wrap{max-width:none;padding:0;}
+    .statusbar,.actionbar,.howto{display:none !important;}
+    .print-only{display:block;}
+    .masthead{border:none;border-bottom:2px solid var(--accent);border-radius:0;padding:0 0 12px;margin-bottom:14px;}
+    .masthead h1{font-size:18px;}
+    .meta-grid{gap:6px 18px;}
+    .meta-field input{border-bottom:1px solid #bbb;}
+    .section{break-inside:auto;margin-bottom:10px;}
+    .section-head{margin-bottom:8px;padding-bottom:6px;}
+    .section-count{display:none;}
+    .item{
+      break-inside:avoid;border:1px solid #d4d8dd;border-radius:8px;
+      padding:9px 11px 9px 14px;margin-bottom:7px;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact;
+    }
+    .item::before{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .choice label{padding:3px 9px;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .choices{margin-top:7px;gap:7px;}
+    .note-row textarea{background:#fff;border:1px solid #ccc;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .summary,.footnote{break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .sum-list li,.sum-decision{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    a{color:inherit;text-decoration:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- progress -->
+  <div class="statusbar">
+    <div class="statusbar-inner">
+      <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+      <div class="progress-label">已核對 <b id="pdone">0</b> / <span id="ptotal">35</span></div>
+      <div class="legend">
+        <span><i class="dot ok"></i>確認無誤</span>
+        <span><i class="dot adjust"></i>需調整</span>
+        <span><i class="dot decide"></i>方案決議</span>
+        <span><i class="dot idle"></i>未核對</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- masthead -->
+  <header class="masthead">
+    <p class="eyebrow">Wowprime · Back-office Account Management · Review Sheet</p>
+    <h1>後台帳號管理機制說明　需求核對表</h1>
+    <p class="subtitle">版本日期：2026-06-09 ｜ 狀態：實作現況（部分項目標示「待確認」）｜ 請逐點選擇「確認無誤 / 需調整」，需調整者請填寫期望行為。</p>
+    <div class="meta-grid">
+      <div class="meta-field"><label>核對單位</label><input id="meta_unit" type="text" placeholder="例：營運需求單位"></div>
+      <div class="meta-field"><label>核對人員</label><input id="meta_person" type="text" placeholder="姓名"></div>
+      <div class="meta-field"><label>核對日期</label><input id="meta_date" type="date"></div>
+      <div class="meta-field"><label>備註 / 文件編號</label><input id="meta_ref" type="text" placeholder="（選填）"></div>
+    </div>
+    <div class="howto">
+      <b>如何留檔：</b>逐項勾選並填寫後，點右下角「匯出 PDF」會開啟列印視窗，目的地請選「<b>另存為 PDF</b>」即可存成一份正式核對紀錄。你填的內容也會自動暫存於本機瀏覽器，下次開同一個檔可接續填寫。
+    </div>
+  </header>
+
+  <main id="form"></main>
+
+  <!-- live summary -->
+  <section class="summary" id="summary">
+    <h2>核對結果彙總</h2>
+    <p class="subtitle">系統依上方選擇自動整理，供工程 / 需求兩方對焦。</p>
+
+    <div class="sum-block">
+      <h3>待確認項目（#25 累計鎖定行為）</h3>
+      <div id="sum-decision-wrap"><div class="sum-empty">尚未選擇方案。</div></div>
+    </div>
+
+    <div class="sum-block">
+      <h3>需調整項目清單</h3>
+      <ul class="sum-list" id="sum-adjust"></ul>
+      <div class="sum-empty" id="sum-adjust-empty">目前沒有標記為「需調整」的項目。</div>
+    </div>
+  </section>
+
+  <div class="footnote">
+    <b>技術備註（供工程備查）：</b>鎖定時間之判斷依賴主機時區設定為台灣時間（UTC+8），正式環境部署時須確認主機時區正確，否則鎖定 / 自動解鎖時間之顯示與判斷可能有時差。
+  </div>
+
+</div>
+
+<!-- actions -->
+<div class="actionbar">
+  <div class="actionbar-inner">
+    <span class="saved-hint" id="savedHint">尚未變更</span>
+    <button class="btn btn-ghost" id="btnAll">全部標記為「確認無誤」</button>
+    <button class="btn btn-ghost" id="btnClear">清除全部</button>
+    <button class="btn btn-primary" id="btnPdf">匯出 PDF</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- content data ----
+  var SECTIONS = [
+    { num:"一", title:"帳號類型與基本設定", items:[
+      {n:"1", html:"<p><strong>帳號分兩大類：</strong></p><ul><li><strong>同步帳號</strong>：由王品集團帳號系統（AD）同步進來的帳號。</li><li><strong>外部帳號</strong>：直接在本後台建立的帳號。</li></ul>"},
+      {n:"2", html:"<p><strong>帳號類型建立後不可變更。</strong>建立帳號時選定類型，存檔後該欄位變唯讀，任何人皆無法再修改。</p>"},
+      {n:"3", html:"<p><strong>銀行權限建立後不可變更。</strong>若帳號類型為「銀行」，建立時選定的銀行，存檔後不可再改。</p>"},
+      {n:"4", html:"<p><strong>帳號名稱規則：</strong>至少 6 碼，僅能輸入英數字與「.」。建立後帳號（登入代號）不可修改。</p>"},
+      {n:"5", html:"<p><strong>帳號有效期限：</strong>可設定到期日（或設為「無效期」永久有效）。<strong>超過到期日當天即無法登入</strong>，登入時顯示「此帳號已被停用」。</p>"},
+      {n:"6", html:"<p><strong>帳號啟用 / 停用：</strong>可手動停用帳號，停用後無法登入。</p>"}
+    ]},
+    { num:"二", title:"權限範圍（商家維護）", items:[
+      {n:"7", html:"<p><strong>同步帳號</strong>：可設定「商家維護」，依<strong>品牌 / 門市</strong>過濾其可見、可操作的資料範圍。</p>"},
+      {n:"8", html:"<p><strong>外部帳號</strong>：<strong>不綁定商家維護</strong>，預設擁有全部資料範圍權限（因外部帳號使用的功能多半不涉及品牌 / 門市過濾）。後台列表上外部帳號<strong>不會出現</strong>「商家維護」按鈕。</p>"}
+    ]},
+    { num:"三", title:"密碼政策", items:[
+      {n:"9", html:"<p><strong>密碼長度：</strong>8～12 碼。</p>"},
+      {n:"10", html:"<p><strong>密碼複雜度：</strong>必須同時包含「大寫英文字母、小寫英文字母、數字、特殊符號」四類。</p>"},
+      {n:"11", html:"<p><strong>密碼有效期限：</strong>90 天。逾期後下次登入會被強制要求變更密碼，才能繼續使用。</p>"},
+      {n:"12", html:"<p><strong>密碼不可重複：</strong>新密碼不得與<strong>前 3 次</strong>用過的密碼相同。</p>"},
+      {n:"13", html:"<p><strong>首次登入強制改密碼：</strong>新建帳號會由系統產生初始密碼，並透過「帳號開通通知」Email 寄給使用者。使用者<strong>第一次登入後必須先變更密碼</strong>才能使用系統功能。</p>"}
+    ]},
+    { num:"四", title:"登入二階段驗證（2FA）", items:[
+      {n:"15", html:"<p><strong>驗證方式：</strong>採 <strong>Email 驗證碼</strong>（6 碼數字）。登入輸入正確帳密後，系統寄送驗證碼到該帳號 Email，輸入正確才完成登入。</p>"},
+      {n:"16", html:"<p><strong>驗證碼規則：</strong>有效時間 10 分鐘；單次流程最多輸入錯誤 5 次；重新發送需間隔 60 秒（<strong>無重發次數上限</strong>，僅需等待 60 秒冷卻）。</p>"},
+      {n:"17", html:"<p><strong>預設一律需要 2FA：</strong>所有新建帳號預設都需要二階段驗證。如需測試，可由具系統管理員角色（AdminRole）的帳號於後台帳號編輯頁，將指定帳號的 2FA 關閉；<strong>關閉 / 開啟動作皆會留存異動紀錄</strong>。</p>"},
+      {n:"19", html:"<p><strong>當日免再驗（以「帳號」計，與裝置無關）：</strong>帳號當天只要成功通過一次 2FA，<strong>當天</strong>該帳號再次登入即免再輸入驗證碼（<strong>不限同一裝置</strong>，到當日 23:59:59 失效）。</p>"},
+      {n:"20", html:"<p><strong>同步帳號免 2FA：</strong>同步帳號登入不經過二階段驗證（其身分由王品帳號系統驗證）。</p>"}
+    ]},
+    { num:"五", title:"帳號鎖定機制", items:[
+      {n:"21", html:"<p><strong>連續輸入錯誤鎖定：</strong>同一帳號<strong>連續登入失敗 5 次</strong>即鎖定，鎖定時間 <strong>15 分鐘</strong>，期間無法登入（即使密碼正確）。</p>"},
+      {n:"22", html:"<p><strong>自動解鎖：</strong>鎖定滿 15 分鐘後<strong>自動解除</strong>，無需人工處理即可再次嘗試登入。</p>"},
+      {n:"23", html:"<p><strong>後台手動解鎖：</strong>管理員可於「使用者帳號設定」列表，對鎖定中的帳號點「解鎖」立即解除。解鎖按鈕滑鼠移上去會顯示「將於 ○○ 自動解鎖，或點此立即解鎖」。解鎖動作會留存<strong>操作紀錄</strong>（記錄操作人員與時間），並另於<strong>權限異動紀錄</strong>寫一筆「帳號解鎖」（鎖定中 → 已解鎖，含操作人員）。</p>"},
+      {n:"24", html:"<p><strong>累計鎖定通知：</strong>同一帳號<strong>累計被鎖定達 2 次</strong>起，系統會發出通知（Email + 站內通知）給指定的通知群組（收件群組於「通知群組設定」維護）。</p>"},
+      {n:"25", type:"decide", html:"<p><strong>⚠️【待確認】累計 2 次之後的鎖定行為：</strong></p><span class='item-note-inline'><b>目前現況（A）</b>：不論累計幾次，每次鎖定仍是 15 分鐘後自動解鎖；「累計 2 次」只負責發送通知，不會升級為永久鎖定。<br><b>可選方案（B）</b>：累計達 2 次後改為永久鎖定，只能由後台人工解鎖，不再自動解。若採 (B)，鎖定中提示將改為「已達鎖定上限，需聯繫管理員解鎖」。</span>"},
+      {n:"26", html:"<p><strong>單一 IP 大量嘗試保護：</strong>同一來源 IP 在 <strong>60 秒內</strong>登入失敗達 <strong>10 次</strong>，該 IP 會被鎖定 <strong>15 分鐘</strong>（用於阻擋自動化暴力嘗試 / 跨多帳號掃描）。此為 IP 層保護，與帳號鎖定分開。</p><span class='item-note-inline'>IP 門檻（10 次）刻意設得比帳號門檻（5 次）高，確保「同一人慢慢打錯」會先觸發帳號鎖定（並走累計 / 通知），IP 鎖定只攔截短時間大量、多帳號的異常行為。</span>"}
+    ]},
+    { num:"六", title:"忘記密碼", items:[
+      {n:"27", html:"<p><strong>流程：</strong>輸入帳號 Email → 收到 6 碼驗證碼 → 驗證通過後<strong>自行設定新密碼</strong>（一樣套用密碼長度、複雜度與「不可重複前 3 次」規則）。</p>"},
+      {n:"28", html:"<p><strong>驗證碼規則：</strong>與登入 2FA 相同（10 分鐘有效、最多錯 5 次、重發間隔 60 秒，<strong>無重發次數上限</strong>）。</p>"},
+      {n:"29", html:"<p><strong>鎖定 / 停用帳號的限制：</strong>帳號若處於鎖定中，於登入頁與忘記密碼頁輸入該帳號時，皆會提示「該帳號已被鎖定，請洽系統管理員解鎖」。</p>"},
+      {n:"30", html:"<p><strong>同步帳號不適用：</strong>同步帳號無法使用忘記密碼（密碼由王品帳號系統管理），會提示請洽公司帳號系統處理。</p>"}
+    ]},
+    { num:"七", title:"同步帳號（王品 AD 同步）特性彙整", items:[
+      {n:"31", html:"<p><strong>登入驗證委派：</strong>同步帳號登入時，由王品帳號系統驗證其真實密碼，通過後才登入本後台。</p>"},
+      {n:"32", html:"<p><strong>本地不管理密碼：</strong>同步帳號的密碼由外部系統控管，本後台<strong>不適用</strong>密碼有效期限、強制改密、忘記密碼。</p>"},
+      {n:"33", html:"<p><strong>仍受鎖定保護：</strong>同步帳號連續登入失敗一樣會被鎖定（5 次 / 15 分），IP 大量嘗試保護亦適用。</p>"},
+      {n:"34", html:"<p><strong>資料欄位唯讀：</strong>同步帳號的名稱、Email、企編、帳號類型等由來源系統決定，後台顯示為唯讀。</p>"}
+    ]},
+    { num:"八", title:"稽核與通知", items:[
+      {n:"35", html:"<p><strong>登入紀錄：</strong>每次登入（成功 / 失敗）都會留存登入紀錄。</p>"},
+      {n:"36", html:"<p><strong>權限異動紀錄：</strong>帳號的角色、銀行權限等異動會留存變動紀錄。</p>"},
+      {n:"37", html:"<p><strong>通知群組：</strong>帳號鎖定通知的收件對象，由後台「通知群組設定」維護。</p>"}
+    ]}
+  ];
+
+  var STORE_KEY = "wp_account_review_v1";
+  var form = document.getElementById("form");
+  var allItems = [];
+
+  // ---- render ----
+  SECTIONS.forEach(function(sec){
+    var s = document.createElement("section");
+    s.className = "section";
+    var count = sec.items.length;
+    s.innerHTML =
+      '<div class="section-head"><span class="section-num">'+sec.num+'</span>'+
+      '<h2>'+sec.title+'</h2><span class="section-count" data-sec-count>0 / '+count+'</span></div>';
+    sec.items.forEach(function(it){
+      allItems.push(it.n);
+      var isDecide = it.type === "decide";
+      var div = document.createElement("div");
+      div.className = "item" + (isDecide ? " warn" : "");
+      div.id = "item-"+it.n;
+
+      var choicesHtml;
+      if(isDecide){
+        choicesHtml =
+          '<div class="choices" data-group="'+it.n+'">'+
+            radio(it.n,"A","decide","維持現況（A）自動解鎖")+
+            radio(it.n,"B","decide","改為永久鎖定（B）只能後台解")+
+            radio(it.n,"other","decide","其他")+
+          '</div>'+
+          noteRow(it.n,"請說明（選「其他」時填寫）");
+      } else {
+        choicesHtml =
+          '<div class="choices" data-group="'+it.n+'">'+
+            radio(it.n,"ok","ok","確認無誤")+
+            radio(it.n,"adjust","adjust","需調整")+
+          '</div>'+
+          noteRow(it.n,"期望行為 / 需調整說明");
+      }
+
+      div.innerHTML =
+        '<div class="item-top"><span class="item-num">'+it.n+'</span>'+
+        '<div class="item-body">'+it.html+choicesHtml+'</div></div>';
+      s.appendChild(div);
+    });
+    form.appendChild(s);
+  });
+
+  function radio(n,val,cls,label){
+    var id = "r_"+n+"_"+val;
+    return '<span class="choice c-'+cls+'">'+
+      '<input type="radio" name="status_'+n+'" id="'+id+'" value="'+val+'">'+
+      '<label for="'+id+'">'+label+'</label></span>';
+  }
+  function noteRow(n,label){
+    return '<div class="note-row" id="noterow_'+n+'"><label>'+label+'</label>'+
+      '<textarea id="note_'+n+'" rows="1" placeholder="請輸入…"></textarea></div>';
+  }
+
+  document.getElementById("ptotal").textContent = allItems.length;
+
+  // ---- helpers ----
+  function getStatus(n){
+    var el = document.querySelector('input[name="status_'+n+'"]:checked');
+    return el ? el.value : null;
+  }
+  function autoGrow(ta){ ta.style.height="auto"; ta.style.height=(ta.scrollHeight)+"px"; }
+
+  function applyItemState(n){
+    var item = document.getElementById("item-"+n);
+    var v = getStatus(n);
+    item.classList.remove("is-ok","is-adjust","is-decide");
+    var noterow = document.getElementById("noterow_"+n);
+    if(v==="ok"){ item.classList.add("is-ok"); noterow.classList.remove("show"); }
+    else if(v==="adjust"){ item.classList.add("is-adjust"); noterow.classList.add("show"); }
+    else if(v==="A"||v==="B"){ item.classList.add("is-decide"); noterow.classList.remove("show"); }
+    else if(v==="other"){ item.classList.add("is-decide"); noterow.classList.add("show"); }
+    else { noterow.classList.remove("show"); }
+  }
+
+  function updateProgress(){
+    var done = 0;
+    allItems.forEach(function(n){ if(getStatus(n)) done++; });
+    document.getElementById("pdone").textContent = done;
+    var pct = Math.round(done/allItems.length*100);
+    document.getElementById("pfill").style.width = pct + "%";
+    // per-section counts
+    var idx = 0;
+    SECTIONS.forEach(function(sec, si){
+      var c = 0;
+      sec.items.forEach(function(it){ if(getStatus(it.n)) c++; });
+      var heads = document.querySelectorAll("[data-sec-count]");
+      heads[si].textContent = c + " / " + sec.items.length;
+    });
+  }
+
+  function plainText(n){
+    // pull the leading bold title of the item for summary readability
+    var el = document.querySelector("#item-"+n+" .item-body p strong");
+    var t = el ? el.textContent.replace(/[：:]\s*$/,"") : ("項目 "+n);
+    return t;
+  }
+
+  function updateSummary(){
+    // decision (#25)
+    var dWrap = document.getElementById("sum-decision-wrap");
+    var dv = getStatus("25");
+    var dnote = (document.getElementById("note_25").value||"").trim();
+    if(!dv){
+      dWrap.innerHTML = '<div class="sum-empty">尚未選擇方案。</div>';
+    } else {
+      var label = dv==="A" ? "維持現況（A）：每次仍 15 分鐘後自動解鎖，累計 2 次僅發通知。"
+                : dv==="B" ? "改為永久鎖定（B）：累計達 2 次後永久鎖定，只能後台人工解鎖。"
+                : "其他：" + (dnote || "（未填說明）");
+      dWrap.innerHTML = '<div class="sum-decision"><span class="sl-num">#25</span>'+escapeHtml(label)+'</div>';
+    }
+    // adjust list
+    var ul = document.getElementById("sum-adjust");
+    var empty = document.getElementById("sum-adjust-empty");
+    ul.innerHTML = "";
+    var found = 0;
+    allItems.forEach(function(n){
+      if(getStatus(n)==="adjust"){
+        found++;
+        var note = (document.getElementById("note_"+n).value||"").trim();
+        var li = document.createElement("li");
+        li.innerHTML = '<span class="sl-num">#'+n+'</span>'+escapeHtml(plainText(n))+
+          (note ? '<span class="sl-note">→ '+escapeHtml(note)+'</span>' : '<span class="sl-note">→（未填說明）</span>');
+        ul.appendChild(li);
+      }
+    });
+    empty.style.display = found ? "none" : "block";
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+  // ---- persistence ----
+  var hint = document.getElementById("savedHint");
+  function collect(){
+    var data = {meta:{}, status:{}, notes:{}};
+    ["meta_unit","meta_person","meta_date","meta_ref"].forEach(function(id){ data.meta[id]=document.getElementById(id).value; });
+    allItems.forEach(function(n){
+      var v=getStatus(n); if(v) data.status[n]=v;
+      var note=document.getElementById("note_"+n).value; if(note) data.notes[n]=note;
+    });
+    return data;
+  }
+  function save(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(collect()));
+      var t=new Date(); hint.textContent="已暫存於本機 "+t.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit"});
+    }catch(e){ hint.textContent="（本機暫存不可用，內容仍可匯出 PDF）"; }
+  }
+  function load(){
+    var raw;
+    try{ raw=localStorage.getItem(STORE_KEY); }catch(e){ raw=null; }
+    if(!raw) return;
+    try{
+      var d=JSON.parse(raw);
+      if(d.meta) Object.keys(d.meta).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=d.meta[id]; });
+      if(d.status) Object.keys(d.status).forEach(function(n){
+        var el=document.querySelector('input[name="status_'+n+'"][value="'+d.status[n]+'"]'); if(el) el.checked=true;
+      });
+      if(d.notes) Object.keys(d.notes).forEach(function(n){ var el=document.getElementById("note_"+n); if(el) el.value=d.notes[n]; });
+    }catch(e){}
+  }
+
+  // ---- events ----
+  form.addEventListener("change", function(e){
+    if(e.target.name && e.target.name.indexOf("status_")===0){
+      applyItemState(e.target.name.replace("status_",""));
+      updateProgress(); updateSummary(); save();
+    }
+  });
+  form.addEventListener("input", function(e){
+    if(e.target.tagName==="TEXTAREA"){ autoGrow(e.target); updateSummary(); save(); }
+  });
+  ["meta_unit","meta_person","meta_date","meta_ref"].forEach(function(id){
+    document.getElementById(id).addEventListener("input", save);
+  });
+
+  document.getElementById("btnAll").addEventListener("click", function(){
+    allItems.forEach(function(n){
+      if(n==="25") return; // decision item left to the unit
+      var el=document.querySelector('input[name="status_'+n+'"][value="ok"]');
+      if(el){ el.checked=true; applyItemState(n); }
+    });
+    updateProgress(); updateSummary(); save();
+  });
+
+  document.getElementById("btnClear").addEventListener("click", function(){
+    if(!confirm("確定清除所有勾選與填寫內容？此動作無法復原。")) return;
+    document.querySelectorAll('input[type="radio"]').forEach(function(r){ r.checked=false; });
+    document.querySelectorAll("textarea").forEach(function(t){ t.value=""; autoGrow(t); });
+    allItems.forEach(applyItemState);
+    updateProgress(); updateSummary();
+    try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+    hint.textContent="已清除";
+  });
+
+  document.getElementById("btnPdf").addEventListener("click", function(){
+    if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    var u=document.getElementById("meta_unit").value.trim();
+    var d=document.getElementById("meta_date").value;
+    var name="後台帳號管理機制_需求核對表";
+    if(u) name+="_"+u; if(d) name+="_"+d;
+    var prev=document.title; document.title=name;
+    window.print();
+    setTimeout(function(){ document.title=prev; }, 800);
+  });
+
+  // ---- init ----
+  load();
+  // default date = today (only if empty)
+  var dateEl=document.getElementById("meta_date");
+  if(!dateEl.value){ var t=new Date(); dateEl.value=t.toISOString().slice(0,10); }
+  document.querySelectorAll("textarea").forEach(autoGrow);
+  allItems.forEach(applyItemState);
+  updateProgress(); updateSummary();
+})();
+</script>
+</body>
+</html>
