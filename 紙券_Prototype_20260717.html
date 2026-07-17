@@ -1,0 +1,2592 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>王品集團紙本票券訂購網 | Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ============ 基礎 ============ */
+:root{
+  --wine:#8A1B29; --wine-d:#701221; --wine-x:#4E0C16; --wine-bright:#B02A3A;
+  --gold:#B08D4A; --gold-l:#D8B878; --gold-pale:#F3E7CC;
+  --cream:#F6F1E7; --card:#FFFFFF;
+  --ink:#2E2A26; --muted:#8A8178; --line:#E7DFD2;
+  --orange:#E07B1F; --orange-bg:#FDF3E2;
+  --ok:#2E7D46; --err:#C0392B; --info-bg:#EDF1F6; --info-ink:#5A6B7E;
+  --shadow:0 2px 10px rgba(78,12,22,.08);
+  --shadow-lg:0 12px 40px rgba(46,42,38,.18);
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--wine);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
+.serif{font-family:'Noto Serif TC','PMingLiU',serif}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.container{max-width:1280px;margin:0 auto;padding:0 24px}
+::placeholder{color:#B9B0A4}
+
+/* ============ 需求對照標籤 ============ */
+[data-req]{position:relative}
+body.show-req [data-req]::before{
+  content:"需求 §" attr(data-req);
+  position:absolute;top:-10px;left:-6px;z-index:60;
+  background:#1F6FEB;color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;
+  padding:2px 8px;border-radius:99px;box-shadow:0 2px 6px rgba(31,111,235,.4);
+  font-family:'Noto Sans TC',sans-serif;white-space:nowrap;pointer-events:none;line-height:1.6;
+}
+body.show-req [data-req]{outline:1.5px dashed rgba(31,111,235,.55);outline-offset:4px;border-radius:6px}
+
+/* ============ Prototype 頂條 ============ */
+.proto-strip{background:#241B16;color:#CBBFAE;font-size:12.5px;letter-spacing:.4px;position:relative;z-index:70}
+.proto-strip .container{display:flex;align-items:center;gap:14px;min-height:34px;flex-wrap:wrap}
+.proto-strip b{color:var(--gold-l);font-weight:700}
+.proto-strip .sp{flex:1}
+.proto-btn{border:1px solid #5A4C3E;color:#E4D9C6;border-radius:99px;padding:1px 12px;font-size:12px;transition:.15s}
+.proto-btn:hover,.proto-btn.on{background:var(--gold);border-color:var(--gold);color:#241B16}
+
+/* ============ Header ============ */
+.site-head{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.site-head .container{display:flex;align-items:center;gap:18px;min-height:64px}
+.logo{display:flex;align-items:baseline;gap:2px;font-family:'Noto Serif TC',serif;font-size:26px;font-weight:900;letter-spacing:2px;white-space:nowrap;cursor:pointer}
+.logo .l1{color:var(--wine)}
+.logo .l2{color:var(--gold)}
+.logo small{font-size:11px;letter-spacing:2.5px;color:var(--muted);font-family:'Noto Sans TC',sans-serif;font-weight:500;margin-left:8px;transform:translateY(-1px)}
+.nav{margin-left:auto;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.nav .who{font-size:13.5px;color:var(--muted);margin-right:8px;display:flex;align-items:center;gap:6px}
+.nav .who .dot{width:8px;height:8px;border-radius:99px;background:var(--ok)}
+.nav-link{padding:7px 13px;border-radius:99px;font-size:14.5px;color:#4C453D;font-weight:500;transition:.15s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.nav-link:hover{background:var(--cream);text-decoration:none}
+.nav-link.active{background:var(--wine);color:#fff}
+.nav-link.pill-out{background:var(--wine-bright);color:#fff;font-weight:700}
+.nav-link.pill-out:hover{background:var(--wine)}
+.nav-link .ext{font-size:11px;opacity:.6}
+.nav-item{position:relative}
+.nav-drop{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);min-width:230px;padding:8px;z-index:60;
+  display:block;visibility:hidden;opacity:0;transform:translateY(6px);
+  transition:opacity .16s ease,transform .16s ease,visibility 0s linear .28s}
+.nav-drop::before{content:"";position:absolute;top:-12px;left:-12px;right:-12px;height:12px}
+.nav-item:hover .nav-drop,.nav-item.open .nav-drop,.nav-drop:hover{visibility:visible;opacity:1;transform:none;transition:opacity .16s ease,transform .16s ease}
+.nav-drop .dd{display:flex;width:100%;text-align:left;gap:10px;align-items:center;padding:10px 12px;border-radius:8px;font-size:14.5px;color:var(--ink)}
+.nav-drop .dd:hover{background:var(--cream)}
+.nav-drop .dd small{display:block;color:var(--muted);font-size:12px;line-height:1.4}
+.nav-drop hr{border:none;border-top:1px solid var(--line);margin:6px 4px}
+.nav-drop .dd.danger{color:var(--err)}
+.hamb{display:none;margin-left:auto;width:42px;height:42px;border-radius:10px;border:1px solid var(--line);align-items:center;justify-content:center;font-size:20px;color:var(--wine)}
+
+/* ============ 公告跑馬燈 ============ */
+.marquee{background:linear-gradient(90deg,var(--wine-d),var(--wine));color:#F6E8D8;font-size:14px}
+.marquee .container{display:flex;align-items:center;gap:12px;min-height:40px}
+.marquee .tagchip{background:var(--gold-l);color:var(--wine-x);font-weight:700;font-size:12.5px;border-radius:99px;padding:1px 11px;flex:none}
+.marquee .msg{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:fadein .5s}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.marquee .mq-ctl{display:flex;align-items:center;gap:6px;flex:none;font-size:12.5px;color:#E9CFA9}
+.mq-btn{width:22px;height:22px;border-radius:99px;border:1px solid rgba(246,232,216,.45);color:#F6E8D8;font-size:11px;display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.mq-btn:hover{background:rgba(255,255,255,.15)}
+
+/* ============ 步驟指示列 ============ */
+.steps-wrap{background:#fff;border-bottom:1px solid var(--line)}
+.steps{display:flex;align-items:center;justify-content:center;gap:0;padding:16px 8px;max-width:860px;margin:0 auto}
+.step{display:flex;align-items:center;gap:9px;flex:none}
+.step .num{width:30px;height:30px;border-radius:99px;border:2px solid #CFC6B8;color:#A69C8D;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;background:#fff;transition:.2s}
+.step .lbl{font-size:14.5px;color:#A69C8D;font-weight:500;white-space:nowrap}
+.step.on .num{background:var(--wine);border-color:var(--wine);color:#fff}
+.step.on .lbl{color:var(--wine);font-weight:700}
+.step.done .num{background:var(--gold-pale);border-color:var(--gold);color:var(--gold)}
+.step.done .lbl{color:var(--gold)}
+.step-line{height:2px;background:#E3DACB;flex:1;max-width:110px;margin:0 12px}
+.step-line.done{background:var(--gold)}
+
+/* ============ 主版面 ============ */
+main#app{min-height:62vh;padding-bottom:70px}
+.view-pad{padding-top:26px}
+.shop-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:26px;align-items:start}
+.page-title{font-family:'Noto Serif TC',serif;font-size:28px;font-weight:900;color:var(--wine);letter-spacing:1px;margin:6px 0 4px}
+.page-sub{color:var(--muted);font-size:14.5px;margin-bottom:20px}
+.sec-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:var(--ink);margin:4px 0 14px}
+.sec-title::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--gold)}
+.sec-title .cnt{font-size:12.5px;color:var(--muted);font-weight:500;background:var(--cream);border-radius:99px;padding:1px 10px}
+
+/* ============ 商品工具列 ============ */
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.search-box{position:relative;flex:1;min-width:220px;max-width:330px}
+.search-box input{width:100%;height:44px;border:1.5px solid var(--line);border-radius:99px;padding:0 42px 0 18px;background:#fff;transition:.15s}
+.search-box input:focus{outline:none;border-color:var(--gold)}
+.search-box .sic{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.cat-tabs{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:99px;padding:4px;gap:2px;flex-wrap:wrap}
+.cat-tab{padding:8px 18px;border-radius:99px;font-size:14.5px;font-weight:500;color:#5C544A;transition:.15s;white-space:nowrap}
+.cat-tab:hover{color:var(--wine)}
+.cat-tab.on{background:var(--wine);color:#fff;font-weight:700}
+.brand-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 18px}
+.brand-tab{padding:5px 15px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-size:13.5px;color:#5C544A;transition:.15s}
+.brand-tab:hover{border-color:var(--gold)}
+.brand-tab.on{border-color:var(--wine);color:var(--wine);font-weight:700;background:#FDF7F2}
+.dm-btn{margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--wine);color:var(--wine);border-radius:99px;padding:9px 18px;font-size:14.5px;font-weight:700;background:#fff;transition:.15s;white-space:nowrap}
+.dm-btn:hover{background:var(--wine);color:#fff}
+
+/* ============ 商品卡片 ============ */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:18px}
+.prod-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(231,223,210,.7);transition:.18s}
+.prod-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(78,12,22,.14)}
+.vart{position:relative;aspect-ratio:23/11;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F3E2B9;overflow:hidden;
+  background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.045) 0 2px,transparent 2px 9px),linear-gradient(135deg,var(--v1,#7E1523),var(--v2,#4E0C16));}
+.vart::after{content:"";position:absolute;inset:7px;border:1px solid rgba(243,226,185,.35);border-radius:6px;pointer-events:none}
+.vart .b{font-size:13px;letter-spacing:3px;opacity:.92;font-weight:500}
+.vart .v{font-family:'Noto Serif TC',serif;font-size:30px;font-weight:900;letter-spacing:1px;color:var(--vt,#EFD79A);line-height:1.15}
+.vart .k{font-size:11px;letter-spacing:5px;opacity:.75}
+.vart .seal{position:absolute;right:12px;bottom:9px;font-size:10px;letter-spacing:1px;border:1px solid rgba(243,226,185,.5);border-radius:4px;padding:0 5px;opacity:.8}
+.prod-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:9px;flex:1}
+.prod-name{font-size:15.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px;cursor:pointer;line-height:1.4}
+.prod-name:hover{color:var(--wine)}
+.prod-name .info{flex:none;width:17px;height:17px;border-radius:99px;background:#B7AD9E;color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+.price-line{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.price-line .plabel{font-size:13px;color:var(--muted)}
+.price-line .pnow{font-size:19px;font-weight:900;color:var(--wine-bright);white-space:nowrap}
+.price-line .porig{font-size:13.5px;color:#B3A897;text-decoration:line-through;margin-right:7px;font-weight:400}
+.price-line .per{font-size:12.5px;font-weight:500;color:var(--muted)}
+.ladder{display:flex;flex-direction:column;gap:5px}
+.lad-row{display:flex;align-items:center;justify-content:space-between;background:#FAF6EE;border:1px solid #F0E8D8;border-radius:8px;padding:5px 10px;font-size:13px;cursor:pointer;transition:.15s}
+.lad-row:hover{border-color:var(--gold);background:var(--gold-pale)}
+.lad-row.hit{border-color:var(--orange);background:var(--orange-bg);box-shadow:0 0 0 1px var(--orange) inset}
+.lad-row .lq{font-weight:700;color:#6B6155}
+.lad-row .lp{color:var(--wine-bright);font-weight:700}
+.lad-row .lo{color:#B3A897;text-decoration:line-through;font-weight:400;margin-right:6px;font-size:12px}
+.qty-row{display:flex;align-items:center;gap:8px;margin-top:auto}
+.qty-row .qlabel{font-size:13px;color:var(--muted);flex:none}
+.stepper{display:flex;align-items:center;gap:6px;margin-left:auto}
+.st-btn{width:30px;height:30px;border-radius:99px;border:1.5px solid #D8CFC0;color:#6B6155;font-size:16px;display:inline-flex;align-items:center;justify-content:center;background:#fff;transition:.15s;line-height:1}
+.st-btn:hover{border-color:var(--wine);color:var(--wine)}
+.qty-in{width:64px;height:34px;text-align:center;border:1.5px solid #D8CFC0;border-radius:8px;font-weight:700;font-size:15px}
+.qty-in:focus{outline:none;border-color:var(--gold)}
+.add-btn{width:100%;background:var(--wine);color:#fff;font-weight:700;font-size:15px;border-radius:9px;padding:11px 0;letter-spacing:2px;transition:.15s}
+.add-btn:hover{background:var(--wine-d)}
+.prod-note{background:var(--orange-bg);color:#B4691C;font-size:12px;text-align:center;padding:6px 8px;margin:0 -14px -15px;margin-top:2px}
+.empty-hint{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 0;font-size:15px}
+
+/* ============ 購物車 ============ */
+.cart-aside{position:sticky;top:150px}
+.cart-box{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(231,223,210,.7);overflow:hidden}
+.cart-head{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--line);font-weight:700;font-size:16px}
+.cart-head .cic{color:var(--gold)}
+.cart-head .n{margin-left:auto;font-size:12.5px;color:var(--muted);font-weight:500}
+.cart-empty{padding:42px 10px;text-align:center;color:#B7AD9E;font-size:14.5px}
+.cart-empty .big{font-size:30px;margin-top:8px;opacity:.5}
+.cart-items{max-height:300px;overflow:auto}
+.ci{padding:12px 16px;border-bottom:1px dashed var(--line)}
+.ci .t{display:flex;justify-content:space-between;gap:8px;font-size:14.5px;font-weight:700}
+.ci .meta{font-size:12.5px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px}
+.ci .meta .orig-strike{text-decoration:line-through}
+.ci .row2{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.ci .amt{font-weight:900;font-size:15.5px}
+.ci .amt.disc{color:var(--orange)}
+.ci .rm{font-size:12.5px;color:#B7AD9E;transition:.15s}
+.ci .rm:hover{color:var(--err)}
+.promo-tg{width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 16px;font-size:14px;font-weight:700;color:#6B5E4E;background:#FBF8F1;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.promo-tg .ar{transition:.2s;font-size:12px;color:var(--gold)}
+.promo-tg.open .ar{transform:rotate(90deg)}
+.promo-tg .pc{color:var(--orange);margin-left:4px}
+.promo-list{padding:10px 14px;display:flex;flex-direction:column;gap:7px;background:#FBF8F1}
+.promo-badge{background:var(--orange);color:#fff;font-size:12.5px;border-radius:8px;padding:7px 11px;line-height:1.5;box-shadow:0 2px 6px rgba(224,123,31,.3)}
+.save-bar{margin:12px 14px 0;background:var(--orange-bg);border:1px dashed #EFC08A;color:#C06A14;font-size:13.5px;font-weight:700;text-align:center;border-radius:8px;padding:7px 8px}
+.cart-total{display:flex;align-items:baseline;justify-content:space-between;padding:12px 16px 4px}
+.cart-total .lb{font-size:14.5px;font-weight:700}
+.cart-total .v{font-family:'Noto Serif TC',serif;font-size:27px;font-weight:900;color:var(--wine-bright)}
+.pay-hint{margin:9px 14px;background:var(--info-bg);color:var(--info-ink);font-size:12.5px;border-radius:8px;padding:7px 11px;display:flex;gap:7px;align-items:flex-start;line-height:1.55}
+.min-warn{margin:0 14px 6px;color:var(--err);font-size:12.5px;text-align:center;font-weight:500}
+.cta-btn{display:block;margin:6px 14px 16px;width:calc(100% - 28px);background:linear-gradient(135deg,#C23A46,var(--wine));color:#fff;font-size:16px;font-weight:900;letter-spacing:3px;border-radius:10px;padding:13px 0;box-shadow:0 6px 16px rgba(138,27,41,.35);transition:.18s;text-align:center}
+.cta-btn:hover{filter:brightness(1.07)}
+.cta-btn:disabled{background:#E5B9BD;box-shadow:none;cursor:not-allowed;letter-spacing:2px}
+.cart-fab{display:none}
+</style>
+<style>
+/* ============ 面板/表單 ============ */
+.panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(231,223,210,.7);padding:22px 24px;margin-bottom:18px}
+.panel-title{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin-bottom:16px}
+.panel-title::before{content:"";width:5px;height:19px;border-radius:3px;background:var(--gold)}
+.panel-title .opt{font-size:12.5px;color:var(--muted);font-weight:400}
+.panel-title .lock-chip{margin-left:auto;font-size:12.5px;background:var(--cream);color:#6B6155;border-radius:99px;padding:2px 12px;font-weight:500}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+.form-grid .full{grid-column:1/-1}
+.field label{display:block;font-size:13.5px;font-weight:700;color:#55504A;margin-bottom:6px}
+.field label .req{color:var(--err);margin-right:2px}
+.field label .why{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
+.in,.sel,textarea.in{width:100%;height:44px;border:1.5px solid #DCD3C4;border-radius:9px;padding:0 13px;background:#fff;transition:.15s}
+textarea.in{height:auto;padding:10px 13px;resize:vertical}
+.in:focus,.sel:focus,textarea.in:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,141,74,.14)}
+.in[readonly]{background:#F4EFE6;color:#7A7166;border-style:dashed}
+.in.err,.sel.err{border-color:var(--err);box-shadow:0 0 0 3px rgba(192,57,43,.12)}
+.in.okv{border-color:var(--ok)}
+.sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4L10 1' stroke='%238A8178' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
+.help{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+.help.gray{color:#A79D8F}
+.fmsg{font-size:12.5px;margin-top:5px;display:none;line-height:1.5}
+.fmsg.show{display:block}
+.fmsg.bad{color:var(--err)}
+.fmsg.good{color:var(--ok)}
+.tel-3{display:flex;gap:8px;align-items:center}
+.tel-3 .in{text-align:center}
+.tel-3 .t1{width:76px;flex:none}
+.tel-3 .t2{flex:1;min-width:0}
+.tel-3 .t3{width:86px;flex:none}
+.tel-3 .sep{color:#B7AD9E;flex:none}
+.mob-wrap{display:flex;align-items:stretch}
+.mob-wrap .cc{flex:none;display:flex;align-items:center;border:1.5px solid #DCD3C4;border-right:none;border-radius:9px 0 0 9px;background:#F4EFE6;color:#6B6155;font-size:14px;padding:0 11px;font-weight:700}
+.mob-wrap .in{border-radius:0 9px 9px 0}
+.id-switch{display:inline-flex;background:#F1EADC;border-radius:11px;padding:4px;gap:4px;margin-bottom:4px}
+.id-btn{padding:9px 22px;border-radius:8px;font-size:14.5px;font-weight:700;color:#7A7166;transition:.15s}
+.id-btn.on{background:var(--wine);color:#fff;box-shadow:0 3px 8px rgba(138,27,41,.3)}
+.check-row{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.6;cursor:pointer;padding:2px 0}
+.check-row input{appearance:none;-webkit-appearance:none;width:20px;height:20px;margin-top:1px;flex:none;cursor:pointer;
+  border:1.5px solid #C9BFAE;border-radius:6px;background:#fff;display:inline-grid;place-content:center;
+  transition:border-color .15s,background .15s,box-shadow .15s}
+.check-row input::before{content:"";width:12px;height:12px;background:#fff;transform:scale(0);transition:transform .15s ease-out;
+  clip-path:polygon(14% 44%,0 65%,50% 100%,100% 16%,80% 0%,43% 62%)}
+.check-row:hover input{border-color:var(--gold)}
+.check-row input:checked{background:var(--wine);border-color:var(--wine);box-shadow:0 2px 6px rgba(138,27,41,.25)}
+.check-row input:checked::before{transform:scale(1)}
+.check-row input:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(176,141,74,.28)}
+.check-row.pol{background:#FBF8F1;border:1px solid var(--line);border-radius:9px;padding:11px 13px;transition:border-color .15s,background .15s,box-shadow .15s}
+.check-row.pol:hover{border-color:var(--gold)}
+.check-row.pol:has(input:checked){border-color:var(--wine);background:#FDF9F5;box-shadow:0 0 0 1px var(--wine) inset}
+.radio-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.rcard{border:1.5px solid var(--line);border-radius:11px;padding:15px 16px;cursor:pointer;background:#fff;transition:.15s;position:relative}
+.rcard:hover{border-color:var(--gold)}
+.rcard.on{border-color:var(--wine);box-shadow:0 0 0 1.5px var(--wine) inset;background:#FDF9F5}
+.rcard.disabled{opacity:.5;cursor:not-allowed;background:#F7F3EA}
+.rcard .rt{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:8px}
+.rcard .rt .ic{color:var(--gold);font-size:17px}
+.rcard .rd{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.55}
+.rcard .badge-tr{position:absolute;top:-9px;right:12px;background:var(--gold);color:#fff;font-size:11px;font-weight:700;border-radius:99px;padding:1px 10px}
+.rcard .rwarn{margin-top:6px;font-size:12px;color:var(--err);font-weight:500}
+.fold-link{color:var(--wine);font-size:13.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:500}
+.fold-link:hover{text-decoration:underline}
+.fold-link .ar{font-size:11px;transition:.2s}
+.fold-link.open .ar{transform:rotate(90deg)}
+.fold-body{margin-top:10px;background:#FBF8F1;border:1px dashed var(--line);border-radius:10px;padding:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;font-weight:700;transition:.16s;white-space:nowrap}
+.btn-main{background:var(--wine);color:#fff;padding:12px 34px;font-size:15.5px;letter-spacing:2px}
+.btn-main:hover{background:var(--wine-d)}
+.btn-main:disabled{background:#D9C2C5;cursor:not-allowed}
+.btn-sub{border:1.5px solid #CFC6B8;color:#6B6155;padding:11px 26px;font-size:15px;background:#fff}
+.btn-sub:hover{border-color:var(--wine);color:var(--wine)}
+.btn-sm{padding:7px 16px;font-size:13.5px;border-radius:8px}
+.btn-gold{background:var(--gold);color:#fff;padding:10px 22px;font-size:14px}
+.btn-gold:hover{background:#9A7A3C}
+.btn-line{background:#06C755;color:#fff;padding:12px 28px;font-size:15px;width:100%}
+.btn-line:hover{background:#05B34C}
+.btn-danger-o{border:1.5px solid #E4B6B0;color:var(--err);background:#fff;padding:9px 20px;font-size:14px}
+.btn-danger-o:hover{background:#FDF3F1;border-color:var(--err)}
+.form-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:22px;flex-wrap:wrap}
+.line-ic{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:#06C755;color:#fff;font-size:9px;font-weight:900;letter-spacing:0;flex:none}
+
+/* ============ 登入/註冊 ============ */
+.auth-wrap{max-width:460px;margin:34px auto 0}
+.auth-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow-lg);border:1px solid rgba(231,223,210,.8);overflow:hidden}
+.auth-tabs{display:flex;border-bottom:1px solid var(--line)}
+.auth-tab{flex:1;text-align:center;padding:15px 0;font-size:16px;font-weight:700;color:#A69C8D;background:#FBF8F1;transition:.15s}
+.auth-tab.on{color:var(--wine);background:#fff;box-shadow:inset 0 -3px 0 var(--wine)}
+.auth-body{padding:26px 28px 30px;display:flex;flex-direction:column;gap:15px}
+.or-sep{display:flex;align-items:center;gap:12px;color:#B7AD9E;font-size:12.5px}
+.or-sep::before,.or-sep::after{content:"";height:1px;background:var(--line);flex:1}
+.pw-rules{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted);background:#FBF8F1;border-radius:9px;padding:9px 12px}
+.pw-rules .r::before{content:"○ ";color:#C9BFAE}
+.pw-rules .r.ok{color:var(--ok)}
+.pw-rules .r.ok::before{content:"✓ ";color:var(--ok)}
+.demo-hint{background:#FFF9E8;border:1px dashed #E3C875;border-radius:9px;padding:9px 13px;font-size:12.5px;color:#8A6D1F;line-height:1.6}
+.auth-links{display:flex;justify-content:space-between;align-items:center;font-size:13.5px}
+.code-row{display:flex;gap:10px}
+.code-row .in{flex:1;letter-spacing:6px;text-align:center;font-weight:700;font-size:18px}
+.count-btn{flex:none;border:1.5px solid var(--gold);color:var(--gold);border-radius:9px;padding:0 16px;font-size:13.5px;font-weight:700}
+.count-btn:disabled{border-color:#D8CFC0;color:#B7AD9E;cursor:not-allowed}
+.lock-note{background:#FDF3F1;border:1px solid #F0CCC5;color:var(--err);border-radius:9px;padding:10px 13px;font-size:13.5px;line-height:1.6}
+
+/* ============ 訂單查詢 ============ */
+.filter-bar{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.filter-bar .field{min-width:150px}
+.filter-bar .field.grow{flex:1;min-width:230px}
+.date-pair{display:flex;align-items:center;gap:8px}
+.date-pair .in{width:145px}
+.order-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(231,223,210,.7);padding:16px 20px;margin-bottom:13px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;position:relative;transition:.15s}
+.order-card:hover{box-shadow:0 8px 22px rgba(78,12,22,.12)}
+.order-card .oc-main{flex:1;min-width:240px;cursor:pointer}
+.order-card .oid{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.order-card .oname{font-size:15.5px;font-weight:700;margin:3px 0 2px;line-height:1.5}
+.order-card .odate{font-size:12.5px;color:var(--muted)}
+.oc-amt{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:900;color:var(--ink);min-width:110px;text-align:right}
+.oc-side{display:flex;flex-direction:column;align-items:flex-end;gap:7px;min-width:150px}
+.paynow-btn{background:var(--wine-bright);color:#fff;border-radius:8px;padding:8px 18px;font-size:13.5px;font-weight:700}
+.paynow-btn:hover{background:var(--wine)}
+.deadline{font-size:11.5px;color:var(--err)}
+.st-badge{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 12px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.st-badge::before{content:"";width:7px;height:7px;border-radius:99px;background:currentColor}
+.st-待付款{background:#FDF3DC;color:#B07A10}
+.st-待配送{background:#E7EEF9;color:#3563A8}
+.st-配送中{background:#E4F2F0;color:#1F7A6D}
+.st-已完成{background:#E7F2E5;color:#2E7D46}
+.st-未簽收{background:#FCEBE2;color:#C05621}
+.st-已取消{background:#EFECE6;color:#8A8178}
+.ret-flag{position:absolute;top:-1px;left:18px;background:var(--orange);color:#fff;font-size:11px;font-weight:700;border-radius:0 0 7px 7px;padding:2px 10px;box-shadow:0 2px 5px rgba(224,123,31,.35)}
+.pager{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;flex-wrap:wrap}
+.pg-btn{min-width:34px;height:34px;border-radius:8px;border:1.5px solid var(--line);background:#fff;font-size:13.5px;color:#6B6155;display:inline-flex;align-items:center;justify-content:center;padding:0 8px}
+.pg-btn.on{background:var(--wine);border-color:var(--wine);color:#fff;font-weight:700}
+.pg-size{margin-left:14px;display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+.pg-size .sel{height:34px;width:auto;padding:0 30px 0 10px;font-size:13px}
+
+/* ============ 訂單詳情/手風琴 ============ */
+.acc{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(231,223,210,.7);margin-bottom:13px;overflow:hidden}
+.acc-h{width:100%;display:flex;align-items:center;gap:11px;padding:15px 20px;font-size:15.5px;font-weight:700;text-align:left}
+.acc-h:hover{background:#FDFBF6}
+.acc-h .ic{color:var(--gold);flex:none}
+.acc-h .ar{margin-left:auto;color:#B7AD9E;font-size:12px;transition:.2s;flex:none}
+.acc.open .acc-h .ar{transform:rotate(180deg)}
+.acc-b{display:none;padding:4px 20px 19px;border-top:1px dashed var(--line)}
+.acc.open .acc-b{display:block}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:9px 14px;font-size:14.5px;padding-top:12px}
+.kv .k{color:var(--muted)}
+.kv .v{font-weight:500;word-break:break-all}
+.kv .v b.money{font-family:'Noto Serif TC',serif;font-size:18px;color:var(--wine-bright)}
+.tl{list-style:none;padding:14px 0 0 6px}
+.tl li{position:relative;padding:0 0 20px 24px;border-left:2px solid #E8E0D1;margin-left:6px}
+.tl li:last-child{border-left-color:transparent;padding-bottom:4px}
+.tl li::before{content:"";position:absolute;left:-7px;top:2px;width:12px;height:12px;border-radius:99px;background:#D8CFC0;border:2.5px solid #fff;box-shadow:0 0 0 1.5px #D8CFC0}
+.tl li.now::before{background:var(--wine);box-shadow:0 0 0 1.5px var(--wine)}
+.tl .tt{font-weight:700;font-size:14.5px}
+.tl .td{font-size:12.5px;color:var(--muted);margin-top:1px}
+.tl .tx{font-size:13px;color:#6B6155;margin-top:3px;background:#FBF8F1;border-radius:7px;padding:6px 10px;display:inline-block}
+.inv-tip{font-size:12.5px;color:var(--muted);background:#FBF8F1;border-radius:8px;padding:8px 12px;margin-top:10px;line-height:1.6}
+
+/* ============ 通用彈窗 ============ */
+.ovl{position:fixed;inset:0;background:rgba(36,27,22,.55);backdrop-filter:blur(2px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadein .18s}
+.dlg{background:#fff;border-radius:16px;box-shadow:var(--shadow-lg);width:100%;max-width:520px;max-height:88vh;overflow:auto;position:relative;animation:pop .2s}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+.dlg-h{display:flex;align-items:center;gap:10px;padding:17px 22px;border-bottom:1px solid var(--line);font-size:16.5px;font-weight:700;position:sticky;top:0;background:#fff;z-index:2}
+.dlg-h .x{margin-left:auto;width:32px;height:32px;border-radius:99px;color:#A69C8D;font-size:17px;display:flex;align-items:center;justify-content:center}
+.dlg-h .x:hover{background:var(--cream);color:var(--ink)}
+.dlg-b{padding:20px 22px}
+.dlg-f{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px 20px}
+.dlg.wide{max-width:760px}
+.dlg.prod{max-width:680px}
+.prod-hero{aspect-ratio:23/9;border-radius:12px;margin-bottom:18px}
+.spec-title{font-size:14.5px;font-weight:900;color:var(--wine);margin:16px 0 8px;letter-spacing:1px}
+.spec-list{font-size:14px;color:#55504A;line-height:1.9;padding-left:20px}
+.board-dlg{max-width:min(560px,calc((100vh - 150px)*14/15));background:transparent;box-shadow:none;overflow:visible}
+.board-img{border-radius:16px;aspect-ratio:14/15;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#F3E2B9;text-align:center;padding:34px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;
+  background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.04) 0 2px,transparent 2px 10px),linear-gradient(150deg,#7E1523,#3C0810)}
+.board-img::after{content:"";position:absolute;inset:13px;border:1.5px solid rgba(243,226,185,.4);border-radius:10px;pointer-events:none}
+.board-img .b1{font-size:13px;letter-spacing:6px;opacity:.85}
+.board-img .b2{font-family:'Noto Serif TC',serif;font-size:34px;font-weight:900;line-height:1.4;color:#EFD79A}
+.board-img .b3{font-size:15px;opacity:.9;line-height:1.8}
+.board-img .b4{border:1px solid rgba(243,226,185,.6);border-radius:99px;padding:6px 22px;font-size:13.5px;letter-spacing:2px}
+.board-ctl{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px;color:#fff}
+.bd-btn{width:38px;height:38px;border-radius:99px;background:rgba(255,255,255,.18);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.bd-btn:hover{background:rgba(255,255,255,.32)}
+.board-cnt{font-size:14px;letter-spacing:2px}
+.board-x{position:absolute;top:-14px;right:-14px;width:38px;height:38px;border-radius:99px;background:#fff;color:var(--ink);font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-lg);z-index:2}
+.board-skip{align-items:center;margin-left:8px;padding:0;color:#F6E8D8;font-size:13.5px;text-shadow:0 1px 4px rgba(0,0,0,.35);white-space:nowrap}
+.board-skip input{margin-top:0}
+
+/* ============ 行事曆 ============ */
+.cal-pop{position:absolute;z-index:120;background:#fff;border-radius:14px;box-shadow:var(--shadow-lg);border:1px solid var(--line);padding:14px;width:308px}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-h .m{font-weight:900;font-size:15px;letter-spacing:1px}
+.cal-nav{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);color:#6B6155;display:flex;align-items:center;justify-content:center}
+.cal-nav:disabled{opacity:.3;cursor:not-allowed}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.cal-g .wd{font-size:11.5px;color:var(--muted);padding:4px 0;font-weight:700}
+.cal-d{height:36px;border-radius:8px;font-size:13.5px;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.cal-d:hover:not(:disabled){background:var(--gold-pale)}
+.cal-d:disabled{color:#CFC6B8;cursor:not-allowed;text-decoration:line-through;text-decoration-color:rgba(207,198,184,.6)}
+.cal-d.pick{background:var(--wine);color:#fff;font-weight:700}
+.cal-note{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.6;border-top:1px dashed var(--line);padding-top:8px}
+
+/* ============ 模擬銀行頁 ============ */
+.bank-stage{background:#EDEFF2;min-height:70vh;padding:40px 20px}
+.bank-card{max-width:480px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(30,40,60,.14);overflow:hidden;font-family:Arial,'Noto Sans TC',sans-serif}
+.bank-h{background:#123C69;color:#fff;padding:16px 22px;display:flex;align-items:center;gap:10px}
+.bank-h .blogo{font-weight:900;font-size:17px;letter-spacing:1px}
+.bank-h .sim{margin-left:auto;font-size:11px;background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px}
+.bank-b{padding:24px 26px;display:flex;flex-direction:column;gap:14px}
+.bank-amt{background:#F2F6FA;border-radius:9px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#456}
+.bank-amt b{font-size:21px;color:#123C69}
+.bank-b .in{border-color:#C6CFDA;border-radius:7px}
+.bank-btn{background:#1B5EA8;color:#fff;border-radius:7px;padding:13px 0;font-weight:700;font-size:15.5px;width:100%}
+.bank-btn:hover{background:#123C69}
+.bank-cancel{text-align:center;font-size:13px;color:#789;cursor:pointer}
+.bank-otp-note{font-size:13px;color:#567;background:#F2F6FA;border-radius:8px;padding:10px 14px;line-height:1.7}
+.result-hero{max-width:620px;margin:40px auto 0;background:#fff;border-radius:18px;box-shadow:var(--shadow);border:1px solid rgba(231,223,210,.7);padding:38px 34px;text-align:center}
+.result-hero .ric{width:74px;height:74px;border-radius:99px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:34px}
+.result-hero .ric.ok{background:#E7F2E5;color:var(--ok)}
+.result-hero .ric.wait{background:#FDF3DC;color:#B07A10}
+.result-hero h2{font-family:'Noto Serif TC',serif;font-size:24px;color:var(--ink);margin-bottom:8px}
+.result-hero .rsub{color:var(--muted);font-size:14.5px;line-height:1.8}
+.vac-box{margin:20px auto 4px;max-width:430px;background:#FBF8F1;border:1.5px dashed var(--gold);border-radius:12px;padding:18px 20px;text-align:left}
+.vac-box .kv{grid-template-columns:110px 1fr;padding-top:0}
+.vac-box .vv{font-family:'Noto Serif TC',serif;font-weight:900;font-size:19px;letter-spacing:1px;color:var(--wine)}
+.notice-list{max-width:430px;margin:14px auto 0;text-align:left;font-size:13px;color:var(--muted);line-height:1.9;padding-left:20px}
+
+/* ============ FAQ ============ */
+.faq-cats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.faq-cat{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:9px 19px;font-size:14px;font-weight:700;background:#fff;border:1.5px solid var(--line);color:#5C544A;transition:.15s}
+.faq-cat.on{background:var(--wine);border-color:var(--wine);color:#fff}
+.faq-cat .n{font-size:12px;opacity:.7;font-weight:500}
+.faq-item{background:#fff;border:1px solid rgba(231,223,210,.8);border-radius:11px;margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden}
+.faq-q{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:15px 18px;font-size:15px;font-weight:700}
+.faq-q .qic{flex:none;width:24px;height:24px;border-radius:99px;background:var(--wine);color:#fff;font-size:12px;font-weight:900;display:inline-flex;align-items:center;justify-content:center}
+.faq-q .ar{margin-left:auto;color:#B7AD9E;font-size:12px;transition:.2s}
+.faq-item.open .faq-q .ar{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 18px 16px 54px;color:#55504A;font-size:14.5px;line-height:1.85}
+.faq-item.open .faq-a{display:block}
+.faq-foot{margin-top:24px;background:#FBF8F1;border:1px dashed var(--gold);border-radius:11px;padding:15px 18px;text-align:center;font-size:14.5px;color:#6B5E4E}
+
+/* ============ 退換貨 ============ */
+.entry-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:860px}
+.entry-card{background:#fff;border-radius:14px;border:1.5px solid var(--line);box-shadow:var(--shadow);padding:26px;cursor:pointer;transition:.18s;display:flex;flex-direction:column;gap:10px}
+.entry-card:hover{border-color:var(--wine);transform:translateY(-3px);box-shadow:0 10px 26px rgba(78,12,22,.14)}
+.entry-card .eic{width:52px;height:52px;border-radius:13px;background:var(--gold-pale);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:24px}
+.entry-card h3{font-size:17px;color:var(--ink)}
+.entry-card .who{font-size:13px;color:var(--wine);background:#FDF4F0;border-radius:8px;padding:7px 11px;line-height:1.6}
+.entry-card p{font-size:13.5px;color:var(--muted);line-height:1.7}
+.entry-card .go{margin-top:auto;color:var(--wine);font-weight:700;font-size:14px}
+.photo-grid{display:flex;gap:10px;flex-wrap:wrap}
+.photo-add{width:86px;height:86px;border:1.5px dashed #CFC6B8;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#A69C8D;font-size:12px;background:#FBF8F1}
+.photo-add:hover{border-color:var(--gold);color:var(--gold)}
+.photo-add .pl{font-size:20px;line-height:1}
+.photo-th{width:86px;height:86px;border-radius:11px;position:relative;overflow:hidden;border:1px solid var(--line);background-size:cover;background-position:center}
+.photo-th .del{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:99px;background:rgba(36,27,22,.65);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+.photo-th.book::after{content:"";position:absolute;inset:0;background-image:var(--wm);opacity:.9}
+.step-flow{display:flex;gap:0;justify-content:center;margin:22px 0 6px;flex-wrap:wrap}
+.sf{display:flex;flex-direction:column;align-items:center;gap:6px;width:112px;position:relative;font-size:12.5px;color:var(--muted);text-align:center}
+.sf::before{content:"";position:absolute;top:14px;left:calc(50% + 16px);width:calc(100% - 32px);height:2px;background:#E3DACB}
+.sf:last-child::before{display:none}
+.sf .n{width:30px;height:30px;border-radius:99px;background:#F1EADC;color:#A69C8D;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px}
+.sf.on .n{background:var(--gold);color:#fff}
+.sf.on{color:var(--gold);font-weight:700}
+
+/* ============ LINE 手機預覽 ============ */
+.phone{width:330px;max-width:100%;margin:0 auto;background:#8CABD8;border-radius:26px;border:8px solid #241B16;overflow:hidden}
+.ph-head{background:#273246;color:#fff;padding:11px 16px;display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700}
+.ph-body{padding:14px 12px;display:flex;flex-direction:column;gap:12px;max-height:430px;overflow:auto}
+.ph-msg{display:flex;gap:8px;align-items:flex-start}
+.ph-av{width:34px;height:34px;border-radius:99px;background:var(--wine);color:#F3E2B9;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;font-family:'Noto Serif TC',serif}
+.ph-bub{background:#fff;border-radius:4px 14px 14px 14px;padding:11px 13px;font-size:12.5px;line-height:1.65;max-width:230px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.ph-bub .bt{font-weight:900;font-size:13.5px;margin-bottom:3px}
+.ph-bub .bo{color:#888;font-size:11.5px}
+.ph-bub .lk{display:block;margin-top:8px;border-top:1px solid #EEE;padding-top:7px;color:#1F6FEB;font-weight:700;text-align:center}
+.ph-time{font-size:10px;color:#5A718F;align-self:flex-end;flex:none;margin-bottom:2px}
+
+/* ============ Toast ============ */
+#toasts{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:9px;align-items:center;pointer-events:none;width:min(92vw,560px)}
+.toast{background:#2E2A26;color:#fff;border-radius:11px;padding:11px 20px;font-size:14px;box-shadow:var(--shadow-lg);animation:pop .2s;line-height:1.6;text-align:center;pointer-events:auto}
+.toast.err{background:#8E2B20}
+.toast.ok{background:#2E6B40}
+.toast.line{background:#06C755;font-weight:700}
+
+/* ============ Footer ============ */
+.site-foot{background:#241B16;color:#B8A99C;margin-top:60px}
+.site-foot .cols{display:grid;grid-template-columns:1.3fr 1.2fr 1fr 1fr;gap:30px;padding:42px 0 34px}
+.site-foot h4{color:var(--gold-l);font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:8px;margin-bottom:15px}
+.site-foot h4::before{content:"";width:4px;height:15px;background:var(--gold);border-radius:2px}
+.site-foot ul{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:13.5px}
+.site-foot a{color:#B8A99C}
+.site-foot a:hover{color:var(--gold-l)}
+.site-foot .kvf{display:grid;grid-template-columns:76px 1fr;gap:7px 10px;font-size:13.5px}
+.site-foot .kvf .k{color:#7A6B5E}
+.foot-bot{border-top:1px solid #3A2E26;padding:15px 0}
+.foot-bot .container{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:13px}
+.foot-bot .cop{margin:0 auto;color:#7A6B5E}
+.foot-ret{border:1.5px solid var(--gold);color:var(--gold-l);border-radius:99px;padding:7px 18px;font-size:13.5px;font-weight:700;display:inline-flex;gap:7px;align-items:center}
+.foot-ret:hover{background:var(--gold);color:#241B16;text-decoration:none}
+
+/* ============ Demo 控制台 ============ */
+#demoFab{position:fixed;left:18px;bottom:18px;z-index:90;width:52px;height:52px;border-radius:99px;background:#241B16;color:var(--gold-l);font-size:12px;font-weight:900;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;letter-spacing:1px;border:1.5px solid #4A3B2E}
+#demoFab:hover{background:#38291F}
+#demoPanel{position:fixed;left:18px;bottom:80px;z-index:90;width:288px;background:#241B16;border:1px solid #4A3B2E;border-radius:16px;box-shadow:var(--shadow-lg);color:#D9CDBC;padding:16px;display:none}
+#demoPanel.open{display:block}
+#demoPanel h5{color:var(--gold-l);font-size:13px;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+#demoPanel h5 small{color:#7A6B5E;letter-spacing:0;font-weight:400}
+#demoPanel .grp{font-size:11px;color:#7A6B5E;margin:11px 0 6px;letter-spacing:1px}
+#demoPanel .d-btn{display:block;width:100%;text-align:left;background:#38291F;border:1px solid #4A3B2E;border-radius:9px;padding:8px 12px;font-size:12.5px;margin-bottom:6px;color:#E4D9C6;transition:.15s}
+#demoPanel .d-btn:hover{border-color:var(--gold);color:var(--gold-l)}
+#demoPanel .d-row{display:flex;gap:6px}
+#demoPanel .d-row .d-btn{flex:1;text-align:center}
+
+/* ============ RWD ============ */
+@media (max-width:1080px){
+  .shop-grid{grid-template-columns:1fr}
+  .cart-aside{position:static}
+  .cart-aside.dock{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:80;padding:0 10px 10px}
+  .cart-aside.dock .cart-box{box-shadow:0 -8px 30px rgba(36,27,22,.25);border-radius:16px 16px 12px 12px;max-height:72vh;overflow:auto}
+  .cart-aside.dock .cart-items{max-height:170px}
+  .cart-collapse .cart-items,.cart-collapse .promo-tg,.cart-collapse .promo-list,.cart-collapse .save-bar,.cart-collapse .pay-hint,.cart-collapse .cart-empty{display:none}
+  .cart-fab{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12.5px;color:var(--wine);font-weight:700}
+  .site-foot .cols{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .container{padding:0 14px}
+  .nav{display:none;position:fixed;top:0;right:0;bottom:0;width:min(78vw,320px);background:#fff;z-index:110;flex-direction:column;align-items:stretch;gap:2px;padding:64px 16px 20px;box-shadow:-10px 0 40px rgba(0,0,0,.2);margin:0;overflow:auto}
+  .nav.open{display:flex}
+  .nav .nav-link{padding:13px 14px;border-radius:10px;font-size:15.5px}
+  .nav .who{padding:0 14px 10px;border-bottom:1px solid var(--line);margin:0 0 8px}
+  .nav-drop{position:static;display:block;box-shadow:none;border:none;padding:0 0 0 18px;min-width:0;visibility:visible;opacity:1;transform:none;transition:none}
+  .nav-drop::before{display:none}
+  .hamb{display:flex}
+  .steps{gap:0;padding:13px 4px}
+  .step .lbl{font-size:12px}
+  .step .num{width:24px;height:24px;font-size:12px}
+  .step-line{margin:0 6px;max-width:40px}
+  .form-grid{grid-template-columns:1fr}
+  .entry-cards{grid-template-columns:1fr}
+  .prod-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .kv{grid-template-columns:104px 1fr;font-size:13.5px}
+  .page-title{font-size:23px}
+  .oc-amt,.oc-side{min-width:0}
+  .filter-bar .field{min-width:46%}
+  .proto-strip .container{gap:8px;font-size:11.5px}
+  .marquee .msg{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ Prototype 頂條 ============ -->
+<div class="proto-strip">
+  <div class="container">
+    <span><b>PROTOTYPE</b> 王品集團紙本票券訂購網 · 需求討論版 v1.1(2026-07-17)</span>
+    <span class="sp"></span>
+    <span style="opacity:.75">僅供內部會議討論,非正式畫面,資料皆為示意</span>
+    <button class="proto-btn" data-action="toggle-req">需求對照標籤</button>
+  </div>
+</div>
+
+<!-- ============ Header ============ -->
+<header class="site-head" data-req="2.1 版面結構-Header">
+  <div class="container">
+    <div class="logo" data-action="nav" data-to="#/shop">
+      <span class="l1">王品</span><span class="l2">集團</span><small>紙本票券訂購網</small>
+    </div>
+    <button class="hamb" data-action="toggle-menu" aria-label="開啟選單">☰</button>
+    <nav class="nav" id="mainNav"><!-- JS render --></nav>
+  </div>
+</header>
+
+<!-- ============ 一般公告(跑馬燈) ============ -->
+<div class="marquee" id="marqueeBar" data-req="2.1 公告欄-一般公告">
+  <div class="container">
+    <span style="flex:none">📣</span><span class="tagchip">公告</span>
+    <span class="msg" id="mqMsg"></span>
+    <span class="mq-ctl">
+      <button class="mq-btn" data-action="mq-prev" aria-label="上一則">‹</button>
+      <span id="mqCnt">1 / 3</span>
+      <button class="mq-btn" data-action="mq-next" aria-label="下一則">›</button>
+      <button class="mq-btn" data-action="mq-close" aria-label="關閉公告">✕</button>
+    </span>
+  </div>
+</div>
+
+<main id="app"></main>
+
+<!-- ============ Footer ============ -->
+<footer class="site-foot" data-req="2.1 版面結構-底部">
+  <div class="container">
+    <div class="cols">
+      <div>
+        <h4>公司資訊</h4>
+        <div class="kvf">
+          <span class="k">公司名稱</span><span>王品餐飲股份有限公司</span>
+          <span class="k">授權代表人</span><span>陳正輝</span>
+          <span class="k">地址</span><span>台中市西區台灣大道二段218號29樓</span>
+        </div>
+      </div>
+      <div>
+        <h4>客服 / 聯絡方式</h4>
+        <ul>
+          <li><a href="javascript:void(0)" data-action="ext-line"><span class="line-ic">L</span>&nbsp;LINE @wowvoucher</a></li>
+          <li><a href="mailto:wowvoucher@wowprime.com">✉ wowvoucher@wowprime.com</a></li>
+          <li>🕘 週一至週五 09:00-12:00、13:00-17:30<br><span style="font-size:12px;color:#7A6B5E">(不含國定假日與連續假日)</span></li>
+        </ul>
+      </div>
+      <div>
+        <h4>平台政策</h4>
+        <ul>
+          <li><a href="javascript:void(0)" data-action="policy" data-key="privacy">隱私權條款</a></li>
+          <li><a href="javascript:void(0)" data-action="policy" data-key="tos">使用者服務條款</a></li>
+          <li><a href="https://www.wowprime.com" target="_blank" rel="noopener">關於王品 ↗</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>服務須知</h4>
+        <ul>
+          <li><a href="javascript:void(0)" data-action="policy" data-key="howbuy">購買流程(含產品 DM 下載)</a></li>
+          <li><a href="javascript:void(0)" data-action="policy" data-key="usage">票券使用說明</a></li>
+          <li><a href="javascript:void(0)" data-action="policy" data-key="return">退換貨規範</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <div class="container">
+      <a class="foot-ret" href="javascript:void(0)" data-action="nav" data-to="#/return" data-req="2.1 底部-退換貨申請">⇄ 退換貨申請</a>
+      <span class="cop">版權所有 © Wowprime.Corp. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 固定元素 -->
+<div id="toasts"></div>
+<div id="modalRoot"></div>
+<div id="calRoot"></div>
+<button id="demoFab" data-action="toggle-demo" title="示範控制台">示範</button>
+<div id="demoPanel">
+  <h5>示範控制台 <small>會議用</small></h5>
+  <div class="grp">登入狀態</div>
+  <div class="d-row">
+    <button class="d-btn" data-action="demo-login">一鍵登入</button>
+    <button class="d-btn" data-action="demo-logout">登出</button>
+  </div>
+  <div class="grp">情境示範</div>
+  <button class="d-btn" data-action="demo-cart">帶入示範購物車(觸發集團滿額 98 折)</button>
+  <button class="d-btn" data-action="demo-idle">模擬閒置 30 分鐘(強制登出)</button>
+  <button class="d-btn" data-action="line-preview">LINE OA 推播預覽(§8)</button>
+  <div class="grp">快速跳頁</div>
+  <div class="d-row">
+    <button class="d-btn" data-action="nav" data-to="#/shop">票券</button>
+    <button class="d-btn" data-action="nav" data-to="#/orders">訂單</button>
+    <button class="d-btn" data-action="nav" data-to="#/member">會員</button>
+  </div>
+  <div class="d-row">
+    <button class="d-btn" data-action="nav" data-to="#/return">退換貨</button>
+    <button class="d-btn" data-action="nav" data-to="#/faq">FAQ</button>
+    <button class="d-btn" data-action="nav" data-to="#/login">登入頁</button>
+  </div>
+  <div class="grp">其他</div>
+  <button class="d-btn" data-action="demo-reset">重置 Demo 資料</button>
+</div>
+<script>
+/* ================================================================
+   王品集團紙本票券訂購網 Prototype — 純前端示意,無後端
+   ================================================================ */
+'use strict';
+
+/* ---------- 小工具 ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const fm = n => '$' + Math.round(n).toLocaleString('en-US');
+const pad = n => String(n).padStart(2, '0');
+const fmtD = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fmtDT = d => `${fmtD(d)} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+const fmtDT2 = d => `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const toHalf = s => (s||'').replace(/[！-～]/g, c => String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/　/g,' ');
+
+function toast(msg, type='', ms=3400){
+  const t = document.createElement('div');
+  t.className = 'toast ' + type; t.innerHTML = msg;
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='.4s'; setTimeout(()=>t.remove(),400); }, ms);
+}
+function openModal(html, cls=''){ $('#modalRoot').innerHTML = `<div class="ovl" data-ovl><div class="dlg ${cls}">${html}</div></div>`; }
+function closeModal(){ $('#modalRoot').innerHTML=''; }
+
+/* ---------- 假日(2026 示意,供行事曆停選) ---------- */
+const HOLIDAYS = ['2026-01-01','2026-02-14','2026-02-15','2026-02-16','2026-02-17','2026-02-18','2026-02-19','2026-02-20','2026-02-27','2026-02-28','2026-03-01','2026-04-03','2026-04-04','2026-04-05','2026-04-06','2026-05-01','2026-06-19','2026-09-25','2026-09-28','2026-10-09','2026-10-10','2026-10-25','2026-10-26','2026-12-25'];
+const isHoliday = d => HOLIDAYS.includes(fmtD(d));
+const isWorkday = d => d.getDay()!==0 && d.getDay()!==6 && !isHoliday(d);
+function afterWorkdays(from, n){ let d = new Date(from), c = 0; while(c < n){ d = addDays(d,1); if(isWorkday(d)) c++; } return d; }
+function secondLastWorkday(base){
+  const y = base.getFullYear(), m = base.getMonth();
+  const days = []; const last = new Date(y, m+1, 0);
+  for(let i=1;i<=last.getDate();i++){ const d=new Date(y,m,i); if(isWorkday(d)) days.push(d); }
+  return days.length>=2 ? days[days.length-2] : last;
+}
+
+/* ---------- 縣市/行政區(本島,行政區為節選示意) ---------- */
+const CITIES = {
+  '基隆市':['仁愛區','中正區','信義區','安樂區'],
+  '台北市':['中正區','大同區','中山區','松山區','大安區','萬華區','信義區','士林區','北投區','內湖區','南港區','文山區'],
+  '新北市':['板橋區','三重區','中和區','永和區','新莊區','新店區','土城區','蘆洲區','汐止區','林口區','淡水區'],
+  '桃園市':['桃園區','中壢區','平鎮區','八德區','楊梅區','蘆竹區','龜山區'],
+  '新竹市':['東區','北區','香山區'],
+  '新竹縣':['竹北市','竹東鎮','湖口鄉','新豐鄉'],
+  '苗栗縣':['苗栗市','頭份市','竹南鎮'],
+  '台中市':['中區','東區','南區','西區','北區','北屯區','西屯區','南屯區','太平區','大里區','豐原區'],
+  '彰化縣':['彰化市','員林市','鹿港鎮','和美鎮'],
+  '南投縣':['南投市','草屯鎮','埔里鎮'],
+  '雲林縣':['斗六市','虎尾鎮','斗南鎮'],
+  '嘉義市':['東區','西區'],
+  '嘉義縣':['太保市','朴子市','民雄鄉'],
+  '台南市':['中西區','東區','南區','北區','安平區','安南區','永康區','新營區'],
+  '高雄市':['新興區','前金區','苓雅區','鹽埕區','三民區','左營區','楠梓區','鳳山區','前鎮區'],
+  '屏東縣':['屏東市','潮州鎮','東港鎮'],
+  '宜蘭縣':['宜蘭市','羅東鎮','礁溪鄉'],
+  '花蓮縣':['花蓮市','吉安鄉','新城鄉'],
+  '台東縣':['台東市','卑南鄉','關山鎮'],
+};
+const EAST = ['花蓮縣','台東縣']; // 花東 5 個工作天
+
+/* ---------- 商品資料(價格為示意) ---------- */
+const GROUP_TIER = { amt:100000, r:.98, label:'集團商品卡合計滿 $100,000 享 98 折' };
+const LAD = [{q:10,r:.95},{q:20,r:.92},{q:30,r:.90}];
+const rateName = r => (r*100)%10===0 ? (r*10)+'折' : (r*100)+'折';
+
+const PRODUCTS = [
+  // 集團商品卡(面額可累計滿額優惠)
+  ...[500,1000,2000,3000,5000].map(v => ({
+    id:'gc'+v, cat:'group', name:`王品集團商品卡 $${v}`, kind:'商品卡', price:v,
+    art:{v1:'#7E1523',v2:'#4E0C16',vt:'#EFD79A',b:'王品集團商品卡',v:'$'+v.toLocaleString(),k:'WOWPRIME GROUP'},
+    desc:['全台王品集團旗下各品牌門市皆可使用(部分特殊店型除外)。','等同現金使用,可找零、可分次折抵。','本商品卡為無記名有價票券,請妥善保管,遺失恕不補發。']
+  })),
+  // 品牌商品卡/券(階梯式訂價,不同品牌不可累算)
+  { id:'wp-t', cat:'brand', brand:'王品牛排', name:'王品牛排 餐券', kind:'餐券', price:1380, ladder:LAD,
+    art:{v1:'#1A140F',v2:'#000000',vt:'#E8C87E',b:'王品牛排',v:'餐 券',k:'WANG STEAK'},
+    desc:['適用於全台王品牛排門市,每券兌換套餐乙客。','假日與特殊節日(如母親節、聖誕節)適用,無需加價。','用餐請提前訂位,並於訂位時告知使用餐券。'] },
+  { id:'wp-c', cat:'brand', brand:'王品牛排', name:'王品牛排 商品卡', kind:'商品卡', price:1500, ladder:LAD,
+    art:{v1:'#1A140F',v2:'#000000',vt:'#E8C87E',b:'王品牛排',v:'商品卡',k:'WANG STEAK'},
+    desc:['適用於全台王品牛排門市,等同現金使用。','可找零、可與其他優惠併用(依門市現場公告)。'] },
+  { id:'ty-t', cat:'brand', brand:'西堤牛排', name:'西堤牛排 餐券', kind:'餐券', price:680, ladder:LAD,
+    art:{v1:'#B33A24',v2:'#6E1F0E',vt:'#FFE4C2',b:'西堤牛排',v:'餐 券',k:'TASTY'},
+    desc:['適用於全台西堤牛排門市,每券兌換套餐乙客。','假日適用,無需補差價。'] },
+  { id:'ty-c', cat:'brand', brand:'西堤牛排', name:'西堤牛排 商品卡', kind:'商品卡', price:700, ladder:LAD,
+    art:{v1:'#B33A24',v2:'#6E1F0E',vt:'#FFE4C2',b:'西堤牛排',v:'商品卡',k:'TASTY'},
+    desc:['適用於全台西堤牛排門市,等同現金使用,可找零。'] },
+  { id:'tk-t', cat:'brand', brand:'陶板屋', name:'陶板屋 和風餐券', kind:'餐券', price:730, ladder:LAD,
+    art:{v1:'#33523F',v2:'#1B2E22',vt:'#E4D9A8',b:'陶板屋',v:'餐 券',k:'TOKIYA'},
+    desc:['適用於全台陶板屋門市,每券兌換套餐乙客。'] },
+  { id:'ys-c', cat:'brand', brand:'原燒', name:'原燒 商品卡', kind:'商品卡', price:800, ladder:LAD,
+    art:{v1:'#7E3A1D',v2:'#42200F',vt:'#F3D9B0',b:'原燒 YAKIYAN',v:'商品卡',k:'YAKIYAN'},
+    desc:['適用於全台原燒門市,等同現金使用,可找零。'] },
+  { id:'ik-t', cat:'brand', brand:'藝奇', name:'藝奇 新日本料理餐券', kind:'餐券', price:980, ladder:LAD,
+    art:{v1:'#3A2B4E',v2:'#1F1430',vt:'#DCC9F0',b:'藝奇 ikki',v:'餐 券',k:'IKKI'},
+    desc:['適用於全台藝奇門市,每券兌換套餐乙客。'] },
+  { id:'fm-c', cat:'brand', brand:'曼咖啡', name:'曼咖啡 商品卡', kind:'商品卡', price:300, ladder:LAD,
+    art:{v1:'#4A3226',v2:'#291A10',vt:'#E8CDA8',b:'曼咖啡',v:'商品卡',k:'FAMONN COFFEE'},
+    desc:['適用於全台曼咖啡門市,等同現金使用。'] },
+  { id:'h7-t', cat:'brand', brand:'hot 7', name:'hot 7 鐵板料理餐券', kind:'餐券', price:330, ladder:LAD,
+    art:{v1:'#2B2B2B',v2:'#0E0E0E',vt:'#FFD34D',b:'hot 7 新鉄板料理',v:'餐 券',k:'HOT 7'},
+    desc:['適用於全台 hot 7 門市,每券兌換套餐乙客。'] },
+  // 禮贈包裝品
+  { id:'env', cat:'gift', name:'精緻燙金禮券信封(10 入)', kind:'禮贈品', price:50,
+    art:{v1:'#EFE3C8',v2:'#CDB183',vt:'#7E1523',b:'禮贈包裝',v:'燙金信封',k:'GIFT ENVELOPE'},
+    desc:['厚磅美術紙製,燙金「王品集團」字樣。','適合企業贈禮、獎勵發放使用。'] },
+  { id:'bag', cat:'gift', name:'王品集團 精緻提袋(單入)', kind:'禮贈品', price:30,
+    art:{v1:'#EFE3C8',v2:'#CDB183',vt:'#7E1523',b:'禮贈包裝',v:'精緻提袋',k:'GIFT BAG'},
+    desc:['質感霧面提袋,附燙金緞帶。'] },
+];
+const P = id => PRODUCTS.find(p => p.id===id);
+const BRANDS = [...new Set(PRODUCTS.filter(p=>p.cat==='brand').map(p=>p.brand))];
+
+/* ---------- 公告 ---------- */
+const ANNS = [
+  '7 月企業採購禮遇:集團商品卡合計滿 $100,000 享 98 折,歡迎公司行號大量訂購。',
+  '中秋送禮預購開跑!8/20 前完成訂購,加贈精緻燙金信封,數量有限送完為止。',
+  '提醒您:訂購後 3 個工作天出貨(花東地區約 5 個工作天),節慶期間請提早下單。',
+];
+const BOARDS = [
+  {b1:'WOWPRIME GROUP', b2:'企業採購禮遇<br>盛夏開跑', b3:'集團商品卡 合計滿 $100,000 享 98 折<br>品牌餐券 滿 10 張 95 折起', b4:'活動期間 7/1 – 7/31'},
+  {b1:'MID-AUTUMN GIFT', b2:'中秋送禮<br>提前預購', b3:'8/20 前完成訂購<br>加贈精緻燙金信封', b4:'企業訂購專線 LINE @wowvoucher'},
+];
+
+/* ---------- FAQ ---------- */
+const FAQS = [
+  {cat:'票券使用與保管說明', q:'票券的有效期限是多久?', a:'依主管機關規定,本公司發行之商品(禮)券無使用期限,您可安心保存與使用。'},
+  {cat:'票券使用與保管說明', q:'票券可以找零或兌換現金嗎?', a:'商品卡等同現金使用、可找零;餐券為兌換指定套餐乙客,恕無法找零或兌換現金。'},
+  {cat:'票券使用與保管說明', q:'集團商品卡可以在哪些品牌使用?', a:'全台王品集團旗下各品牌門市皆可使用(部分特殊店型、百貨專櫃除外),詳細適用門市請參閱票券背面說明或官網公告。'},
+  {cat:'票券使用與保管說明', q:'票券遺失或破損可以補發嗎?', a:'紙本票券為無記名有價證券,遺失恕無法補發;若票券破損但條碼與券號仍可辨識,請透過退換貨申請由票務小組協助鑑定換發。'},
+  {cat:'購買流程與帳務問題', q:'最低訂購金額與付款方式限制?', a:'單筆訂單最低訂購金額為 $10,000。匯款滿 $10,000、刷卡滿 $20,000 即可結帳;另提供分次匯款(由客服人工對帳)。'},
+  {cat:'購買流程與帳務問題', q:'付款後多久出貨?', a:'完成付款後約 3 個工作天出貨,花東地區約 5 個工作天;您也可於結帳時指定到貨日(最遠兩週內)。'},
+  {cat:'購買流程與帳務問題', q:'發票如何開立?可以指定開立日期嗎?', a:'公司戶開立三聯式發票、個人戶開立二聯式發票。結帳時可指定發票開立日期(限當月,最遠至當月倒數第二個工作天)。'},
+  {cat:'購買流程與帳務問題', q:'可以取消訂單嗎?', a:'訂單狀態為【待付款】時,可於「訂單查詢 > 訂單詳情」點擊取消訂單;已付款之訂單請改走退換貨申請流程。'},
+  {cat:'退換貨相關', q:'如何申請退換貨?', a:'一年內於本站購買之訂單,請至「訂單查詢」找到該筆訂單並點擊【申請退換貨】;歷史訂單或持贈送券者,請由頁尾「退換貨申請」進入專用表單。'},
+  {cat:'退換貨相關', q:'退款多久會入帳?', a:'票務小組收到寄回票券並驗收無誤後,約 7-14 個工作天完成退款,實際依銀行作業時間為準。'},
+  {cat:'退換貨相關', q:'退貨需要負擔費用嗎?', a:'非因商品瑕疵之退貨,寄回票券之郵資由顧客負擔;屬品質或物流因素者,由本公司負擔相關費用。'},
+];
+
+/* ---------- 會員/狀態 ---------- */
+const DEMO_USER = {
+  email:'member@example.com', pw:'Demo1234', verified:true,
+  line:{ bound:true, name:'王小明' },
+  identity:'company',
+  company:{ comp:'示例科技股份有限公司', taxid:'53212539', dept:'管理部', title:'採購專員', name:'王小明', tel:['04','23261789','123'], mobile:'0912345678' },
+  personal:{ name:'王小明', tel:['','',''], mobile:'0912345678', carrier:'/AB12C3D' },
+  addrs:[
+    { label:'公司(台中總部)', name:'王小明', tel:['04','23261789','123'], mobile:'0912345678', city:'台中市', dist:'西區', addr:'台灣大道二段218號29樓' },
+    { label:'北區分公司', name:'李承翰', tel:['02','27001234',''], mobile:'0922333444', city:'台北市', dist:'信義區', addr:'松智路17號8樓' },
+    { label:'自宅', name:'王小明', tel:['','',''], mobile:'0912345678', city:'台中市', dist:'北屯區', addr:'崇德路二段46巷12號' },
+  ],
+};
+
+const state = {
+  loggedIn:false, user:null,
+  cart:[], qtySel:{},
+  cat:'all', brand:'全部', kw:'',
+  boardShown:false, boardIdx:0,
+  mqIdx:0, mqTimer:null,
+  afterLogin:null, loginFail:0, lockUntil:null,
+  co:null,            // 結帳暫存
+  orders:[],
+  retCtx:null,        // 退換貨表單情境
+  idleTimer:null,
+};
+
+/* ---------- 購物車運算(優惠引擎) ---------- */
+function computeCart(cartArr){
+  const lines = cartArr.map(({id,qty}) => {
+    const p = P(id);
+    let unit = p.price, tier = null;
+    if(p.ladder){
+      const hit = [...p.ladder].sort((a,b)=>b.q-a.q).find(t => qty >= t.q);
+      if(hit){ tier = hit; unit = Math.round(p.price*hit.r); }
+    }
+    const orig = p.price*qty;
+    let total = unit*qty, groupDisc = false;
+    return { p, qty, unit, tier, orig, total, groupDisc };
+  });
+  const groupOrig = lines.filter(l=>l.p.cat==='group').reduce((s,l)=>s+l.orig,0);
+  const groupHit = groupOrig >= GROUP_TIER.amt;
+  if(groupHit) lines.forEach(l => { if(l.p.cat==='group'){ l.total = Math.round(l.orig*GROUP_TIER.r); l.groupDisc = true; } });
+  const badges = [];
+  lines.forEach(l => { if(l.tier) badges.push(`🏷 ${l.p.name} 滿 ${l.tier.q} 張享優惠價 ${fm(l.unit)}/張(${rateName(l.tier.r)})`); });
+  if(groupHit) badges.push(`🏷 王品集團商品卡 合計滿 ${fm(GROUP_TIER.amt)} 打 98 折(不同面額可累計)`);
+  const origSum = lines.reduce((s,l)=>s+l.orig,0);
+  const total = lines.reduce((s,l)=>s+l.total,0);
+  return { lines, badges, origSum, total, save:origSum-total, qty:lines.reduce((s,l)=>s+l.qty,0), groupHit };
+}
+const cartQtyTotal = () => state.cart.reduce((s,c)=>s+c.qty,0);
+
+/* ---------- 訂單種子資料 ---------- */
+function genNo(d, seq){ return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}${String(seq).padStart(3,'0')}`; }
+function seedOrders(){
+  const now = new Date();
+  const mk = (offsetD, seq, status, pay, lines, extra={}) => {
+    const created = addDays(now, offsetD); created.setHours(10, 24, 18);
+    const cc = computeCart(lines.map(([id,qty])=>({id,qty})));
+    const deadline = new Date(created.getTime() + (pay==='multi'?72:24)*3600*1000);
+    const hist = [{st:'待付款', at:new Date(created)}];
+    const paidAt = extra.paidAt!==undefined ? extra.paidAt : new Date(created.getTime()+3600*1000*3);
+    if(status!=='待付款' && status!=='已取消'){ hist.push({st:'待配送', at:paidAt}); }
+    if(['配送中','已完成','未簽收'].includes(status)) hist.push({st:'配送中', at:addDays(paidAt,2)});
+    if(status==='已完成') hist.push({st:'已完成', at:addDays(paidAt,4)});
+    if(status==='未簽收') hist.push({st:'未簽收', at:addDays(paidAt,5), note:'物流回報:三次投遞未成功,票券退回發送中心'});
+    if(status==='已取消') hist.push({st:'已取消', at:new Date(deadline), note:'逾期未付款,系統自動取消並釋放庫存'});
+    return {
+      no:genNo(created,seq), created, status, pay, lines:lines.map(([id,qty])=>({id,qty})), cc, deadline,
+      paidAt:(status!=='待付款'&&status!=='已取消')?paidAt:null,
+      cardMask: pay==='credit' ? '414712******9012' : null,
+      acctMask: pay==='transfer' ? '812-91001******3456' : null,
+      vAccount:'9100 1234 5678 3456',
+      invoice:{ type:'三聯式', taxid:'53212539', detail:'商品卡(券)', no:(status!=='待付款'&&status!=='已取消')?extra.invNo||'AB-'+(31000000+seq*137) : null, reissued:!!extra.reissued },
+      ship:{ name:'王小明', tel:['04','23261789','123'], mobile:'0912345678', city:'台中市', dist:'西區', addr:'台灣大道二段218號29樓', agentOk:true },
+      history:hist, returns:extra.returns||[],
+    };
+  };
+  state.orders = [
+    mk(0, 1, '待付款', 'transfer', [['gc1000',20]]),
+    mk(-3, 2, '待配送', 'credit', [['wp-t',30],['env',3]]),
+    mk(-8, 3, '配送中', 'transfer', [['ty-t',60],['bag',60]]),
+    mk(-15, 4, '已完成', 'credit', [['gc1000',10],['ty-t',6]], { reissued:true, invNo:'AB-31002936',
+      returns:[{no:'RT'+genNo(addDays(now,-9),1), kind:'退款', status:'處理中(待寄回票券)', at:addDays(now,-9)}] }),
+    mk(-22, 5, '未簽收', 'multi', [['tk-t',40]]),
+    mk(-49, 6, '已取消', 'transfer', [['gc2000',8]], {paidAt:null}),
+  ];
+}
+
+/* ---------- 路由 ---------- */
+const NEED_LOGIN = ['#/member','#/orders','#/order/','#/checkout/'];
+function nav(to){ if(location.hash===to){ route(); } else location.hash = to; }
+function route(){
+  const h = location.hash || '#/shop';
+  closeModal(); closeCal(); $('#mainNav').classList.remove('open');
+  if(NEED_LOGIN.some(p => h.startsWith(p)) && !state.loggedIn){
+    state.afterLogin = h;
+    toast('此頁面需要登入,請先登入會員');
+    if(h!=='#/login') return nav('#/login');
+  }
+  window.scrollTo({top:0});
+  document.body.style.paddingBottom = '';
+  const app = $('#app');
+  if(h.startsWith('#/order/')) renderOrderDetail(app, h.split('/')[2]);
+  else if(h.startsWith('#/policy/')) renderPolicy(app, h.split('/')[2]);
+  else if(h.startsWith('#/payresult/')) renderPayResult(app, h.split('/')[2], h.split('/')[3]);
+  else ({
+    '#/shop':renderShop, '#/login':renderLogin, '#/member':renderMember,
+    '#/orders':renderOrders, '#/checkout/info':renderCkInfo, '#/checkout/pay':renderCkPay,
+    '#/checkout/confirm':renderCkConfirm, '#/bank':renderBank, '#/return':renderReturnEntry,
+    '#/return/form':renderReturnForm, '#/return/done':renderReturnDone, '#/faq':renderFaq,
+  }[h] || renderShop)(app);
+  renderNav(); updateStepsVisibility(h);
+}
+
+/* ---------- Header 導覽 ---------- */
+function renderNav(){
+  const h = location.hash || '#/shop';
+  const act = to => h.startsWith(to) ? 'active' : '';
+  $('#mainNav').innerHTML = `
+    ${state.loggedIn ? `<span class="who"><span class="dot"></span>${state.user.email}</span>` : ''}
+    <a class="nav-link ${act('#/shop')||act('#/checkout')?'active':''}" data-action="nav" data-to="#/shop">票券訂購</a>
+    <span class="nav-item">
+      <a class="nav-link ${act('#/member')}" data-action="nav" data-to="#/member">會員中心 ▾</a>
+      <span class="nav-drop">
+        <button class="dd" data-action="nav" data-to="#/member">👤 會員資料<small>修改基本資料</small></button>
+        <hr>
+        <button class="dd" data-action="ext-line"><span class="line-ic">L</span> 聯絡客服 @wowvoucher</button>
+      </span>
+    </span>
+    <a class="nav-link ${act('#/orders')||act('#/order/')?'active':''}" data-action="nav" data-to="#/orders">訂單查詢</a>
+    <a class="nav-link" href="https://www.wowprime.com/zh-tw/gift-voucher/coupon-search/coupon-wowprime" target="_blank" rel="noopener">票券查詢 <span class="ext">↗</span></a>
+    <a class="nav-link ${act('#/faq')}" data-action="nav" data-to="#/faq">FAQ</a>
+    ${state.loggedIn
+      ? `<a class="nav-link pill-out" data-action="logout">登出</a>`
+      : `<a class="nav-link pill-out ${act('#/login')}" data-action="nav" data-to="#/login">登入</a>`}
+  `;
+}
+function updateStepsVisibility(){ /* 步驟列包含於各 view 內,不需全域處理 */ }
+
+/* ---------- 步驟指示列 ---------- */
+function stepsBar(cur){ // 1..4
+  const items = ['選擇票券','訂購資訊','選擇付款','確認送出'];
+  return `<div class="steps-wrap" data-req="2.1 步驟指示列"><div class="steps">${items.map((t,i)=>{
+    const n = i+1;
+    const cls = n===cur?'on': n<cur?'done':'';
+    return `${i? `<span class="step-line ${n<=cur?'done':''}"></span>`:''}<span class="step ${cls}"><span class="num">${n<cur?'✓':n}</span><span class="lbl">${t}</span></span>`;
+  }).join('')}</div></div>`;
+}
+
+/* ---------- 票券呈現頁(步驟1) ---------- */
+function renderShop(app){
+  const cats = [['all','全部'],['group','集團商品卡'],['brand','品牌商品卡/券'],['gift','禮贈包裝品']];
+  app.innerHTML = `
+    ${stepsBar(1)}
+    <div class="container view-pad">
+      <div class="shop-grid">
+        <div>
+          <div class="toolbar" data-req="2.2 票券區塊-查詢/分類">
+            <div class="search-box"><input id="kw" placeholder="搜尋票券名稱⋯" value="${state.kw}"><span class="sic">🔍</span></div>
+            <div class="cat-tabs">${cats.map(([k,t])=>`<button class="cat-tab ${state.cat===k?'on':''}" data-action="cat" data-k="${k}">${t}</button>`).join('')}</div>
+            <button class="dm-btn" data-action="dm" data-req="2.2 票券DM">⬇ 下載票券 DM</button>
+          </div>
+          <div id="brandTabs"></div>
+          <div class="prod-grid" id="prodGrid"></div>
+        </div>
+        <aside class="cart-aside" id="cartAside" data-req="2.3 購物車區塊"><div id="cartBox"></div></aside>
+      </div>
+    </div>`;
+  drawBrandTabs(); drawProducts(); updateCart();
+  if(!state.boardShown){ state.boardShown = true; if(localStorage.getItem('wv_board_skip') !== fmtD(new Date())) openBoard(0); }
+}
+function drawBrandTabs(){
+  const el = $('#brandTabs'); if(!el) return;
+  if(state.cat!=='brand'){ el.innerHTML=''; return; }
+  el.innerHTML = `<div class="brand-tabs">${['全部',...BRANDS].map(b=>`<button class="brand-tab ${state.brand===b?'on':''}" data-action="brand" data-b="${b}">${b}</button>`).join('')}</div>`;
+}
+function listProducts(){
+  return PRODUCTS.filter(p =>
+    (state.cat==='all' || p.cat===state.cat) &&
+    (state.cat!=='brand' || state.brand==='全部' || p.brand===state.brand) &&
+    (!state.kw || p.name.toLowerCase().includes(state.kw.toLowerCase())));
+}
+function vartHTML(p, cls='vart'){
+  return `<div class="${cls}" style="--v1:${p.art.v1};--v2:${p.art.v2};--vt:${p.art.vt}">
+    <span class="b">${p.art.b}</span><span class="v serif">${p.art.v}</span><span class="k">${p.art.k}</span>
+    <span class="seal">WOWPRIME</span></div>`;
+}
+function priceLineHTML(p, qty){
+  let unit = p.price, hit = null;
+  if(p.ladder){ hit = [...p.ladder].sort((a,b)=>b.q-a.q).find(t=>qty>=t.q); if(hit) unit = Math.round(p.price*hit.r); }
+  if(hit) return `<span class="plabel">優惠價</span><span class="pnow"><span class="porig">${fm(p.price)}</span>${fm(unit)}<span class="per"> /張</span></span>`;
+  return `<span class="plabel">${p.cat==='gift'?'售價':'定價'}</span><span class="pnow">${fm(p.price)}${p.cat==='gift'?'':'<span class="per"> /張</span>'}</span>`;
+}
+function drawProducts(){
+  const grid = $('#prodGrid'); if(!grid) return;
+  const list = listProducts();
+  grid.innerHTML = list.length ? list.map(p => {
+    const qty = state.qtySel[p.id]||0;
+    return `<div class="prod-card">
+      ${vartHTML(p)}
+      <div class="prod-body">
+        <span class="prod-name" data-action="prod-info" data-id="${p.id}" data-req="2.2 商品卡片-票券名稱">${p.name} <span class="info">i</span></span>
+        <div class="price-line" id="pl-${p.id}">${priceLineHTML(p,qty)}</div>
+        ${p.ladder ? `<div class="ladder">${[...p.ladder].sort((a,b)=>a.q-b.q).map(t=>{
+            const u = Math.round(p.price*t.r);
+            return `<button class="lad-row ${qty>=t.q?'hit':''}" data-action="ladder" data-id="${p.id}" data-q="${t.q}" title="點擊自動帶入 ${t.q} 張">
+              <span class="lq">滿 ${t.q} 張 <small style="font-weight:400;color:#A69C8D">${rateName(t.r)}</small></span>
+              <span class="lp"><span class="lo">${fm(p.price)}</span>${fm(u)}/張</span></button>`;
+          }).join('')}</div>` : ''}
+        <div class="qty-row"><span class="qlabel">購買數量</span>
+          <span class="stepper">
+            <button class="st-btn" data-action="qty-dec" data-id="${p.id}">−</button>
+            <input class="qty-in" id="q-${p.id}" data-id="${p.id}" inputmode="numeric" value="${qty}">
+            <button class="st-btn" data-action="qty-inc" data-id="${p.id}">+</button>
+          </span></div>
+        <button class="add-btn" data-action="add-cart" data-id="${p.id}">加入購物車</button>
+        ${p.cat==='group' ? `<div class="prod-note">${GROUP_TIER.label}</div>` : ''}
+      </div></div>`;
+  }).join('') : `<div class="empty-hint">找不到符合「${state.kw}」的票券,請嘗試其他關鍵字。</div>`;
+}
+function setQty(id, v){
+  v = Math.max(0, Math.floor(Number(String(v).replace(/\D/g,''))||0));
+  state.qtySel[id] = v;
+  const inp = $('#q-'+CSS.escape(id)); if(inp && inp.value!==String(v)) inp.value = v;
+  const pl = $('#pl-'+CSS.escape(id)); if(pl) pl.innerHTML = priceLineHTML(P(id), v);
+  $$(`.lad-row[data-id="${id}"]`).forEach(r => r.classList.toggle('hit', v >= Number(r.dataset.q)));
+}
+
+/* ---------- 購物車 ---------- */
+function cartHTML(){
+  const cc = computeCart(state.cart);
+  const can = cc.total >= 10000;
+  const mobile = matchMedia('(max-width:1080px)').matches;
+  return `<div class="cart-box">
+    <div class="cart-head"><span class="cic">🛒</span> 購物車 <span class="n">${cc.qty ? `共 ${cc.qty.toLocaleString()} 張/件` : ''}</span>
+      ${mobile?`<button class="cart-fab" data-action="cart-expand">明細 ▴</button>`:''}</div>
+    ${state.cart.length ? `
+      <div class="cart-items">${cc.lines.map(l=>`
+        <div class="ci">
+          <div class="t"><span>${l.p.name}</span><button class="rm" data-action="cart-rm" data-id="${l.p.id}">✕ 移除</button></div>
+          <div class="meta">${l.tier?`<span class="orig-strike">${fm(l.p.price)}</span> ${fm(l.unit)}/張 × ${l.qty.toLocaleString()}`:`${fm(l.p.price)}${l.p.cat==='gift'?'':'/張'} × ${l.qty.toLocaleString()}`}</div>
+          <div class="row2"><span class="muted" style="font-size:12px">${l.tier?`已套用 滿${l.tier.q}張${rateName(l.tier.r)}`:(l.groupDisc?'已套用 集團滿額 98 折':'')}</span>
+          <span class="amt ${l.tier||l.groupDisc?'disc':''}">${fm(l.total)}</span></div>
+        </div>`).join('')}</div>
+      <button class="promo-tg ${state.promoOpen?'open':''}" data-action="promo-tg">套用優惠${cc.badges.length?`<span class="pc">(${cc.badges.length})</span>`:''}<span class="ar">▶</span></button>
+      ${state.promoOpen ? `<div class="promo-list">${cc.badges.length?cc.badges.map(b=>`<div class="promo-badge">${b}</div>`).join(''):'<span class="muted" style="font-size:12.5px">目前尚未達優惠門檻</span>'}</div>`:''}
+      ${cc.save>0 ? `<div class="save-bar">🎉 本次優惠共省下 ${fm(cc.save)}</div>` : ''}`
+    : `<div class="cart-empty">購物車是空的<div class="big">🛒</div></div>`}
+    <div class="cart-total"><span class="lb">應付總金額</span><span class="v">${fm(cc.total)}</span></div>
+    <div class="pay-hint" data-req="2.3 付款限制">💳 <span>匯款滿 $10,000 / 刷卡滿 $20,000 即可結帳<br><span style="opacity:.75">單筆訂單上限 100,000 張</span></span></div>
+    ${state.cart.length && !can ? `<div class="min-warn">最低訂購金額需滿 $10,000 元</div>`:''}
+    <button class="cta-btn" data-action="to-checkout" ${can?'':'disabled'}>前往結帳</button>
+  </div>`;
+}
+function updateCart(){
+  const box = $('#cartBox'); if(!box) return;
+  box.innerHTML = cartHTML();
+  const aside = $('#cartAside');
+  if(matchMedia('(max-width:1080px)').matches){
+    aside.classList.add('dock');
+    if(!aside.dataset.expanded) aside.classList.add('cart-collapse');
+    document.body.style.paddingBottom = '150px';
+  } else { aside.classList.remove('dock','cart-collapse'); document.body.style.paddingBottom = ''; }
+}
+function addCart(id){
+  const q = state.qtySel[id]||0;
+  if(q<=0){ toast('請先輸入購買數量', 'err'); return; }
+  if(cartQtyTotal() + q > 100000){ toast('單筆訂單上限為 100,000 張。如需協助或有特殊訂購需求,請洽客服為您服務。','err',5200); return; }
+  const it = state.cart.find(c=>c.id===id);
+  if(it) it.qty += q; else state.cart.push({id, qty:q});
+  setQty(id, 0);
+  toast(`已將「${P(id).name}」× ${q.toLocaleString()} 加入購物車`, 'ok', 2200);
+  updateCart();
+}
+
+/* ---------- 商品說明遮罩(說明事項/發行資訊) ---------- */
+function openProdInfo(id){
+  const p = P(id);
+  openModal(`
+    <div class="dlg-h">${p.name}<button class="x" data-action="close-modal">✕</button></div>
+    <div class="dlg-b">
+      ${vartHTML(p,'vart prod-hero')}
+      <div class="spec-title">說明事項</div>
+      <ul class="spec-list">${p.desc.map(d=>`<li>${d}</li>`).join('')}${p.ladder?`<li>階梯優惠:${[...p.ladder].sort((a,b)=>a.q-b.q).map(t=>`滿 ${t.q} 張 ${rateName(t.r)}`).join('、')}(同一票券累計,不同品牌不可累算)。</li>`:''}${p.cat==='group'?`<li>${GROUP_TIER.label}(不同面額可累計)。</li>`:''}</ul>
+      <div class="spec-title">發行資訊</div>
+      <div class="kv" style="padding-top:2px">
+        <span class="k">發行單位</span><span class="v">王品餐飲股份有限公司</span>
+        <span class="k">票券類型</span><span class="v">${p.kind}(紙本有價票券)</span>
+        <span class="k">有效期限</span><span class="v">無使用期限</span>
+        <span class="k">履約保證</span><span class="v">本商品(禮)券預收款項已存入發卡機構信託專戶,專款專用</span>
+      </div>
+    </div>
+    <div class="dlg-f"><button class="btn btn-main" data-action="close-modal">我知道了</button></div>`, 'prod');
+}
+
+/* ---------- 蓋板公告 ---------- */
+function openBoard(i){
+  state.boardIdx = (i + BOARDS.length) % BOARDS.length;
+  const b = BOARDS[state.boardIdx];
+  const skipped = localStorage.getItem('wv_board_skip') === fmtD(new Date());
+  openModal(`
+    <button class="board-x" data-action="close-modal">✕</button>
+    <div class="board-img" data-req="2.1 公告欄-蓋板公告">
+      <span class="b1">${b.b1}</span><span class="b2">${b.b2}</span><span class="b3">${b.b3}</span><span class="b4">${b.b4}</span>
+    </div>
+    <div class="board-ctl">
+      <button class="bd-btn" data-action="board-prev">‹</button>
+      <span class="board-cnt">${state.boardIdx+1} / ${BOARDS.length}</span>
+      <button class="bd-btn" data-action="board-next">›</button>
+      <label class="check-row board-skip"><input type="checkbox" data-action-ch="board-skip" ${skipped?'checked':''}>今日不再顯示</label>
+    </div>`, 'board-dlg');
+}
+
+/* ---------- 跑馬燈 ---------- */
+function drawMq(){ $('#mqMsg').textContent = ANNS[state.mqIdx]; $('#mqCnt').textContent = `${state.mqIdx+1} / ${ANNS.length}`; }
+function mqNext(d=1){ state.mqIdx = (state.mqIdx + d + ANNS.length) % ANNS.length; drawMq(); }
+function startMq(){ drawMq(); state.mqTimer = setInterval(()=>mqNext(1), 5000); }
+
+/* ---------- 票券 DM ---------- */
+function openDM(){
+  openModal(`
+    <div class="dlg-h">票券 DM 下載<button class="x" data-action="close-modal">✕</button></div>
+    <div class="dlg-b">
+      <div class="board-img" style="aspect-ratio:16/10;border-radius:12px">
+        <span class="b1">WOWPRIME VOUCHER</span><span class="b2" style="font-size:26px">王品集團紙本票券<br>商品總覽 DM</span>
+        <span class="b3">集團商品卡 · 品牌商品卡/券 · 禮贈包裝品<br>企業採購優惠一覽</span><span class="b4">2026 年 7 月版</span>
+      </div>
+      <p class="help" style="margin-top:12px">DM 圖片由票務人員於下單網後台上傳維護,顧客點擊即可下載。(Prototype 以示意圖代替)</p>
+    </div>
+    <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">關閉</button><button class="btn btn-main" data-action="dm-dl">⬇ 下載 DM 圖片</button></div>`);
+}
+function dmDownload(){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750"><rect width="1200" height="750" fill="#7E1523"/><rect x="24" y="24" width="1152" height="702" fill="none" stroke="#EFD79A" stroke-width="2" rx="12"/><text x="600" y="300" font-size="30" fill="#F3E2B9" text-anchor="middle" font-family="serif" letter-spacing="12">WOWPRIME VOUCHER</text><text x="600" y="390" font-size="64" fill="#EFD79A" text-anchor="middle" font-family="serif" font-weight="bold">王品集團紙本票券 DM</text><text x="600" y="460" font-size="28" fill="#F3E2B9" text-anchor="middle" font-family="sans-serif">集團商品卡 · 品牌商品卡/券 · 禮贈包裝品(示意)</text></svg>`;
+  const a = document.createElement('a');
+  a.href = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  a.download = '王品集團紙本票券DM_示意.svg'; a.click();
+  toast('已下載票券 DM(示意檔)', 'ok');
+}
+</script>
+<script>
+/* ================= 驗證器 ================= */
+const vEmail = s => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s||'');
+const vMobile = s => /^0?9\d{8}$/.test(s||'');
+const vCarrier = s => /^\/[0-9A-Z.\+\-]{7}$/i.test(s||'');
+function vPw(s){ s=s||''; return { len:s.length>=8&&s.length<=12, up:/[A-Z]/.test(s), low:/[a-z]/.test(s), num:/\d/.test(s),
+  get ok(){ return this.len&&this.up&&this.low&&this.num; } }; }
+function vTaxId(s){
+  if(!/^\d{8}$/.test(s||'')) return false;
+  const w=[1,2,1,2,1,2,4,1], ds=[...s].map(Number); let base=0;
+  for(let i=0;i<8;i++){ if(i===6&&ds[6]===7) continue; const p=ds[i]*w[i]; base+=Math.floor(p/10)+(p%10); }
+  return ds[6]===7 ? (base%5===0 || (base+1)%5===0) : base%5===0;
+}
+function setPath(obj, path, val){ const ks=path.split('.'); let o=obj; for(let i=0;i<ks.length-1;i++) o=o[ks[i]]; o[ks[ks.length-1]]=val; }
+function getPath(obj, path){ return path.split('.').reduce((o,k)=>o&&o[k], obj); }
+
+/* ================= 登入/註冊(§1) ================= */
+let regState = { sent:false, verified:false, cd:0, cdTimer:null };
+function renderLogin(app, tab='login'){
+  regState = { sent:false, verified:false, cd:0, cdTimer:null };
+  const rememberEmail = localStorage.getItem('wv_email') || DEMO_USER.email;
+  app.innerHTML = `
+    <div class="container view-pad">
+      <div class="auth-wrap" data-req="1 登入/註冊頁面">
+        <h1 class="page-title" style="text-align:center">會員登入</h1>
+        <p class="page-sub" style="text-align:center">登入後即可訂購王品集團紙本票券</p>
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <button class="auth-tab ${tab==='login'?'on':''}" data-action="auth-tab" data-t="login">登入</button>
+            <button class="auth-tab ${tab==='reg'?'on':''}" data-action="auth-tab" data-t="reg">註冊新會員</button>
+          </div>
+          ${tab==='login' ? `
+          <div class="auth-body">
+            <div class="demo-hint">🔑 <b>Demo 帳密已預填</b>:直接點「登入」即可。<br>輸入錯誤密碼可展示「錯誤 4 次警告 / 5 次鎖定 15 分鐘」情境。</div>
+            <div class="field"><label>Email 帳號</label><input class="in" id="lg-email" type="email" value="${rememberEmail}" placeholder="請輸入 Email"><div class="fmsg" id="lg-email-msg"></div></div>
+            <div class="field"><label>密碼</label><input class="in" id="lg-pw" type="password" value="${DEMO_USER.pw}" placeholder="8-12 碼,含大小寫英文與數字"></div>
+            <div class="auth-links">
+              <label class="check-row" style="padding:0"><input type="checkbox" id="lg-rem" checked>記住我</label>
+              <a href="javascript:void(0)" data-action="forgot">忘記密碼?</a>
+            </div>
+            <div id="lg-msg"></div>
+            <button class="btn btn-main" style="width:100%" data-action="login-submit">登 入</button>
+            <div class="or-sep">或使用以下方式</div>
+            <button class="btn btn-line" data-action="line-auth" data-ctx="login"><span class="line-ic" style="background:#fff;color:#06C755">L</span> 使用 LINE 帳號登入</button>
+          </div>` : `
+          <div class="auth-body">
+            <div class="field"><label><span class="req">*</span>Email 帳號</label><input class="in" id="rg-email" type="email" placeholder="example@mail.com"><div class="fmsg" id="rg-email-msg"></div></div>
+            <div class="field"><label><span class="req">*</span>Email 驗證碼<span class="why">驗證通過才可完成註冊(示範碼:123456)</span></label>
+              <div class="code-row"><input class="in" id="rg-code" maxlength="6" placeholder="6 位數驗證碼" inputmode="numeric"><button class="count-btn" id="rg-send" data-action="send-code">發送驗證碼</button></div>
+              <div class="fmsg" id="rg-code-msg"></div>
+              <div class="help gray">驗證碼有效 10 分鐘;第一次發送後需等 60 秒方可重發,每小時上限 5 次、每日上限 10 次。</div></div>
+            <div class="field"><label><span class="req">*</span>密碼</label><input class="in" id="rg-pw" type="password" maxlength="12" placeholder="8-12 碼,含大小寫英文與數字">
+              <div class="pw-rules" id="rg-rules" style="margin-top:7px">
+                <span class="r" data-k="len">長度 8-12 碼</span><span class="r" data-k="up">包含大寫英文字母</span>
+                <span class="r" data-k="low">包含小寫英文字母</span><span class="r" data-k="num">包含數字</span>
+              </div></div>
+            <label class="check-row pol"><input type="checkbox" id="rg-agree"><span>我已閱讀並同意
+              <a href="javascript:void(0)" data-action="policy-new" data-key="privacy">[隱私權條款]</a>、
+              <a href="javascript:void(0)" data-action="policy-new" data-key="tos">[使用者服務條款]</a> 及
+              <a href="javascript:void(0)" data-action="policy-new" data-key="pdpa">[個資聲明]</a></span></label>
+            <div class="fmsg" id="rg-agree-msg"></div>
+            <button class="btn btn-main" style="width:100%" data-action="reg-submit">註 冊</button>
+            <div class="or-sep">或使用以下方式</div>
+            <button class="btn btn-line" data-action="line-auth" data-ctx="reg"><span class="line-ic" style="background:#fff;color:#06C755">L</span> 使用 LINE 帳號註冊</button>
+          </div>`}
+        </div>
+        <p class="help gray" style="text-align:center;margin-top:14px">前台所有欄位輸入之全形英數,系統將自動轉為半形。閒置 30 分鐘將自動登出。</p>
+      </div>
+    </div>`;
+}
+function doLogin(){
+  const email = toHalf($('#lg-email').value.trim()), pw = $('#lg-pw').value, box = $('#lg-msg');
+  if(state.lockUntil && Date.now() < state.lockUntil){
+    const t = new Date(state.lockUntil);
+    box.innerHTML = `<div class="lock-note">帳號已被鎖定 15 分鐘,請於 ${pad(t.getHours())}:${pad(t.getMinutes())} 後再次嘗試,或於解鎖後透過 [忘記密碼] 重新設定</div>`;
+    return;
+  }
+  if(!vEmail(email)){ box.innerHTML = `<div class="lock-note">請輸入正確的 Email 格式</div>`; return; }
+  if(email.toLowerCase()===DEMO_USER.email && pw===DEMO_USER.pw){
+    if($('#lg-rem').checked) localStorage.setItem('wv_email', email); else localStorage.removeItem('wv_email');
+    loginAs(DEMO_USER);
+  } else {
+    state.loginFail++;
+    if(state.loginFail>=5){
+      state.lockUntil = Date.now()+15*60*1000; state.loginFail=0;
+      const t = new Date(state.lockUntil);
+      box.innerHTML = `<div class="lock-note">帳號已被鎖定 15 分鐘,請於 ${pad(t.getHours())}:${pad(t.getMinutes())} 後再次嘗試,或於解鎖後透過 [忘記密碼] 重新設定</div>`;
+    } else if(state.loginFail===4){
+      box.innerHTML = `<div class="lock-note">已輸入錯誤 4 次,再錯誤 1 次帳號將被鎖定 15 分鐘</div>`;
+    } else {
+      box.innerHTML = `<div class="lock-note">帳號或密碼錯誤(${state.loginFail}/5)</div>`;
+    }
+  }
+}
+function loginAs(u){
+  state.loggedIn = true; state.user = JSON.parse(JSON.stringify(u)); state.loginFail = 0;
+  state.mb = null; state.of = null;
+  toast(`歡迎回來,${state.user.email}`, 'ok');
+  const go = state.afterLogin; state.afterLogin = null;
+  nav(go || '#/shop'); resetIdle();
+}
+function doLogout(msg){
+  state.loggedIn = false; state.user = null; state.co = null; state.mb = null; state.of = null;
+  toast(msg || '已登出'); nav('#/shop');
+}
+function sendCode(btnId, msgId){
+  if(regState.cd>0) return;
+  regState.sent = true; regState.cd = 60;
+  const btn = $(btnId);
+  const tick = () => {
+    if(regState.cd>0){ btn.disabled = true; btn.textContent = `重新發送(${regState.cd}s)`; regState.cd--; regState.cdTimer = setTimeout(tick,1000); }
+    else { btn.disabled = false; btn.textContent = '重新發送'; }
+  };
+  tick();
+  const m = $(msgId); if(m){ m.className='fmsg good show'; m.textContent = '驗證碼已寄出,請至信箱收取(示範碼 123456,有效 10 分鐘)'; }
+}
+function doRegister(){
+  const email = toHalf($('#rg-email').value.trim());
+  const emsg = $('#rg-email-msg'), cmsg = $('#rg-code-msg'), amsg = $('#rg-agree-msg');
+  [emsg,cmsg,amsg].forEach(m=>{m.className='fmsg';m.textContent='';});
+  if(!vEmail(email)){ emsg.className='fmsg bad show'; emsg.textContent='請輸入正確的 Email 格式'; $('#rg-email').classList.add('err'); return; }
+  if(email.toLowerCase()===DEMO_USER.email){ emsg.className='fmsg bad show'; emsg.textContent='該信箱已註冊,請重新登入'; return; }
+  if(!regState.sent){ cmsg.className='fmsg bad show'; cmsg.textContent='請先發送並輸入 Email 驗證碼'; return; }
+  if($('#rg-code').value !== '123456'){ cmsg.className='fmsg bad show'; cmsg.textContent='驗證碼錯誤或已逾時(超過 10 分鐘請重新發送驗證)'; return; }
+  const pw = $('#rg-pw').value;
+  if(!vPw(pw).ok){ toast('密碼需 8-12 碼,並包含大小寫英文字母與數字','err'); $('#rg-pw').classList.add('err'); return; }
+  if(!$('#rg-agree').checked){ amsg.className='fmsg bad show'; amsg.textContent='請先閱讀並勾選同意'; return; }
+  const u = JSON.parse(JSON.stringify(DEMO_USER)); u.email = email; u.pw = pw; u.line = {bound:false, name:''};
+  toast('註冊成功,已為您自動登入', 'ok'); loginAs(u);
+}
+function lineAuthModal(ctx){
+  openModal(`
+    <div class="dlg-h" style="background:#06C755;color:#fff;border-radius:16px 16px 0 0"><span class="line-ic" style="background:#fff;color:#06C755">L</span> LINE 授權(模擬畫面)<button class="x" style="color:#fff" data-action="close-modal">✕</button></div>
+    <div class="dlg-b">
+      <p style="font-size:14.5px;line-height:1.8"><b>王品集團紙本票券訂購網</b> 想要取得下列權限:</p>
+      <ul class="spec-list" style="margin-top:8px"><li>您的個人資料(顯示名稱、頭像)</li><li><b>電子郵件地址(Email address permission)</b> — 用於建立與識別您的會員帳號</li></ul>
+      <p class="help" style="margin-top:10px">同意授權後,下單網即可取回您的 Email 完成註冊/登入。</p>
+    </div>
+    <div class="dlg-f">
+      <button class="btn btn-sub" data-action="line-deny" data-ctx="${ctx}">不同意</button>
+      <button class="btn" style="background:#06C755;color:#fff;padding:11px 30px" data-action="line-allow">同意授權</button>
+    </div>`);
+}
+function forgotModal(step=1){
+  const preset = $('#lg-email') ? toHalf($('#lg-email').value.trim()) : '';
+  openModal(`
+    <div class="dlg-h">忘記密碼<button class="x" data-action="close-modal">✕</button></div>
+    <div class="dlg-b" id="fg-body">
+      <div class="step-flow" style="margin-top:0">
+        <span class="sf on"><span class="n">1</span>填寫信箱</span><span class="sf" id="fg-s2"><span class="n">2</span>輸入驗證碼</span><span class="sf" id="fg-s3"><span class="n">3</span>設定新密碼</span>
+      </div>
+      <div class="field"><label>註冊信箱</label><input class="in" id="fg-email" type="email" value="${preset}" placeholder="請輸入註冊時使用的 Email"><div class="fmsg" id="fg-msg"></div>
+      <div class="help gray">若您先前已於登入頁填寫帳號,系統會自動帶入。若帳號信箱已無法收信,請重新創建帳號。</div></div>
+    </div>
+    <div class="dlg-f"><button class="btn btn-main" data-action="fg-next" data-s="1">下一步</button></div>`);
+}
+function fgNext(s){
+  const body = $('#fg-body'), msg = $('#fg-msg');
+  if(s==='1'){
+    const em = toHalf($('#fg-email').value.trim());
+    if(!vEmail(em)){ msg.className='fmsg bad show'; msg.textContent='請輸入正確的 Email 格式'; return; }
+    if(em.toLowerCase()!==DEMO_USER.email){ msg.className='fmsg bad show'; msg.textContent='此信箱尚未完成註冊,請確認或重新創建帳號'; return; }
+    body.innerHTML = `
+      <div class="step-flow" style="margin-top:0"><span class="sf on"><span class="n">✓</span>填寫信箱</span><span class="sf on"><span class="n">2</span>輸入驗證碼</span><span class="sf"><span class="n">3</span>設定新密碼</span></div>
+      <div class="field"><label>Email 驗證碼</label>
+        <div class="code-row"><input class="in" id="fg-code" maxlength="6" placeholder="6 位數驗證碼(示範碼 123456)" inputmode="numeric"><button class="count-btn" id="fg-send" data-action="send-code-fg">重新發送</button></div>
+        <div class="fmsg" id="fg-msg"></div>
+        <div class="help gray">驗證碼已寄至您的信箱;60 秒後才可重新發送,每小時上限 5 次、每日上限 10 次。</div></div>`;
+    $('#modalRoot .dlg-f').innerHTML = `<button class="btn btn-main" data-action="fg-next" data-s="2">下一步</button>`;
+  } else if(s==='2'){
+    if($('#fg-code').value!=='123456'){ const m=$('#fg-msg'); m.className='fmsg bad show'; m.textContent='驗證碼錯誤或已逾時,請重新發送'; return; }
+    body.innerHTML = `
+      <div class="step-flow" style="margin-top:0"><span class="sf on"><span class="n">✓</span>填寫信箱</span><span class="sf on"><span class="n">✓</span>輸入驗證碼</span><span class="sf on"><span class="n">3</span>設定新密碼</span></div>
+      <div class="field"><label>新密碼</label><input class="in" id="fg-pw" type="password" maxlength="12" placeholder="8-12 碼,含大小寫英文與數字"><div class="fmsg" id="fg-msg"></div>
+      <div class="help gray">新密碼不可與舊密碼相同。</div></div>`;
+    $('#modalRoot .dlg-f').innerHTML = `<button class="btn btn-main" data-action="fg-next" data-s="3">完成重設</button>`;
+  } else {
+    const pw = $('#fg-pw').value, m = $('#fg-msg');
+    if(!vPw(pw).ok){ m.className='fmsg bad show'; m.textContent='密碼需 8-12 碼,並包含大小寫英文字母與數字'; return; }
+    if(pw===DEMO_USER.pw){ m.className='fmsg bad show'; m.textContent='新密碼不可與舊密碼相同'; return; }
+    closeModal(); toast('密碼重設完成,請使用新密碼重新登入', 'ok');
+  }
+}
+
+/* ================= 結帳暫存 ================= */
+function initCo(){
+  if(state.co) return;
+  const u = state.user;
+  state.co = {
+    identity: u.identity || 'company',
+    forms: JSON.parse(JSON.stringify({ company:u.company, personal:u.personal })),
+    ship:{ same:false, saved:'', name:'', tel:['','',''], mobile:'', city:'', dist:'', addr:'', agentOk:false, wantDate:false, date:'', saveCommon:false, saveLabel:'' },
+    inv:{ detail:'商品卡(券)', taxid:u.company.taxid||'', channel:'email', carrier:u.personal.carrier||'', wantDate:false, date:'' },
+    pol1:false, pol2:false, payment:null,
+  };
+}
+
+/* ================= 步驟2:訂購資訊(§3/§4.3) ================= */
+function telBoxes(prefix, path, val){
+  return `<div class="tel-3">
+    <input class="in t1" maxlength="3" placeholder="04" inputmode="numeric" data-co="${path}.0" value="${val[0]||''}"><span class="sep">−</span>
+    <input class="in t2" maxlength="8" placeholder="23261789" inputmode="numeric" data-co="${path}.1" value="${val[1]||''}"><span class="sep">#</span>
+    <input class="in t3" placeholder="分機" inputmode="numeric" data-co="${path}.2" value="${val[2]||''}">
+  </div>`;
+}
+function mobileBox(path, val, vald='mobile'){
+  return `<div class="mob-wrap"><span class="cc">+886</span><input class="in" inputmode="numeric" maxlength="10" placeholder="0912345678" data-co="${path}" data-vald="${vald}" value="${val||''}"></div>
+  <div class="fmsg"></div><div class="help gray">可填 09xxxxxxxx 或 9xxxxxxxx</div>`;
+}
+function renderCkInfo(app){
+  if(!state.cart.length){ toast('購物車是空的,請先選購票券'); return nav('#/shop'); }
+  initCo();
+  const co = state.co, u = state.user, isC = co.identity==='company';
+  const f = co.forms[co.identity];
+  app.innerHTML = `
+    ${stepsBar(2)}
+    <div class="container view-pad" style="max-width:880px">
+      <h1 class="page-title">訂購資訊</h1>
+      <p class="page-sub">已自動帶入您的會員資料,仍可於本頁編輯。</p>
+
+      <div class="panel" data-req="3 訂購資料-訂購資訊">
+        <div class="panel-title">訂購人資訊</div>
+        <div class="id-switch">
+          <button class="id-btn ${isC?'on':''}" data-action="co-id" data-v="company">公司戶(需統編)</button>
+          <button class="id-btn ${!isC?'on':''}" data-action="co-id" data-v="personal">個人戶</button>
+        </div>
+        <div class="help" style="margin-bottom:14px">可隨時切換身分別;兩種身分別曾填寫過的資料,系統都會分別保留。</div>
+        <div class="form-grid">
+          ${isC?`
+          <div class="field"><label><span class="req">*</span>公司/單位</label><input class="in" data-co="forms.company.comp" value="${f.comp||''}"></div>
+          <div class="field"><label><span class="req">*</span>統一編號</label><input class="in" maxlength="8" inputmode="numeric" data-co="forms.company.taxid" data-vald="taxid" value="${f.taxid||''}"><div class="fmsg"></div></div>
+          <div class="field"><label>部門</label><input class="in" data-co="forms.company.dept" value="${f.dept||''}"></div>
+          <div class="field"><label>職稱</label><input class="in" data-co="forms.company.title" value="${f.title||''}"></div>
+          <div class="field"><label><span class="req">*</span>聯絡人姓名</label><input class="in" data-co="forms.company.name" value="${f.name||''}"></div>
+          <div class="field"><label>聯絡電話(分機)</label>${telBoxes('c','forms.company.tel',f.tel)}</div>
+          <div class="field"><label><span class="req">*</span>手機號碼</label>${mobileBox('forms.company.mobile',f.mobile)}</div>
+          `:`
+          <div class="field"><label><span class="req">*</span>聯絡人姓名</label><input class="in" data-co="forms.personal.name" value="${f.name||''}"></div>
+          <div class="field"><label>聯絡電話(分機)</label>${telBoxes('p','forms.personal.tel',f.tel)}</div>
+          <div class="field"><label><span class="req">*</span>手機號碼</label>${mobileBox('forms.personal.mobile',f.mobile)}</div>
+          `}
+          <div class="field full"><label><span class="req">*</span>信箱</label><input class="in" readonly value="${u.email}">
+            <div class="help" style="color:#B4691C">電子發票與通知將寄至此信箱,請確保填寫正確(此欄帶入會員信箱,不可編輯)</div></div>
+        </div>
+      </div>
+
+      <div class="panel" data-req="3 訂購資料-收件資訊">
+        <div class="panel-title">收件資訊</div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+          <label class="check-row" style="padding:0"><input type="checkbox" id="ship-same" ${co.ship.same?'checked':''} data-action-ch="ship-same">同訂購人資訊</label>
+          <select class="sel" style="width:auto;min-width:200px;height:40px" data-action-ch="ship-saved">
+            <option value="">— 帶入常用收件資訊 —</option>
+            ${u.addrs.map((a,i)=>`<option value="${i}" ${co.ship.saved===String(i)?'selected':''}>${a.label}(${a.name})</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label><span class="req">*</span>收件人姓名</label><input class="in" id="ship-name" data-co="ship.name" value="${co.ship.name}"></div>
+          <div class="field"><label>聯絡電話(分機)</label>${telBoxes('s','ship.tel',co.ship.tel)}</div>
+          <div class="field"><label><span class="req">*</span>手機號碼</label>${mobileBox('ship.mobile',co.ship.mobile)}</div>
+          <div class="field"><label><span class="req">*</span>收件地址</label>
+            <div style="display:flex;gap:8px">
+              <select class="sel" style="width:118px;flex:none" id="ship-city" data-action-ch="ship-city">
+                <option value="">縣市</option>${Object.keys(CITIES).map(c=>`<option ${co.ship.city===c?'selected':''}>${c}</option>`).join('')}
+              </select>
+              <select class="sel" style="width:118px;flex:none" id="ship-dist" data-co="ship.dist">
+                <option value="">行政區</option>${(CITIES[co.ship.city]||[]).map(d=>`<option ${co.ship.dist===d?'selected':''}>${d}</option>`).join('')}
+              </select>
+            </div>
+            <input class="in" style="margin-top:8px" placeholder="路街巷弄門牌樓層" data-co="ship.addr" value="${co.ship.addr}">
+            <div class="help gray">僅限台灣本島配送(不提供外島選項);偏遠地區將委託物流配送。</div></div>
+          <div class="field full"><label class="check-row" style="padding:0"><input type="checkbox" ${co.ship.agentOk?'checked':''} data-co-ch="ship.agentOk">需由管理室/收發室代收,請勾選授權簽收。</label></div>
+          <div class="field full">
+            <span class="fold-link ${co.ship.wantDate?'open':''}" data-action="fold-date"><span class="ar">▶</span> 如果您需要指定到貨日期,請點擊這裡</span>
+            <div class="fold-body ${co.ship.wantDate?'':'hidden'}" id="fold-date">
+              <label class="check-row" style="padding:0 0 8px"><input type="checkbox" ${co.ship.wantDate?'checked':''} data-co-ch="ship.wantDate">指定到貨日</label>
+              <input class="in" style="max-width:220px;background:#fff;cursor:pointer" readonly placeholder="請選擇日期" id="ship-date" value="${co.ship.date}" data-action="open-cal" data-cal="delivery">
+              <div class="help">預設 3 個工作天出貨,花東地區約需 5 個工作天;國定假日與週末不供選擇,最遠可指定兩週內日期。</div>
+            </div></div>
+          <div class="field full" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+            <label class="check-row" style="padding:0"><input type="checkbox" ${co.ship.saveCommon?'checked':''} data-co-ch="ship.saveCommon">儲存至常用收件資訊</label>
+            <input class="in ${co.ship.saveCommon?'':'hidden'}" id="ship-savelabel" style="max-width:200px;height:38px" placeholder="群組名稱(如:公司)" data-co="ship.saveLabel" value="${co.ship.saveLabel}">
+            <span class="help gray" style="margin:0">最多可儲存 3 組,超過將覆蓋最舊的紀錄</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" data-req="3+4.3 發票資訊">
+        <div class="panel-title">發票資訊 <span class="lock-chip">${isC?'三聯式(公司戶)':'二聯式(個人戶)'} · 依身分別自動帶入,不可變更</span></div>
+        <div class="help" style="margin-bottom:12px">不論身分別,系統皆會寄送發票開立通知;發票資訊可於訂單詳情查看。二聯式發票中獎時將以 Email 通知。</div>
+        ${isC?`
+        <div class="form-grid">
+          <div class="field"><label><span class="req">*</span>發票明細(擇一)</label>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <label class="check-row pol" style="flex:1;min-width:150px"><input type="checkbox" ${co.inv.detail==='商品卡(券)'?'checked':''} data-action-ch="inv-detail" data-v="商品卡(券)">商品卡(券)</label>
+              <label class="check-row pol" style="flex:1;min-width:150px"><input type="checkbox" ${co.inv.detail==='餐費'?'checked':''} data-action-ch="inv-detail" data-v="餐費">餐費</label>
+            </div></div>
+          <div class="field"><label><span class="req">*</span>統一編號</label><input class="in" maxlength="8" inputmode="numeric" data-co="inv.taxid" data-vald="taxid" value="${co.inv.taxid}"><div class="fmsg"></div>
+            <div class="help gray">自動帶入訂購資訊的統編,可編輯;編輯內容不會回存至常用資料。</div></div>
+        </div>`:`
+        <div class="field"><label><span class="req">*</span>收執聯方式(擇一)</label>
+          <div class="radio-cards">
+            <div class="rcard ${co.inv.channel==='email'?'on':''}" data-action="inv-ch" data-v="email"><div class="rt"><span class="ic">✉</span>Email 電子發票</div><div class="rd">發票開立和中獎,皆會發送通知至您的訂購信箱</div></div>
+            <div class="rcard ${co.inv.channel==='carrier'?'on':''}" data-action="inv-ch" data-v="carrier"><div class="rt"><span class="ic">▮</span>手機條碼載具</div><div class="rd">發票將歸戶至您的手機條碼載具</div></div>
+          </div>
+          <div class="${co.inv.channel==='carrier'?'':'hidden'}" style="margin-top:10px;max-width:280px">
+            <input class="in" maxlength="8" placeholder="/AB12C3D" data-co="inv.carrier" data-vald="carrier" value="${co.inv.carrier}"><div class="fmsg"></div>
+            <div class="help gray">自動帶入會員資料的載具;第一碼必須為「/」,共 8 碼。</div>
+          </div></div>`}
+        <div class="field full" style="margin-top:14px">
+          <span class="fold-link ${co.inv.wantDate?'open':''}" data-action="fold-inv"><span class="ar">▶</span> 如果您需要指定發票開立日期,請點擊這裡</span>
+          <div class="fold-body ${co.inv.wantDate?'':'hidden'}" id="fold-inv">
+            <label class="check-row" style="padding:0 0 8px"><input type="checkbox" ${co.inv.wantDate?'checked':''} data-co-ch="inv.wantDate">指定發票日</label>
+            <input class="in" style="max-width:220px;background:#fff;cursor:pointer" readonly placeholder="請選擇日期" id="inv-date" value="${co.inv.date}" data-action="open-cal" data-cal="invoice">
+            <div class="help">發票開立不可跨月,最遠可選至當月倒數第二個工作天。依法規購買當下即開立發票,系統將於您指定日期自動換開。</div>
+          </div></div>
+      </div>
+
+      <div class="panel" data-req="3 勾選政策">
+        <div class="panel-title">同意事項 <span class="opt">(兩項皆必須勾選,才可進行下一步)</span></div>
+        <label class="check-row pol" style="margin-bottom:10px"><input type="checkbox" ${co.pol1?'checked':''} data-co-ch="pol1"><span>我同意為履行訂單配送相關服務,將姓名、電話、配送地址等必要範圍內之資訊提供予合作之第三方物流業者使用。本公司已與其簽訂資料保護相關約定,不得作為其他用途。</span></label>
+        <label class="check-row pol"><input type="checkbox" ${co.pol2?'checked':''} data-co-ch="pol2"><span>本人同意由王品代為處理電子發票銷貨退回或折讓證明單。</span></label>
+      </div>
+
+      <div class="form-foot">
+        <button class="btn btn-sub" data-action="nav" data-to="#/shop">← 上一頁(保留購物車)</button>
+        <button class="btn btn-main" data-action="ck-info-next">下一步,選擇付款 →</button>
+      </div>
+    </div>`;
+}
+function fillShipFrom(src){
+  const s = state.co.ship;
+  s.name = src.name||''; s.tel = [...(src.tel||['','',''])]; s.mobile = src.mobile||'';
+  if(src.city){ s.city = src.city; s.dist = src.dist; s.addr = src.addr; }
+}
+function ckInfoValidate(){
+  const co = state.co, errs = [];
+  const f = co.forms[co.identity];
+  if(co.identity==='company'){
+    if(!f.comp) errs.push('請填寫公司/單位');
+    if(!vTaxId(toHalf(f.taxid))) errs.push('訂購人統一編號格式不符,請重新輸入');
+    if(!f.name) errs.push('請填寫聯絡人姓名');
+    if(!vMobile(toHalf(f.mobile))) errs.push('訂購人手機號碼格式不符,請重新輸入');
+    if(!vTaxId(toHalf(co.inv.taxid))) errs.push('發票統一編號格式不符,請重新輸入');
+  } else {
+    if(!f.name) errs.push('請填寫聯絡人姓名');
+    if(!vMobile(toHalf(f.mobile))) errs.push('訂購人手機號碼格式不符,請重新輸入');
+    if(co.inv.channel==='carrier' && !vCarrier(toHalf(co.inv.carrier))) errs.push('手機載具格式錯誤,請再次確認');
+  }
+  if(!co.ship.name) errs.push('請填寫收件人姓名');
+  if(!vMobile(toHalf(co.ship.mobile))) errs.push('收件人手機號碼格式不符,請重新輸入');
+  if(!co.ship.city || !co.ship.dist || !co.ship.addr) errs.push('請完整填寫收件地址(縣市/行政區/地址)');
+  if(co.ship.wantDate && !co.ship.date) errs.push('請選擇指定到貨日期');
+  if(co.inv.wantDate && !co.inv.date) errs.push('請選擇指定發票開立日期');
+  if(!co.pol1 || !co.pol2) errs.push('請先閱讀並勾選兩項同意事項');
+  return errs;
+}
+function ckInfoNext(){
+  const errs = ckInfoValidate();
+  if(errs.length){ toast('⚠ '+errs[0], 'err'); return; }
+  const co = state.co;
+  if(co.ship.saveCommon){
+    const label = co.ship.saveLabel || co.ship.name + '的收件資訊';
+    const addrs = state.user.addrs;
+    if(addrs.length>=3){
+      const oldest = addrs[0];
+      openModal(`
+        <div class="dlg-h">常用收件資訊已滿<button class="x" data-action="close-modal">✕</button></div>
+        <div class="dlg-b"><p style="line-height:1.9">常用收件資訊已達 3 組上限,系統將自動覆蓋最舊的紀錄:「<b>${oldest.label}</b>」。</p></div>
+        <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">取消</button><button class="btn btn-main" data-action="ck-save-overwrite">確認並繼續</button></div>`);
+      return;
+    }
+    addrs.push({label, name:co.ship.name, tel:[...co.ship.tel], mobile:co.ship.mobile, city:co.ship.city, dist:co.ship.dist, addr:co.ship.addr});
+    toast(`已將「${label}」儲存至常用收件資訊`, 'ok');
+  }
+  nav('#/checkout/pay');
+}
+
+/* ================= 行事曆 ================= */
+let calState = null;
+function openCal(anchor, type){
+  const today = new Date(); today.setHours(0,0,0,0);
+  let min, max, month;
+  if(type==='delivery'){
+    const days = EAST.includes(state.co.ship.city) ? 5 : 3;
+    min = afterWorkdays(today, days); max = addDays(today, 14); month = new Date(min.getFullYear(), min.getMonth(), 1);
+  } else {
+    min = new Date(today); max = secondLastWorkday(today); month = new Date(today.getFullYear(), today.getMonth(), 1);
+  }
+  calState = { type, min, max, month, anchor };
+  drawCal();
+}
+function drawCal(){
+  const c = calState; if(!c) return;
+  const root = $('#calRoot');
+  const y = c.month.getFullYear(), m = c.month.getMonth();
+  const first = new Date(y,m,1), startWd = first.getDay();
+  const dcount = new Date(y,m+1,0).getDate();
+  const sel = c.type==='delivery' ? state.co.ship.date : state.co.inv.date;
+  const canPrev = c.type==='delivery' && new Date(y,m,1) > new Date(c.min.getFullYear(), c.min.getMonth(), 1);
+  const canNext = c.type==='delivery' && new Date(y,m+1,1) <= c.max;
+  let cells = '';
+  for(let i=0;i<startWd;i++) cells += '<span></span>';
+  for(let d=1; d<=dcount; d++){
+    const dt = new Date(y,m,d);
+    const dis = dt < c.min || dt > c.max || !isWorkday(dt);
+    cells += `<button class="cal-d ${sel===fmtD(dt)?'pick':''}" data-action="cal-pick" data-d="${fmtD(dt)}" ${dis?'disabled':''}>${d}</button>`;
+  }
+  const r = c.anchor.getBoundingClientRect();
+  const left = Math.min(r.left + scrollX, document.documentElement.clientWidth - 320 + scrollX);
+  root.innerHTML = `<div class="cal-pop" style="top:${r.bottom + scrollY + 6}px;left:${left}px">
+    <div class="cal-h">
+      <button class="cal-nav" data-action="cal-mv" data-d="-1" ${canPrev?'':'disabled'}>‹</button>
+      <span class="m">${y} 年 ${m+1} 月</span>
+      <button class="cal-nav" data-action="cal-mv" data-d="1" ${canNext?'':'disabled'}>›</button>
+    </div>
+    <div class="cal-g">${['日','一','二','三','四','五','六'].map(w=>`<span class="wd">${w}</span>`).join('')}${cells}</div>
+    <div class="cal-note">${c.type==='delivery'
+      ? `可選 ${fmtD(c.min)} ~ ${fmtD(c.max)}<br>・國定假日與週末不供選擇<br>・${EAST.includes(state.co.ship.city)?'花東地區約 5 個工作天出貨':'預設 3 個工作天出貨'},最遠兩週內`
+      : `可選至本月倒數第二個工作天(${fmtD(c.max)})<br>・發票開立不可跨月`}</div>
+  </div>`;
+}
+function closeCal(){ calState = null; const r = $('#calRoot'); if(r) r.innerHTML=''; }
+
+/* ================= 步驟3:選擇付款(§4.1/§4.2) ================= */
+function renderCkPay(app){
+  if(!state.co){ return nav('#/checkout/info'); }
+  const cc = computeCart(state.cart);
+  const canCredit = cc.total >= 20000;
+  const pm = state.co.payment;
+  app.innerHTML = `
+    ${stepsBar(3)}
+    <div class="container view-pad" style="max-width:880px">
+      <h1 class="page-title">選擇付款方式</h1>
+      <p class="page-sub">本筆訂單應付總金額 <b style="color:var(--wine-bright);font-size:19px">${fm(cc.total)}</b></p>
+      <div class="panel" data-req="4.1 付款方式">
+        <div class="radio-cards" style="grid-template-columns:1fr">
+          <div class="rcard ${pm==='credit'?'on':''} ${canCredit?'':'disabled'}" data-action="pay-sel" data-v="credit">
+            <div class="rt"><span class="ic">💳</span>信用卡</div>
+            <div class="rd">導至銀行付款頁面輸入卡號,完成 3D Secure 驗證(OTP)後即完成付款。付款期限 24 小時。</div>
+            ${canCredit?'':'<div class="rwarn">刷卡需訂單金額滿 $20,000,本筆訂單未達門檻</div>'}
+          </div>
+          <div class="rcard ${pm==='transfer'?'on':''}" data-action="pay-sel" data-v="transfer">
+            <div class="rt"><span class="ic">🏦</span>匯款(虛擬帳號)</div>
+            <div class="rd">系統產出台新銀行專屬虛擬帳號,一次性匯款、自動對帳;完成後同步發送 LINE 通知。付款期限 24 小時。</div>
+          </div>
+          <div class="rcard ${pm==='multi'?'on':''}" data-action="pay-sel" data-v="multi">
+            <span class="badge-tr">適合大額企業採購</span>
+            <div class="rt"><span class="ic">🧾</span>分次匯款</div>
+            <div class="rd">顯示王品指定帳號,可分多筆匯款;由客服人工對帳並回壓付款狀態。付款期限 3 天。</div>
+          </div>
+        </div>
+        <div class="pay-hint" style="margin:16px 0 0" data-req="4.2 付款期限">⏱ <span>付款期限即庫存鎖定期限:逾期未付款,訂單將自動轉為【已取消】並釋放庫存。<br>點擊結帳後,系統將同步發送付款提醒 Email 至您的訂購信箱。</span></div>
+      </div>
+      <div class="form-foot">
+        <button class="btn btn-sub" data-action="nav" data-to="#/checkout/info">← 上一頁</button>
+        <button class="btn btn-main" data-action="ck-pay-next">下一步,確認訂單 →</button>
+      </div>
+    </div>`;
+}
+
+/* ================= 步驟4:確認送出 ================= */
+const PAY_NAME = { credit:'信用卡', transfer:'匯款(虛擬帳號)', multi:'分次匯款' };
+function cartTableHTML(cc){
+  return `${cc.lines.map(l=>`
+    <div class="ci" style="padding:10px 0">
+      <div class="t"><span>${l.p.name}</span><span class="amt ${l.tier||l.groupDisc?'disc':''}">${fm(l.total)}</span></div>
+      <div class="meta">${l.tier?`<span class="orig-strike">${fm(l.p.price)}</span> ${fm(l.unit)}/張 × ${l.qty.toLocaleString()}(滿${l.tier.q}張${rateName(l.tier.r)})`:`${fm(l.p.price)}${l.p.cat==='gift'?'':'/張'} × ${l.qty.toLocaleString()}${l.groupDisc?'(集團滿額 98 折)':''}`}</div>
+    </div>`).join('')}
+    ${cc.badges.length?`<div class="promo-list" style="padding:10px 0 2px;background:none">${cc.badges.map(b=>`<div class="promo-badge">${b}</div>`).join('')}</div>`:''}
+    ${cc.save>0?`<div class="save-bar" style="margin:10px 0 0">🎉 本次優惠共省下 ${fm(cc.save)}</div>`:''}
+    <div class="cart-total" style="padding:12px 0 0"><span class="lb">應付總金額</span><span class="v">${fm(cc.total)}</span></div>`;
+}
+function renderCkConfirm(app){
+  if(!state.co || !state.co.payment){ return nav('#/checkout/pay'); }
+  const co = state.co, cc = computeCart(state.cart), isC = co.identity==='company', f = co.forms[co.identity];
+  app.innerHTML = `
+    ${stepsBar(4)}
+    <div class="container view-pad" style="max-width:880px">
+      <h1 class="page-title">確認送出</h1>
+      <p class="page-sub">請再次確認以下訂購內容,送出後將依所選方式進行付款。</p>
+      <div class="panel"><div class="panel-title">票券明細</div>${cartTableHTML(cc)}</div>
+      <div class="panel"><div class="panel-title">訂購人資訊 <button class="btn btn-sub btn-sm" style="margin-left:auto" data-action="nav" data-to="#/checkout/info">修改</button></div>
+        <div class="kv">
+          <span class="k">身分別</span><span class="v">${isC?'公司戶(需統編)':'個人戶'}</span>
+          ${isC?`<span class="k">公司/單位</span><span class="v">${f.comp}</span><span class="k">統一編號</span><span class="v">${f.taxid}</span>`:''}
+          <span class="k">聯絡人</span><span class="v">${f.name}</span>
+          <span class="k">手機號碼</span><span class="v">+886 ${f.mobile}</span>
+          <span class="k">信箱</span><span class="v">${state.user.email}</span>
+        </div></div>
+      <div class="panel"><div class="panel-title">收件資訊 <button class="btn btn-sub btn-sm" style="margin-left:auto" data-action="nav" data-to="#/checkout/info">修改</button></div>
+        <div class="kv">
+          <span class="k">收件人</span><span class="v">${co.ship.name}(+886 ${co.ship.mobile})</span>
+          <span class="k">收件地址</span><span class="v">${co.ship.city}${co.ship.dist}${co.ship.addr}</span>
+          ${co.ship.agentOk?`<span class="k">代收授權</span><span class="v">已授權管理室/收發室代簽收</span>`:''}
+          <span class="k">到貨日</span><span class="v">${co.ship.wantDate&&co.ship.date?co.ship.date+'(指定)':'約 3 個工作天出貨'+(EAST.includes(co.ship.city)?'(花東約 5 個工作天)':'')}</span>
+        </div></div>
+      <div class="panel"><div class="panel-title">發票資訊 <button class="btn btn-sub btn-sm" style="margin-left:auto" data-action="nav" data-to="#/checkout/info">修改</button></div>
+        <div class="kv">
+          <span class="k">發票類型</span><span class="v">${isC?'三聯式':'二聯式'}</span>
+          ${isC?`<span class="k">發票明細</span><span class="v">${co.inv.detail}</span><span class="k">統一編號</span><span class="v">${co.inv.taxid}</span>`
+               :`<span class="k">收執聯</span><span class="v">${co.inv.channel==='email'?'Email 電子發票':'手機條碼載具 '+co.inv.carrier}</span>`}
+          <span class="k">開立日期</span><span class="v">${co.inv.wantDate&&co.inv.date?co.inv.date+'(指定換開)':'付款完成後開立'}</span>
+        </div></div>
+      <div class="panel"><div class="panel-title">付款方式 <button class="btn btn-sub btn-sm" style="margin-left:auto" data-action="nav" data-to="#/checkout/pay">修改</button></div>
+        <div class="kv"><span class="k">方式</span><span class="v">${PAY_NAME[co.payment]}</span>
+        <span class="k">付款期限</span><span class="v">${co.payment==='multi'?'訂單成立後 3 天':'訂單成立後 24 小時'}(逾期自動取消並釋放庫存)</span></div></div>
+      <div class="form-foot">
+        <button class="btn btn-sub" data-action="nav" data-to="#/checkout/pay">← 上一頁</button>
+        <button class="btn btn-main" style="font-size:16.5px;padding:14px 44px" data-action="ck-submit">確認送出</button>
+      </div>
+    </div>`;
+}
+function submitOrder(){
+  const co = state.co, now = new Date();
+  const cc = computeCart(state.cart);
+  const no = genNo(now, state.orders.filter(o=>o.no.startsWith(genNo(now,0).slice(0,8))).length + 7);
+  const hrs = co.payment==='multi' ? 72 : 24;
+  const isC = co.identity==='company', f = co.forms[co.identity];
+  const order = {
+    no, created:now, status:'待付款', pay:co.payment, lines:state.cart.map(c=>({...c})), cc,
+    deadline:new Date(now.getTime()+hrs*3600*1000), paidAt:null,
+    cardMask:null, acctMask:null, vAccount:'9100 2233 '+String(Math.floor(Math.random()*9000)+1000)+' '+String(Math.floor(Math.random()*9000)+1000),
+    invoice:{ type:isC?'三聯式':'二聯式', taxid:isC?co.inv.taxid:null, detail:isC?co.inv.detail:(co.inv.channel==='email'?'Email 電子發票':'手機條碼 '+co.inv.carrier), no:null, reissued:false, apptDate:co.inv.wantDate?co.inv.date:null },
+    ship:{ name:co.ship.name, tel:[...co.ship.tel], mobile:co.ship.mobile, city:co.ship.city, dist:co.ship.dist, addr:co.ship.addr, agentOk:co.ship.agentOk, apptDate:co.ship.wantDate?co.ship.date:null },
+    history:[{st:'待付款', at:now}], returns:[],
+  };
+  state.orders.unshift(order);
+  state.cart = []; state.promoOpen = false;
+  state.lastOrderNo = no;
+  const mailSub = co.payment==='credit' ? '【王品集團紙本票券訂購網】訂單付款提醒' : `【王品下單網】訂單${no}付款提醒`;
+  toast(`訂單 ${no} 已成立,付款提醒信已寄出<br><span style="opacity:.8;font-size:12.5px">主旨:${mailSub}</span>`, 'ok', 4600);
+  state.co = null;
+  if(order.pay==='credit') nav('#/bank');
+  else nav(`#/payresult/${order.pay}/${no}`);
+}
+
+/* ================= 模擬銀行頁(信用卡 3D) ================= */
+let bankStep = 'card';
+function renderBank(app){
+  const o = state.orders.find(x=>x.no===state.lastOrderNo);
+  if(!o){ return nav('#/shop'); }
+  bankStep = bankStep==='otp' ? 'otp' : 'card';
+  app.innerHTML = `
+    <div class="bank-stage">
+      <div class="bank-card">
+        <div class="bank-h"><span class="blogo">🏦 台新銀行 網路收單</span><span class="sim">模擬畫面(非王品頁面)</span></div>
+        ${bankStep==='card'?`
+        <div class="bank-b">
+          <div class="bank-amt"><span>特店:王品集團紙本票券訂購網<br>訂單編號:${o.no}</span><b>NT ${fm(o.cc.total)}</b></div>
+          <div class="field"><label>信用卡卡號</label><input class="in" value="4147 1234 5678 9012" inputmode="numeric"></div>
+          <div style="display:flex;gap:10px">
+            <div class="field" style="flex:1"><label>有效月/年</label><input class="in" value="12/29"></div>
+            <div class="field" style="flex:1"><label>安全碼</label><input class="in" value="123" type="password" maxlength="3"></div>
+          </div>
+          <button class="bank-btn" data-action="bank-next">確認付款,進行 3D 驗證</button>
+          <span class="bank-cancel" data-action="bank-cancel">取消交易,返回商店</span>
+        </div>`:`
+        <div class="bank-b">
+          <div class="bank-amt"><span>3D Secure 交易驗證</span><b>NT ${fm(o.cc.total)}</b></div>
+          <div class="bank-otp-note">一次性密碼(OTP)已透過簡訊發送至您的手機 0912***345,請於 3 分鐘內輸入完成驗證。<br><b>(示範碼:123456)</b></div>
+          <div class="field"><label>簡訊驗證碼 OTP</label><input class="in" id="bank-otp" maxlength="6" inputmode="numeric" placeholder="6 位數"></div>
+          <button class="bank-btn" data-action="bank-otp-ok">完成驗證</button>
+          <span class="bank-cancel" data-action="bank-cancel">取消交易,返回商店</span>
+        </div>`}
+      </div>
+    </div>`;
+}
+function paySuccess(o){
+  o.status = '待配送'; o.paidAt = new Date(); o.cardMask = o.pay==='credit' ? '414712******9012' : o.cardMask;
+  if(o.pay==='transfer') o.acctMask = '812-9100****'+o.vAccount.slice(-4);
+  o.history.push({st:'待配送', at:o.paidAt});
+  lineToast('付款完成', o.no, '您的訂單已成功付款,我們將盡快為您準備出貨');
+}
+function lineToast(title, no, desc){
+  toast(`<b>LINE OA 推播(示意)</b><br>[${title}] 訂單編號:${no}<br>${desc} <a href="javascript:void(0)" data-action="line-preview" style="color:#CFF3DC;text-decoration:underline">預覽訊息</a>`, 'line', 6000);
+}
+
+/* ================= 付款結果頁 ================= */
+function renderPayResult(app, kind, no){
+  const o = state.orders.find(x=>x.no===no);
+  if(!o) return nav('#/orders');
+  const paid = o.status!=='待付款';
+  let body = '';
+  if(kind==='credit'){
+    body = `
+      <div class="ric ok">✓</div><h2>付款成功,訂單已成立!</h2>
+      <p class="rsub">已完成信用卡 3D 驗證並更新訂單狀態,同步發送 LINE OA 與 Email 通知。<br>我們將於約 3 個工作天內為您出貨。</p>
+      <div class="vac-box"><div class="kv">
+        <span class="k">訂單編號</span><span class="v"><b>${o.no}</b></span>
+        <span class="k">付款金額</span><span class="v vv">${fm(o.cc.total)}</span>
+        <span class="k">信用卡</span><span class="v">${o.cardMask}(前6後4遮蔽)</span>
+      </div></div>`;
+  } else if(kind==='transfer'){
+    body = `
+      <div class="ric ${paid?'ok':'wait'}">${paid?'✓':'🏦'}</div><h2>${paid?'已收到款項,訂單成立!':'訂單成立,請於期限內完成匯款'}</h2>
+      <p class="rsub">${paid?'系統已完成自動對帳,並發送 LINE OA 通知。':'請使用以下台新銀行虛擬帳號完成一次性匯款,系統對帳確認後即安排出貨。<br>付款連結與匯款資訊已同步寄至您的信箱(主旨:【王品下單網】訂單'+o.no+'付款提醒)。'}</p>
+      <div class="vac-box" data-req="4.1 匯款資訊"><div class="kv">
+        <span class="k">銀行代碼</span><span class="v">812 台新國際商業銀行</span>
+        <span class="k">虛擬帳號</span><span class="v vv">${o.vAccount}</span>
+        <span class="k">訂單總金額</span><span class="v vv">${fm(o.cc.total)}</span>
+        <span class="k">付款期限</span><span class="v" style="color:var(--err);font-weight:700">${fmtDT(o.deadline)}</span>
+      </div></div>
+      <ul class="notice-list"><li>虛擬帳號為本訂單專屬,限一次性全額匯款。</li><li>逾期未付款,訂單將自動取消並釋放庫存。</li></ul>
+      ${paid?'':`<button class="btn btn-gold" style="margin-top:16px" data-action="demo-paid" data-no="${o.no}" data-k="transfer">▶(示範)模擬銀行入帳,自動對帳成功</button>`}`;
+  } else {
+    body = `
+      <div class="ric ${paid?'ok':'wait'}">${paid?'✓':'🧾'}</div><h2>${paid?'客服已確認收款,訂單成立!':'訂單成立,請於期限內完成分次匯款'}</h2>
+      <p class="rsub">${paid?'客服已完成人工對帳並回壓付款狀態,同步發送 LINE OA 通知。':'請匯款至以下王品指定帳號,可分多筆匯款;完成後請透過 LINE 官方帳號回報客服。'}</p>
+      <div class="vac-box"><div class="kv">
+        <span class="k">銀行代碼</span><span class="v">812 台新國際商業銀行</span>
+        <span class="k">戶名</span><span class="v">王品餐飲股份有限公司</span>
+        <span class="k">帳號</span><span class="v vv">2088-01-000123-4-56</span>
+        <span class="k">訂單總金額</span><span class="v vv">${fm(o.cc.total)}</span>
+        <span class="k">付款期限</span><span class="v" style="color:var(--err);font-weight:700">${fmtDT(o.deadline)}</span>
+      </div></div>
+      <ul class="notice-list"><li>分次匯款不做自動對帳:請於每筆匯款後回報「匯款日期、金額、帳號後 5 碼」,由客服登錄並人工對帳。</li><li>全額到帳後,客服將回壓【已付款】,訂單即進入待配送。</li></ul>
+      ${paid?'':`<button class="btn btn-gold" style="margin-top:16px" data-action="demo-paid" data-no="${o.no}" data-k="multi">▶(示範)模擬客服人工對帳完成,回壓已付款</button>`}`;
+  }
+  app.innerHTML = `
+    <div class="container">
+      <div class="result-hero" data-req="4.1 付款流程">${body}
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap">
+          <button class="btn btn-main" data-action="nav" data-to="#/order/${o.no}">查看訂單詳情</button>
+          <button class="btn btn-sub" data-action="nav" data-to="#/shop">返回票券訂購</button>
+        </div>
+      </div>
+    </div>`;
+}
+</script>
+<script>
+/* ================= 會員中心(§5) ================= */
+function renderMember(app){
+  const u = state.user;
+  if(!state.mb) state.mb = JSON.parse(JSON.stringify({identity:u.identity, company:u.company, personal:u.personal}));
+  const mb = state.mb, isC = mb.identity==='company', f = mb[mb.identity];
+  app.innerHTML = `
+    <div class="container view-pad" style="max-width:880px">
+      <h1 class="page-title">會員中心</h1>
+      <p class="page-sub">會員資訊與常用收件資訊,將自動帶入訂購流程。</p>
+
+      <div class="panel" data-req="5.1 會員基本資料-帳號">
+        <div class="panel-title">帳號資訊</div>
+        <div class="kv" style="padding-top:0">
+          <span class="k">Email</span>
+          <span class="v" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">${u.email}
+            <span class="st-badge st-已完成">已驗證</span>
+            <button class="btn btn-sub btn-sm" data-action="pw-modal">修改密碼</button>
+          </span>
+          <span class="k"></span><span class="v"><span class="help gray" style="margin:0">如需修改信箱,請聯繫客服協助</span></span>
+          <span class="k">LINE</span>
+          <span class="v" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            ${u.line.bound ? `<span class="line-ic">L</span> 已綁定(${u.line.name||'LINE 帳號'})
+              <button class="btn btn-sub btn-sm" data-action="line-unbind">解除綁定</button>`
+            : `<span class="muted">尚未綁定</span><button class="btn btn-sm" style="background:#06C755;color:#fff" data-action="line-auth" data-ctx="bind"><span class="line-ic" style="background:#fff;color:#06C755">L</span> 綁定 LINE</button>`}
+          </span>
+        </div>
+      </div>
+
+      <div class="panel" data-req="5.1 會員基本資料-會員資訊">
+        <div class="panel-title">會員資訊 <span class="opt">(將自動帶入訂購資料)</span></div>
+        <div class="id-switch">
+          <button class="id-btn ${isC?'on':''}" data-action="mb-id" data-v="company">公司戶(需統編)</button>
+          <button class="id-btn ${!isC?'on':''}" data-action="mb-id" data-v="personal">個人戶</button>
+        </div>
+        <div class="help" style="margin-bottom:14px">兩種身分別的資料會分別保留,切換即可檢視/編輯。</div>
+        <div class="form-grid">
+          ${isC?`
+          <div class="field"><label><span class="req">*</span>公司/單位</label><input class="in" data-mb="company.comp" value="${f.comp||''}"></div>
+          <div class="field"><label><span class="req">*</span>統一編號</label><input class="in" maxlength="8" inputmode="numeric" data-mb="company.taxid" data-vald="taxid" value="${f.taxid||''}"><div class="fmsg"></div></div>
+          <div class="field"><label>部門</label><input class="in" data-mb="company.dept" value="${f.dept||''}"></div>
+          <div class="field"><label>職稱</label><input class="in" data-mb="company.title" value="${f.title||''}"></div>
+          <div class="field"><label><span class="req">*</span>聯絡人姓名</label><input class="in" data-mb="company.name" value="${f.name||''}"></div>
+          <div class="field"><label>聯絡電話(分機)</label><div class="tel-3">
+            <input class="in t1" maxlength="3" inputmode="numeric" data-mb="company.tel.0" value="${f.tel[0]||''}"><span class="sep">−</span>
+            <input class="in t2" maxlength="8" inputmode="numeric" data-mb="company.tel.1" value="${f.tel[1]||''}"><span class="sep">#</span>
+            <input class="in t3" inputmode="numeric" data-mb="company.tel.2" value="${f.tel[2]||''}"></div></div>
+          <div class="field"><label><span class="req">*</span>手機號碼</label><div class="mob-wrap"><span class="cc">+886</span><input class="in" maxlength="10" inputmode="numeric" data-mb="company.mobile" data-vald="mobile" value="${f.mobile||''}"></div><div class="fmsg"></div></div>
+          `:`
+          <div class="field"><label><span class="req">*</span>聯絡人姓名</label><input class="in" data-mb="personal.name" value="${f.name||''}"></div>
+          <div class="field"><label>聯絡電話(分機)</label><div class="tel-3">
+            <input class="in t1" maxlength="3" inputmode="numeric" data-mb="personal.tel.0" value="${f.tel[0]||''}"><span class="sep">−</span>
+            <input class="in t2" maxlength="8" inputmode="numeric" data-mb="personal.tel.1" value="${f.tel[1]||''}"><span class="sep">#</span>
+            <input class="in t3" inputmode="numeric" data-mb="personal.tel.2" value="${f.tel[2]||''}"></div></div>
+          <div class="field"><label><span class="req">*</span>手機號碼</label><div class="mob-wrap"><span class="cc">+886</span><input class="in" maxlength="10" inputmode="numeric" data-mb="personal.mobile" data-vald="mobile" value="${f.mobile||''}"></div><div class="fmsg"></div></div>
+          <div class="field"><label>手機條碼載具</label><input class="in" maxlength="8" placeholder="/AB12C3D" data-mb="personal.carrier" data-vald="carrier" value="${f.carrier||''}"><div class="fmsg"></div></div>
+          `}
+        </div>
+        <div class="form-foot" style="justify-content:flex-end"><button class="btn btn-main" data-action="mb-save">儲存變更</button></div>
+      </div>
+
+      <div class="panel" data-req="5.1 常用收件資訊">
+        <div class="panel-title">常用收件資訊 <span class="opt">(最多 3 組)</span>
+          <button class="btn btn-gold btn-sm" style="margin-left:auto" data-action="addr-edit" data-i="-1" ${u.addrs.length>=3?'disabled title="已達 3 組上限"':''}>+ 新增</button></div>
+        ${u.addrs.length ? u.addrs.map((a,i)=>`
+          <div class="order-card" style="margin-bottom:10px">
+            <div class="oc-main" style="cursor:default">
+              <div class="oname">📦 ${a.label}</div>
+              <div class="odate">${a.name} · +886 ${a.mobile}<br>${a.city}${a.dist}${a.addr}</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-sub btn-sm" data-action="addr-edit" data-i="${i}">編輯</button>
+              <button class="btn btn-danger-o btn-sm" data-action="addr-del" data-i="${i}">刪除</button>
+            </div>
+          </div>`).join('') : '<p class="muted" style="font-size:14px">尚未建立常用收件資訊,結帳時可勾選「儲存至常用收件資訊」。</p>'}
+        <p class="help gray">已滿 3 組時,結帳頁再儲存將覆蓋最舊的一組(系統會先提示)。</p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">其他</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-sub" data-action="ext-line"><span class="line-ic">L</span> 聯絡客服 @wowvoucher</button>
+          <button class="btn btn-danger-o" data-action="del-account">刪除帳號</button>
+        </div>
+      </div>
+    </div>`;
+}
+function pwModal(){
+  openModal(`
+    <div class="dlg-h">修改密碼<button class="x" data-action="close-modal">✕</button></div>
+    <div class="dlg-b">
+      <div class="field"><label>舊密碼</label><input class="in" id="pw-old" type="password" placeholder="請輸入目前密碼(Demo1234)"></div>
+      <div class="field" style="margin-top:12px"><label>新密碼</label><input class="in" id="pw-new" type="password" maxlength="12" placeholder="8-12 碼,含大小寫英文與數字"><div class="fmsg" id="pw-msg"></div>
+      <div class="help gray">新密碼不可與舊密碼相同。</div></div>
+    </div>
+    <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">取消</button><button class="btn btn-main" data-action="pw-save">確認修改</button></div>`);
+}
+function addrModal(i){
+  const a = i>=0 ? state.user.addrs[i] : {label:'',name:'',tel:['','',''],mobile:'',city:'',dist:'',addr:''};
+  openModal(`
+    <div class="dlg-h">${i>=0?'編輯':'新增'}常用收件資訊<button class="x" data-action="close-modal">✕</button></div>
+    <div class="dlg-b">
+      <div class="form-grid">
+        <div class="field"><label><span class="req">*</span>群組名稱</label><input class="in" id="ad-label" placeholder="如:公司、自宅" value="${a.label}"></div>
+        <div class="field"><label><span class="req">*</span>收件人姓名</label><input class="in" id="ad-name" value="${a.name}"></div>
+        <div class="field"><label>聯絡電話(分機)</label><div class="tel-3">
+          <input class="in t1" id="ad-t0" maxlength="3" value="${a.tel[0]||''}"><span class="sep">−</span>
+          <input class="in t2" id="ad-t1" maxlength="8" value="${a.tel[1]||''}"><span class="sep">#</span>
+          <input class="in t3" id="ad-t2" value="${a.tel[2]||''}"></div></div>
+        <div class="field"><label><span class="req">*</span>手機號碼</label><div class="mob-wrap"><span class="cc">+886</span><input class="in" id="ad-mobile" maxlength="10" value="${a.mobile}"></div></div>
+        <div class="field full"><label><span class="req">*</span>收件地址</label>
+          <div style="display:flex;gap:8px">
+            <select class="sel" id="ad-city" style="width:118px;flex:none" data-action-ch="ad-city"><option value="">縣市</option>${Object.keys(CITIES).map(c=>`<option ${a.city===c?'selected':''}>${c}</option>`).join('')}</select>
+            <select class="sel" id="ad-dist" style="width:118px;flex:none"><option value="">行政區</option>${(CITIES[a.city]||[]).map(d=>`<option ${a.dist===d?'selected':''}>${d}</option>`).join('')}</select>
+          </div>
+          <input class="in" id="ad-addr" style="margin-top:8px" placeholder="路街巷弄門牌樓層" value="${a.addr}">
+          <div class="help gray">僅限台灣本島配送</div></div>
+      </div>
+    </div>
+    <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">取消</button><button class="btn btn-main" data-action="addr-save" data-i="${i}">儲存</button></div>`);
+}
+
+/* ================= 訂單查詢(§6) ================= */
+const ORDER_STATUSES = ['待付款','待配送','配送中','已完成','未簽收','已取消'];
+function initOf(){
+  const t = new Date();
+  if(!state.of) state.of = { st:'全部', from:fmtD(addDays(t,-183)), to:fmtD(t), page:1, size:10 };
+}
+function orderSummaryText(o){
+  const first = P(o.lines[0].id).name;
+  const qty = o.lines.reduce((s,l)=>s+l.qty,0);
+  return `${first}${o.lines.length>1?' 及其他票券商品':''},共 ${qty.toLocaleString()} 張`;
+}
+function renderOrders(app){
+  initOf();
+  const of = state.of;
+  app.innerHTML = `
+    <div class="container view-pad" style="max-width:980px">
+      <h1 class="page-title">訂單查詢</h1>
+      <p class="page-sub">僅供會員查詢本人訂單;可查詢近一年內訂單,更早紀錄請透過官方 LINE 聯繫票務專員。</p>
+      <div class="panel" data-req="6 訂單查詢-查詢條件">
+        <div class="filter-bar">
+          <div class="field"><label>訂單狀態(單選)</label>
+            <select class="sel" id="of-st">${['全部',...ORDER_STATUSES].map(s=>`<option ${of.st===s?'selected':''}>${s}</option>`).join('')}</select></div>
+          <div class="field grow"><label>訂單建立日期(預設近 6 個月,一次最長可查 12 個月)</label>
+            <div class="date-pair"><input class="in" type="date" id="of-from" value="${of.from}"><span>~</span><input class="in" type="date" id="of-to" value="${of.to}"></div></div>
+          <button class="btn btn-main" style="padding:11px 26px" data-action="od-filter">查詢</button>
+          <button class="btn btn-sub" data-action="od-reset">重設</button>
+        </div>
+        <div class="help gray" style="margin-top:8px">可查詢近一年內訂單,若需查詢更早紀錄,請透過官方 <a href="javascript:void(0)" data-action="ext-line">LINE(@wowvoucher)</a> 聯繫票務專員。</div>
+      </div>
+      <div id="odList" data-req="6 查詢結果列表"></div>
+    </div>`;
+  drawOrders();
+}
+function drawOrders(){
+  const of = state.of;
+  const list = state.orders.filter(o =>
+    (of.st==='全部' || o.status===of.st) &&
+    fmtD(o.created) >= of.from && fmtD(o.created) <= of.to);
+  const pages = Math.max(1, Math.ceil(list.length/of.size));
+  of.page = Math.min(of.page, pages);
+  const rows = list.slice((of.page-1)*of.size, of.page*of.size);
+  $('#odList').innerHTML = (rows.length ? rows.map(o=>`
+    <div class="order-card">
+      ${o.returns.length?'<span class="ret-flag">有退換貨記錄</span>':''}
+      <div class="oc-main" data-action="od-open" data-no="${o.no}" style="padding-top:${o.returns.length?'10px':'0'}">
+        <div class="oid">訂單編號 <b style="color:var(--ink)">${o.no}</b><span class="st-badge st-${o.status}">${o.status}</span></div>
+        <div class="oname">${orderSummaryText(o)}</div>
+        <div class="odate">訂購日期 ${fmtD(o.created)}</div>
+      </div>
+      <div class="oc-amt">${fm(o.cc.total)}</div>
+      <div class="oc-side">
+        ${o.status==='待付款'?`<button class="paynow-btn" data-action="od-paynow" data-no="${o.no}">立即付款</button>
+        <span class="deadline">付款截止 ${fmtDT(o.deadline)}</span>`:
+        `<button class="btn btn-sub btn-sm" data-action="od-open" data-no="${o.no}">查看詳情</button>`}
+      </div>
+    </div>`).join('') : `<div class="panel" style="text-align:center;color:var(--muted);padding:46px 20px">目前尚無符合條件的訂單</div>`)
+  + `<div class="pager">
+      ${Array.from({length:pages},(_,i)=>`<button class="pg-btn ${of.page===i+1?'on':''}" data-action="od-page" data-p="${i+1}">${i+1}</button>`).join('')}
+      <span class="pg-size">每頁<select class="sel" id="of-size" data-action-ch="od-size">${[10,20,50].map(n=>`<option ${of.size===n?'selected':''}>${n}</option>`).join('')}</select>筆,共 ${list.length} 筆</span>
+    </div>`;
+}
+function accBlock(id, title, open, inner){
+  return `<div class="acc ${open?'open':''}" id="acc-${id}">
+    <button class="acc-h" data-action="acc-tg" data-t="${id}"><span class="ic">◆</span>${title}<span class="ar">▼</span></button>
+    <div class="acc-b">${inner}</div></div>`;
+}
+function renderOrderDetail(app, no){
+  const o = state.orders.find(x=>x.no===no);
+  if(!o){ toast('查無此訂單','err'); return nav('#/orders'); }
+  const canCancel = o.status==='待付款';
+  const canReturn = ['待配送','配送中','已完成','未簽收'].includes(o.status);
+  app.innerHTML = `
+    <div class="container view-pad" style="max-width:880px" data-req="6 訂單詳情(6 折疊區塊)">
+      <a href="javascript:void(0)" data-action="nav" data-to="#/orders" style="font-size:14px">← 返回訂單查詢</a>
+      <h1 class="page-title" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">訂單詳情 <span class="st-badge st-${o.status}" style="font-size:14px">${o.status}</span></h1>
+      <p class="page-sub">訂單編號 ${o.no}</p>
+
+      ${accBlock('info','訂單資訊',true,`
+        <div class="kv">
+          <span class="k">訂單編號</span><span class="v">${o.no}</span>
+          <span class="k">訂購日期</span><span class="v">${fmtDT2(o.created)}</span>
+          <span class="k">訂單狀態</span><span class="v"><span class="st-badge st-${o.status}">${o.status}</span></span>
+          <span class="k">總金額</span><span class="v"><b class="money">${fm(o.cc.total)}</b></span>
+          ${o.status==='待付款'?`<span class="k">付款截止</span><span class="v" style="color:var(--err);font-weight:700">${fmtDT(o.deadline)}</span>`:''}
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+          ${o.status==='待付款'?`<button class="paynow-btn" data-action="od-paynow" data-no="${o.no}">立即付款</button>`:''}
+          ${canCancel?`<button class="btn btn-danger-o btn-sm" data-action="od-cancel" data-no="${o.no}">取消訂單</button>`:''}
+          ${canReturn?`<button class="btn btn-gold btn-sm" data-action="od-return" data-no="${o.no}">申請退換貨</button>`:''}
+        </div>`)}
+      ${accBlock('items','票券明細',true, cartTableHTML(o.cc))}
+      ${accBlock('ship','收件資訊',false,`
+        <div class="kv">
+          <span class="k">收件人姓名</span><span class="v">${o.ship.name}</span>
+          <span class="k">聯絡電話(分機)</span><span class="v">${o.ship.tel[0]||'—'}${o.ship.tel[1]?'-'+o.ship.tel[1]:''}${o.ship.tel[2]?' #'+o.ship.tel[2]:''}</span>
+          <span class="k">手機號碼</span><span class="v">+886 ${o.ship.mobile}</span>
+          <span class="k">收件地址</span><span class="v">${o.ship.city}${o.ship.dist}${o.ship.addr}</span>
+          ${o.ship.apptDate?`<span class="k">指定到貨日</span><span class="v">${o.ship.apptDate}</span>`:''}
+        </div>
+        ${o.ship.agentOk?`<div class="inv-tip">已授權管理室/收發室代簽收。</div>`:''}`)}
+      ${accBlock('pay','付款資訊',false,`
+        <div class="kv">
+          <span class="k">付款方式</span><span class="v">${PAY_NAME[o.pay]}</span>
+          ${o.pay==='credit'&&o.cardMask?`<span class="k">付款帳號</span><span class="v">${o.cardMask}(銀行回傳,前 6 後 4 碼)</span>`:''}
+          ${o.pay==='transfer'&&o.acctMask?`<span class="k">付款帳號</span><span class="v">${o.acctMask}(銀行回傳,已遮蔽)</span>`:''}
+          <span class="k">付款時間</span><span class="v">${o.paidAt?fmtDT2(o.paidAt):'—(尚未付款)'}</span>
+        </div>`)}
+      ${accBlock('inv','發票',false,`
+        <div class="kv">
+          <span class="k">發票類型</span><span class="v">${o.invoice.type}</span>
+          ${o.invoice.type==='三聯式'?`<span class="k">統一編號</span><span class="v">${o.invoice.taxid}</span>`:''}
+          <span class="k">發票號碼</span><span class="v">${o.invoice.no?o.invoice.no:'—(付款完成後開立)'}</span>
+          <span class="k">發票明細</span><span class="v">${o.invoice.detail}</span>
+          ${o.invoice.apptDate?`<span class="k">指定開立日期</span><span class="v">${o.invoice.apptDate}</span>`:''}
+        </div>
+        ${o.invoice.no?`<div class="inv-tip">電子發票已開立,可於 48 小時後至財政部電子發票整合服務平台查詢下載${o.invoice.reissued?`<br><span style="font-size:12px;color:#B4691C">原發票已作廢換開,請以此最新發票為準</span>`:''}</div>`:''}`)}
+      ${accBlock('hist','訂單歷程',false,`
+        <ul class="tl">${o.history.map((h,i)=>`
+          <li class="${i===o.history.length-1?'now':''}"><span class="tt">${h.st}</span><div class="td">${fmtDT2(h.at)}</div>${h.note?`<div class="tx">${h.note}</div>`:''}</li>`).join('')}
+        </ul>`)}
+      ${accBlock('ret','退換貨紀錄',false, o.returns.length?`
+        <ul class="tl">${o.returns.map(r=>`
+          <li class="now"><span class="tt">${r.kind==='退款'?'退貨(退款)':'換貨'} — ${r.status}</span>
+          <div class="td">${fmtDT2(r.at)}</div><div class="tx">退換貨表單編號:${r.no} · 退換貨方式:${r.kind}</div></li>`).join('')}
+        </ul>`:`<p class="muted" style="padding-top:12px;font-size:14px">此訂單尚無退換貨紀錄。</p>`)}
+    </div>`;
+}
+function cancelModal(no){
+  openModal(`
+    <div class="dlg-h">取消訂單<button class="x" data-action="close-modal">✕</button></div>
+    <div class="dlg-b">
+      <div class="field"><label><span class="req">*</span>取消原因</label>
+        <select class="sel" id="cx-reason"><option value="">請選擇</option>${['改變心意','票券訂購錯誤','付款遇到問題','其他'].map(r=>`<option>${r}</option>`).join('')}</select></div>
+      <div class="field" style="margin-top:12px"><label>補充說明(非必填)</label><textarea class="in" id="cx-txt" rows="2" placeholder="自行輸入原因"></textarea></div>
+      <div class="pay-hint" style="margin:14px 0 0">ℹ <span>取消後系統將:釋放預留庫存數量、停止自動對帳、寄送取消通知 Email 給您。</span></div>
+    </div>
+    <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">返回</button><button class="btn btn-main" data-action="cx-ok" data-no="${no}">確認取消訂單</button></div>`);
+}
+
+/* ================= 退換貨(§7) ================= */
+function renderReturnEntry(app){
+  app.innerHTML = `
+    <div class="container view-pad" data-req="7 退換貨申請-申請管道">
+      <h1 class="page-title">退換貨申請</h1>
+      <p class="page-sub">請選擇符合您情況的申請方式,我們將為您引導至對應的流程。</p>
+      <div class="entry-cards">
+        <div class="entry-card" data-action="nav" data-to="#/orders">
+          <div class="eic">🧾</div><h3>一年內在本站購買的訂單</h3>
+          <div class="who">適用對象:一年內從本站訂購票券,且您是原購買人(擁有會員帳號/訂單資訊)</div>
+          <p>請點擊前往「訂單查詢」,找到該筆訂單並點擊【申請退換貨】,系統將自動帶入訂單與收件資訊。</p>
+          <span class="go">前往訂單查詢 →</span>
+        </div>
+        <div class="entry-card" data-action="ret-other">
+          <div class="eic">🎫</div><h3>其他狀況(歷史訂單或持贈送券者)</h3>
+          <div class="who">適用對象:1. 超過一年以上的歷史訂單 2. 親友贈送、公司發放等非原購買人之持券者</div>
+          <p>點擊後將導向專用的「退換貨申請表單」,免註冊登入即可填寫。</p>
+          <span class="go">填寫退換貨申請表單 →</span>
+        </div>
+      </div>
+    </div>`;
+}
+function initRf(ctx){
+  const o = ctx.no ? state.orders.find(x=>x.no===ctx.no) : null;
+  state.rf = {
+    no: o?o.no:'', order:o,
+    scope: o?'full':'part', brand:'', tickets:'', count: o?o.cc.qty:0,
+    reason:'', reasonTxt:'', photos:[], expect:'退款',
+    refund: (o && (o.pay==='credit'||o.pay==='transfer')) ? 'orig' : 'account',
+    bank:{code:'',branch:'',holder:'',acct:'',book:null},
+    ship: o?{name:o.ship.name, city:o.ship.city, dist:o.ship.dist, addr:o.ship.addr, tel:[...o.ship.tel], mobile:o.ship.mobile}
+         :{name:'', city:'', dist:'', addr:'', tel:['','',''], mobile:''},
+    contact:{name:o?o.ship.name:'', tel:o?[...o.ship.tel]:['','',''], mobile:o?o.ship.mobile:'', email:state.user?state.user.email:''},
+    agree:false,
+  };
+}
+function parseTickets(str){
+  if(!str) return 0;
+  return str.split(/[,،、;\s]+/).filter(Boolean).reduce((sum,tk)=>{
+    const m = tk.match(/^(\D*)(\d+)\s*[-~]\s*\D*(\d+)$/);
+    if(m) return sum + Math.abs(Number(m[3])-Number(m[2])) + 1;
+    return sum + 1;
+  },0);
+}
+function renderReturnForm(app){
+  const ctx = state.retCtx || {from:'footer'};
+  if(!state.rf || state.rf._ctx !== JSON.stringify(ctx)){ initRf(ctx); state.rf._ctx = JSON.stringify(ctx); }
+  const rf = state.rf, o = rf.order;
+  const canOrig = !!(o && (o.pay==='credit'||o.pay==='transfer'));
+  app.innerHTML = `
+    <div class="container view-pad" style="max-width:880px">
+      <a href="javascript:void(0)" data-action="nav" data-to="${o?'#/order/'+o.no:'#/return'}" style="font-size:14px">← 返回</a>
+      <h1 class="page-title">退換貨申請表單</h1>
+      <p class="page-sub">${o?`由訂單 ${o.no} 發起,系統已自動帶入訂單與收件資訊。`:'歷史訂單/持贈送券者專用表單,免登入填寫;為避免資料錯置,本表單不需填寫訂單編號。'}</p>
+
+      <div class="panel" data-req="7 申請退換貨表單-基本資訊">
+        <div class="panel-title">基本表單資訊</div>
+        <div class="form-grid">
+          ${o?`<div class="field"><label>訂單編號</label><input class="in" readonly value="${o.no}"><div class="help gray">自動帶入原交易訂單編號,不可編輯</div></div>`:''}
+          <div class="field"><label><span class="req">*</span>退貨範圍</label>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              ${o?`<label class="check-row pol" style="flex:1;min-width:140px"><input type="checkbox" ${rf.scope==='full'?'checked':''} data-action-ch="rf-scope" data-v="full">整筆訂單退貨</label>`:''}
+              <label class="check-row pol" style="flex:1;min-width:140px"><input type="checkbox" ${rf.scope==='part'?'checked':''} data-action-ch="rf-scope" data-v="part">部分退貨</label>
+            </div>
+            ${o?'<div class="help gray">每筆訂單僅能發起一次整筆退貨;部分退貨可發起多次。</div>':''}</div>
+          ${rf.scope==='part'?`
+          <div class="field"><label><span class="req">*</span>品牌</label>
+            <input class="in" list="brandList" placeholder="輸入關鍵字模糊搜尋" data-rf="brand" value="${rf.brand}">
+            <datalist id="brandList">${['王品集團(集團商品卡)',...BRANDS].map(b=>`<option value="${b}">`).join('')}</datalist>
+            <div class="help gray">因舊券可能有重複流水號,需搭配品牌判斷。</div></div>
+          <div class="field full"><label><span class="req">*</span>退貨券號</label>
+            <textarea class="in" rows="2" placeholder="連號請以區間輸入:WP0001234-WP0001243;非連號以逗號分隔:WP0001250, WP0001262" data-rf="tickets">${rf.tickets}</textarea>
+            <div class="help">支援「連號區間 + 逗號分隔」混合輸入,系統自動計算張數(規劃提案,詳細規則待與票務小組確認)。</div></div>
+          `:''}
+          <div class="field"><label>退貨總張數</label><input class="in" readonly id="rf-count" value="${rf.scope==='full'&&o ? o.cc.qty : (rf.count||0)}">
+            <div class="help gray">${rf.scope==='full'?'整筆退貨自動帶入訂單張數(考量系統效能,不逐張顯示券號)':'依退貨券號自動計算'}</div></div>
+          <div class="field"><label><span class="req">*</span>退貨原因</label>
+            <select class="sel" data-rf-ch="reason">
+              <option value="">請選擇</option>
+              <optgroup label="個人因素">${['買錯票券','重複購買','不再需要'].map(r=>`<option ${rf.reason===r?'selected':''}>${r}</option>`).join('')}</optgroup>
+              <optgroup label="品質因素">${['票券破損','污損無法辨識'].map(r=>`<option ${rf.reason===r?'selected':''}>${r}</option>`).join('')}</optgroup>
+              <optgroup label="商品因素">${['商品調價','停售'].map(r=>`<option ${rf.reason===r?'selected':''}>${r}</option>`).join('')}</optgroup>
+              <optgroup label="物流因素">${['品項與訂單不符','配送延遲'].map(r=>`<option ${rf.reason===r?'selected':''}>${r}</option>`).join('')}</optgroup>
+              <option ${rf.reason==='其他'?'selected':''}>其他</option>
+            </select>
+            ${rf.reason==='其他'?`<textarea class="in" style="margin-top:8px" rows="2" placeholder="請填寫詳細原因(必填)" data-rf="reasonTxt">${rf.reasonTxt}</textarea>`:''}</div>
+          <div class="field full"><label><span class="req">*</span>上傳票券照片<span class="why">最多 5 張,每張 5MB 內(格式與大小為建議值)</span></label>
+            <div class="photo-grid" id="photoGrid">
+              ${rf.photos.map((p,i)=>`<div class="photo-th" style="background-image:url('${p.url}')"><button class="del" data-action="photo-del" data-i="${i}">✕</button></div>`).join('')}
+              ${rf.photos.length<5?`<button class="photo-add" data-action="photo-add"><span class="pl">＋</span>上傳照片</button>
+              <button class="photo-add" data-action="photo-demo" title="會議示範用"><span class="pl">🎫</span>示範照片</button>`:''}
+            </div>
+            <input type="file" id="photoFile" accept="image/*" multiple class="hidden">
+            <div class="help" style="color:#B4691C">照片請清楚且完整拍攝到票券條碼及票券售價資訊</div></div>
+          <div class="field"><label><span class="req">*</span>期待處理方式</label>
+            <div style="display:flex;gap:12px">
+              <label class="check-row pol" style="flex:1"><input type="checkbox" ${rf.expect==='退款'?'checked':''} data-action-ch="rf-expect" data-v="退款">退款</label>
+              <label class="check-row pol" style="flex:1"><input type="checkbox" ${rf.expect==='換貨'?'checked':''} data-action-ch="rf-expect" data-v="換貨">換貨</label>
+            </div>
+            <div class="help gray">實際退款/換貨處理方式,於票務小組驗收票券時,與顧客協議為主</div></div>
+          <div class="field"><label><span class="req">*</span>退款方式<span class="why">換貨如需退差價亦適用</span></label>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              ${canOrig?`<label class="check-row pol" style="flex:1;min-width:150px"><input type="checkbox" ${rf.refund==='orig'?'checked':''} data-action-ch="rf-refund" data-v="orig">原付款方式退回</label>`:''}
+              <label class="check-row pol" style="flex:1;min-width:150px"><input type="checkbox" ${rf.refund==='account'?'checked':''} data-action-ch="rf-refund" data-v="account">指定帳戶</label>
+            </div>
+            ${canOrig?'':'<div class="help gray">無訂單編號或原付款方式不支援時,僅能指定帳戶退款。</div>'}</div>
+        </div>
+      </div>
+
+      ${rf.refund==='account'?`
+      <div class="panel" data-req="7 退款帳戶資訊">
+        <div class="panel-title">退款帳戶資訊 <span class="opt">(必填)</span></div>
+        <div class="help" style="margin-bottom:12px">客服與您溝通處理方式為退款時使用。</div>
+        <div class="form-grid">
+          <div class="field"><label><span class="req">*</span>銀行代碼/名稱</label><input class="in" placeholder="如:812 台新國際商業銀行" data-rf="bank.code" value="${rf.bank.code}"></div>
+          <div class="field"><label><span class="req">*</span>分行代碼/名稱</label><input class="in" placeholder="如:0123 台中分行" data-rf="bank.branch" value="${rf.bank.branch}"></div>
+          <div class="field"><label><span class="req">*</span>戶名</label><input class="in" data-rf="bank.holder" value="${rf.bank.holder}"></div>
+          <div class="field"><label><span class="req">*</span>帳號</label><input class="in" inputmode="numeric" data-rf="bank.acct" value="${rf.bank.acct}"></div>
+          <div class="field full"><label><span class="req">*</span>上傳存摺封面<span class="why">僅能上傳一張,系統將自動加上防偽浮水印</span></label>
+            <div class="photo-grid">
+              ${rf.bank.book?`<div class="photo-th book" style="background-image:url('${rf.bank.book}');--wm:${WM_URL}"><button class="del" data-action="book-del">✕</button></div>`
+              :`<button class="photo-add" data-action="book-add"><span class="pl">＋</span>上傳存摺</button>
+                <button class="photo-add" data-action="book-demo" title="會議示範用"><span class="pl">📔</span>示範圖片</button>`}
+            </div>
+            <input type="file" id="bookFile" accept="image/*" class="hidden">
+            <div class="help gray">浮水印文字:「僅供王品集團紙本票券退款使用,塗改翻印無效」(滿版傾斜網格)</div></div>
+        </div>
+      </div>`:''}
+
+      <div class="panel" data-req="7 收件資訊(票券退回地址)">
+        <div class="panel-title">收件資訊</div>
+        <div class="pay-hint" style="margin:0 0 14px">📮 <span>此地址將作為「實體票券退回地址」。若後續審核有異動、或協議取消退貨時,我們將依此地址將實體票券掛號寄還給您。${o?'<br>已自動帶入原訂單收件資訊,可編輯;編輯內容不會回寫至原訂單。':''}</span></div>
+        <div class="form-grid">
+          <div class="field"><label><span class="req">*</span>收件人姓名</label><input class="in" data-rf="ship.name" value="${rf.ship.name}"></div>
+          <div class="field"><label><span class="req">*</span>收件地址</label>
+            <div style="display:flex;gap:8px">
+              <select class="sel" style="width:118px;flex:none" data-action-ch="rf-city"><option value="">縣市</option>${Object.keys(CITIES).map(c=>`<option ${rf.ship.city===c?'selected':''}>${c}</option>`).join('')}</select>
+              <select class="sel" style="width:118px;flex:none" data-rf="ship.dist"><option value="">行政區</option>${(CITIES[rf.ship.city]||[]).map(d=>`<option ${rf.ship.dist===d?'selected':''}>${d}</option>`).join('')}</select>
+            </div>
+            <input class="in" style="margin-top:8px" placeholder="路街巷弄門牌樓層" data-rf="ship.addr" value="${rf.ship.addr}">
+            <div class="help gray">僅限台灣本島配送</div></div>
+          <div class="field"><label>聯絡電話(分機)</label><div class="tel-3">
+            <input class="in t1" maxlength="3" data-rf="ship.tel.0" value="${rf.ship.tel[0]||''}"><span class="sep">−</span>
+            <input class="in t2" maxlength="8" data-rf="ship.tel.1" value="${rf.ship.tel[1]||''}"><span class="sep">#</span>
+            <input class="in t3" data-rf="ship.tel.2" value="${rf.ship.tel[2]||''}"></div></div>
+          <div class="field"><label><span class="req">*</span>手機號碼</label><div class="mob-wrap"><span class="cc">+886</span><input class="in" maxlength="10" inputmode="numeric" data-rf="ship.mobile" data-vald="mobile" value="${rf.ship.mobile}"></div><div class="fmsg"></div></div>
+        </div>
+      </div>
+
+      <div class="panel" data-req="7 聯絡資訊">
+        <div class="panel-title">聯絡資訊 <button class="btn btn-sub btn-sm" style="margin-left:auto" data-action="rf-same">同收件資訊,自動帶入</button></div>
+        <div class="form-grid">
+          <div class="field"><label>聯絡人姓名</label><input class="in" id="rc-name" data-rf="contact.name" value="${rf.contact.name}"></div>
+          <div class="field"><label><span class="req">*</span>電子信箱</label><input class="in" type="email" data-rf="contact.email" value="${rf.contact.email}"><div class="help gray">審核進度與結果將以 Email 通知</div></div>
+          <div class="field"><label>聯絡電話(分機)</label><div class="tel-3">
+            <input class="in t1" id="rc-t0" maxlength="3" data-rf="contact.tel.0" value="${rf.contact.tel[0]||''}"><span class="sep">−</span>
+            <input class="in t2" id="rc-t1" maxlength="8" data-rf="contact.tel.1" value="${rf.contact.tel[1]||''}"><span class="sep">#</span>
+            <input class="in t3" id="rc-t2" data-rf="contact.tel.2" value="${rf.contact.tel[2]||''}"></div></div>
+          <div class="field"><label>手機號碼</label><div class="mob-wrap"><span class="cc">+886</span><input class="in" id="rc-mobile" maxlength="10" data-rf="contact.mobile" data-vald="mobile" value="${rf.contact.mobile}"></div><div class="fmsg"></div></div>
+        </div>
+      </div>
+
+      <div class="panel" data-req="7 勾選政策">
+        <label class="check-row pol"><input type="checkbox" ${rf.agree?'checked':''} data-rf-bool="agree"><span>為辦理退換貨與退款作業,本人同意提供上述資料,並已詳細閱讀且接受 <a href="javascript:void(0)" data-action="policy-new" data-key="return">[退換貨政策]</a> 及 <a href="javascript:void(0)" data-action="policy-new" data-key="privacy">[隱私權與個資蒐集聲明]</a> 之全部內容。</span></label>
+        <div class="form-foot" style="justify-content:center"><button class="btn btn-main" style="padding:14px 48px" data-action="rf-submit">確認送出</button></div>
+      </div>
+    </div>`;
+}
+function rfValidate(){
+  const rf = state.rf, errs = [];
+  if(rf.scope==='part'){
+    if(!rf.brand) errs.push('請選擇/輸入品牌');
+    if(!rf.tickets.trim()) errs.push('請填寫退貨券號');
+  }
+  if(!rf.reason) errs.push('請選擇退貨原因');
+  if(rf.reason==='其他' && !rf.reasonTxt.trim()) errs.push('退貨原因選擇「其他」時,需填寫詳細原因');
+  if(!rf.photos.length) errs.push('請上傳票券照片(不論退貨原因,皆需上傳)');
+  if(rf.refund==='account'){
+    if(!rf.bank.code||!rf.bank.branch||!rf.bank.holder||!rf.bank.acct) errs.push('請完整填寫退款帳戶資訊');
+    if(!rf.bank.book) errs.push('請上傳存摺封面');
+  }
+  if(!rf.ship.name||!rf.ship.city||!rf.ship.dist||!rf.ship.addr) errs.push('請完整填寫收件資訊(票券退回地址)');
+  if(!vMobile(toHalf(rf.ship.mobile))) errs.push('收件人手機號碼格式不符,請重新輸入');
+  if(!vEmail(toHalf(rf.contact.email))) errs.push('請填寫正確的聯絡電子信箱');
+  if(!rf.agree) errs.push('請先閱讀並勾選同意退換貨政策');
+  return errs;
+}
+function renderReturnDone(app){
+  const d = state.rfDone || {no:'RT'+genNo(new Date(),1)};
+  app.innerHTML = `
+    <div class="container">
+      <div class="result-hero" data-req="7 表單送出/通知時機">
+        <div class="ric ok">✓</div><h2>退換貨申請已送出!</h2>
+        <p class="rsub">表單編號 <b>${d.no}</b><br>系統已發送申請成功通知信至您的信箱,審核進度將以 Email 與 LINE 通知。</p>
+        <div class="step-flow">
+          <span class="sf on"><span class="n">✓</span>表單成功送出</span>
+          <span class="sf"><span class="n">2</span>書審通過<br>(通知寄回票券)</span>
+          <span class="sf"><span class="n">3</span>票務小組驗收<br>協議處理方式</span>
+          <span class="sf"><span class="n">4</span>退款/換貨<br>退貨單結案</span>
+        </div>
+        <p class="rsub" style="font-size:13px;margin-top:10px">若換貨新訂單需要補款、或表單被駁回,皆會另行通知。</p>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+          ${state.loggedIn?`<button class="btn btn-main" data-action="nav" data-to="#/orders">返回訂單查詢</button>`:''}
+          <button class="btn btn-sub" data-action="nav" data-to="#/shop">回票券訂購</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ================= FAQ ================= */
+const FAQ_CATS = [['all','📋 全部問題'],['票券使用與保管說明','🎫 票券使用與保管說明'],['購買流程與帳務問題','🛒 購買流程與帳務問題'],['退換貨相關','⇄ 退換貨相關']];
+function renderFaq(app){
+  const cur = state.faqCat || 'all';
+  const cats = FAQ_CATS.map(([k,t])=>{
+    const n = k==='all' ? FAQS.length : FAQS.filter(f=>f.cat===k).length;
+    return `<button class="faq-cat ${cur===k?'on':''}" data-action="faq-cat" data-c="${k}">${t} <span class="n">(${n})</span></button>`;
+  }).join('');
+  const groups = (cur==='all' ? FAQ_CATS.slice(1).map(c=>c[0]) : [cur]);
+  app.innerHTML = `
+    <div class="container view-pad" style="max-width:880px" data-req="2.1 Header-FAQ">
+      <h1 class="page-title">常見問題 FAQ</h1>
+      <p class="page-sub">找不到答案?歡迎透過 LINE OA 或電子郵件聯繫我們的客服團隊。</p>
+      <div class="faq-cats">${cats}</div>
+      ${groups.map(g=>`
+        <div class="sec-title" style="margin-top:20px">${g} <span class="cnt">${FAQS.filter(f=>f.cat===g).length} 則</span></div>
+        ${FAQS.filter(f=>f.cat===g).map((f,i)=>`
+          <div class="faq-item"><button class="faq-q" data-action="faq-tg"><span class="qic">Q</span>${f.q}<span class="ar">▼</span></button>
+          <div class="faq-a">${f.a}</div></div>`).join('')}`).join('')}
+      <div class="faq-foot">如無法解決您的問題,請聯繫 <a href="javascript:void(0)" data-action="ext-line"><b>LINE OA 票務專員</b></a></div>
+    </div>`;
+}
+
+/* ================= 政策/服務須知頁 ================= */
+const POLICIES = {
+  privacy:{ t:'隱私權條款', body:'本網站由王品餐飲股份有限公司營運。我們僅於提供紙本票券訂購、配送、發票開立與售後服務之必要範圍內,蒐集、處理及利用您的個人資料(姓名、電話、地址、Email、統一編號等)。' },
+  tos:{ t:'使用者服務條款', body:'使用本網站服務前,請詳細閱讀本條款。會員應妥善保管帳號密碼;票券訂購成立後之權利義務、付款期限、取消與退換貨規範,依本網站公告辦理。' },
+  pdpa:{ t:'個人資料保護聲明', body:'依個人資料保護法規定,您得就您的個人資料行使查詢、閱覽、複製、補充、更正、停止蒐集處理利用及刪除之權利,行使方式請聯繫客服信箱。' },
+  howbuy:{ t:'購買流程', body:'STEP 1 選擇票券並加入購物車 → STEP 2 填寫訂購資訊(訂購人/收件/發票) → STEP 3 選擇付款方式(信用卡/匯款/分次匯款) → STEP 4 確認送出並完成付款 → 約 3 個工作天出貨(花東約 5 個工作天)。' },
+  usage:{ t:'票券使用說明', body:'商品卡等同現金使用、可找零;餐券兌換指定套餐乙客。全台適用門市以票券背面說明與官網公告為準。票券為無記名有價證券,請妥善保管。' },
+  return:{ t:'退換貨規範', body:'一年內本站訂單:請於訂單查詢申請退換貨;歷史訂單或持贈送券者:請由頁尾「退換貨申請」填寫專用表單。所有申請皆需上傳票券照片,由票務小組書審與驗收後,與您協議實際處理方式。' },
+};
+function renderPolicy(app, key){
+  const p = POLICIES[key] || POLICIES.privacy;
+  app.innerHTML = `
+    <div class="container view-pad" style="max-width:760px">
+      <h1 class="page-title">${p.t}</h1>
+      <p class="page-sub">本頁內容由下單網後台維護(Prototype 為示意文案)。</p>
+      <div class="panel"><p style="line-height:2;font-size:15px">${p.body}</p>
+      ${key==='howbuy'?`<div style="margin-top:16px"><button class="dm-btn" data-action="dm" style="margin:0">⬇ 下載產品 DM</button></div>`:''}
+      </div>
+      <button class="btn btn-sub" onclick="history.back()">← 返回上一頁</button>
+    </div>`;
+}
+
+/* ================= LINE OA 推播預覽(§8) ================= */
+function linePreviewModal(){
+  const o = state.orders.find(x=>x.paidAt) || state.orders[0];
+  const no = o ? o.no : '20260420001';
+  const msgs = [
+    {t:'訂單已成立!', d:'您的訂單已成功付款,我們將盡快為您準備出貨', time:'09:41'},
+    {t:'訂單已出貨!', d:'您的訂單已完成出貨', time:'14:20'},
+    {t:'退款已完成!', d:'您的訂單已成功退款', time:'11:05'},
+  ];
+  openModal(`
+    <div class="dlg-h">LINE OA 推播預覽(§8 示意)<button class="x" data-action="close-modal">✕</button></div>
+    <div class="dlg-b">
+      <div class="phone">
+        <div class="ph-head"><span class="line-ic">L</span> 王品集團紙本票券 @wowvoucher</div>
+        <div class="ph-body">
+          ${msgs.map(m=>`
+          <div class="ph-msg"><span class="ph-av">王品</span>
+            <div class="ph-bub"><div class="bt">[${m.t}]</div>訂單編號:${no}<br>${m.d}<a class="lk" href="javascript:void(0)" data-action="nav" data-to="#/order/${no}">&gt; 查看訂單</a></div>
+            <span class="ph-time">${m.time}</span></div>`).join('')}
+        </div>
+      </div>
+      <p class="help gray" style="margin-top:12px;text-align:center">文案版型:[標題] + [訂單編號] + [1 段狀態描述] + [1 個連結](導到前台訂單詳情頁)<br>推播限制:LINE OA 高用量方案每月 6,000 則,超量依費率加價;輪播型卡片最多 12 張。</p>
+    </div>`);
+}
+
+/* ================= 浮水印(存摺) ================= */
+const WM_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='170' height='110'><text x='0' y='55' font-size='11' fill='rgba(140,20,30,.6)' transform='rotate(-22 85 55)' font-family='sans-serif'>僅供王品集團紙本票券退款使用</text><text x='6' y='78' font-size='11' fill='rgba(140,20,30,.6)' transform='rotate(-22 85 55)' font-family='sans-serif'>塗改翻印無效</text></svg>`;
+const WM_URL = `url('data:image/svg+xml,${encodeURIComponent(WM_SVG).replace(/'/g,'%27')}')`;
+const DEMO_TICKET_SVG = (txt,c1,c2)=>`data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><rect width='240' height='240' fill='${c1}'/><rect x='14' y='14' width='212' height='212' fill='none' stroke='${c2}' rx='8'/><text x='120' y='110' font-size='20' fill='${c2}' text-anchor='middle' font-family='serif'>${txt}</text><rect x='40' y='150' width='160' height='34' fill='${c2}'/><text x='120' y='172' font-size='12' fill='${c1}' text-anchor='middle'>|||| |||| 1234 5678 ||||</text></svg>`).replace(/'/g,'%27')}`;
+
+/* ================= 閒置登出(30 分鐘) ================= */
+let lastAct = Date.now();
+function resetIdle(){ lastAct = Date.now(); }
+setInterval(()=>{ if(state.loggedIn && Date.now()-lastAct > 30*60*1000){ doLogout('閒置超過 30 分鐘,系統已自動登出並返回首頁'); } }, 30000);
+['click','keydown','scroll','touchstart'].forEach(ev=>document.addEventListener(ev, resetIdle, {passive:true}));
+
+/* ================= 事件委派 ================= */
+function rerenderCk(){ const y = scrollY; renderCkInfo($('#app')); window.scrollTo(0,y); }
+function rerenderRf(){ const y = scrollY; renderReturnForm($('#app')); window.scrollTo(0,y); }
+function rerenderMb(){ const y = scrollY; renderMember($('#app')); window.scrollTo(0,y); }
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]');
+  if(!e.target.closest('.cal-pop') && !(el && el.dataset.action==='open-cal')) closeCal();
+  const mnav = $('#mainNav');
+  if(mnav.classList.contains('open') && !e.target.closest('#mainNav') && !(el && el.dataset.action==='toggle-menu')) mnav.classList.remove('open');
+  if(e.target.matches('.ovl')) { closeModal(); return; }
+  if(!el) return;
+  const A = el.dataset.action, D = el.dataset;
+  const acts = {
+    'nav': ()=>nav(D.to),
+    'toggle-req': ()=>{ document.body.classList.toggle('show-req'); el.classList.toggle('on'); },
+    'toggle-menu': ()=>$('#mainNav').classList.toggle('open'),
+    'toggle-demo': ()=>$('#demoPanel').classList.toggle('open'),
+    'close-modal': closeModal,
+    'ext-line': ()=>toast('<span class="line-ic">L</span> 導向 LINE 官方帳號 @wowvoucher 好友畫面(示意)','line',2600),
+    'policy': ()=>nav('#/policy/'+D.key),
+    'policy-new': ()=>window.open(location.href.split('#')[0]+'#/policy/'+D.key, '_blank'),
+    'logout': ()=>doLogout(),
+    'del-account': ()=>{ if(!state.loggedIn){ state.afterLogin='#/member'; return nav('#/login'); }
+      openModal(`<div class="dlg-h">刪除帳號<button class="x" data-action="close-modal">✕</button></div>
+      <div class="dlg-b"><p style="line-height:1.9">刪除帳號後,您的會員資料與常用收件資訊將無法復原;歷史訂單資料仍依法保存。確定要刪除嗎?</p></div>
+      <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">取消</button><button class="btn btn-danger-o" data-action="del-account-ok">確認刪除</button></div>`); },
+    'del-account-ok': ()=>{ closeModal(); doLogout('帳號已刪除(示意)'); },
+    /* 跑馬燈/蓋板 */
+    'mq-prev': ()=>mqNext(-1), 'mq-next': ()=>mqNext(1),
+    'mq-close': ()=>$('#marqueeBar').classList.add('hidden'),
+    'board-prev': ()=>openBoard(state.boardIdx-1), 'board-next': ()=>openBoard(state.boardIdx+1),
+    /* 商品/購物車 */
+    'cat': ()=>{ state.cat = D.k; state.brand='全部'; $$('.cat-tab').forEach(b=>b.classList.toggle('on', b.dataset.k===state.cat)); drawBrandTabs(); drawProducts(); },
+    'brand': ()=>{ state.brand = D.b; drawBrandTabs(); drawProducts(); },
+    'dm': openDM, 'dm-dl': ()=>{ dmDownload(); },
+    'prod-info': ()=>openProdInfo(D.id),
+    'ladder': ()=>{ setQty(D.id, D.q); toast(`已帶入最少優惠數量 ${D.q} 張`,'',1600); },
+    'qty-inc': ()=>setQty(D.id, (state.qtySel[D.id]||0)+1),
+    'qty-dec': ()=>setQty(D.id, Math.max(0,(state.qtySel[D.id]||0)-1)),
+    'add-cart': ()=>addCart(D.id),
+    'cart-rm': ()=>{ state.cart = state.cart.filter(c=>c.id!==D.id); updateCart(); },
+    'promo-tg': ()=>{ state.promoOpen = !state.promoOpen; updateCart(); },
+    'cart-expand': ()=>{ const a=$('#cartAside'); a.dataset.expanded = a.classList.toggle('cart-collapse') ? '' : '1'; },
+    'to-checkout': ()=>{ if(!state.loggedIn){ state.afterLogin='#/checkout/info'; toast('請先登入會員;登入後將直接為您前往訂購資訊頁'); return nav('#/login'); } nav('#/checkout/info'); },
+    /* 登入/註冊 */
+    'auth-tab': ()=>renderLogin($('#app'), D.t==='reg'?'reg':'login'),
+    'login-submit': doLogin,
+    'forgot': ()=>forgotModal(),
+    'fg-next': ()=>fgNext(D.s),
+    'send-code': ()=>sendCode('#rg-send','#rg-code-msg'),
+    'send-code-fg': ()=>sendCode('#fg-send','#fg-msg'),
+    'reg-submit': doRegister,
+    'line-auth': ()=>lineAuthModal(D.ctx),
+    'line-allow': ()=>{ const ctx = $('#modalRoot [data-action="line-deny"]'); const c = ctx?ctx.dataset.ctx:'bind';
+      closeModal();
+      if(c==='bind'){ state.user.line={bound:true,name:'王小明'}; toast('LINE 綁定成功','ok'); rerenderMb(); }
+      else { loginAs(DEMO_USER); toast('已透過 LINE 授權取得 Email,登入成功','ok'); } },
+    'line-deny': ()=>{ const c = D.ctx; closeModal();
+      if(c==='reg') toast('註冊失敗,需完成 LINE 授權方可登入。請重新嘗試,或使用 email 註冊','err',5200);
+      else toast('已取消 LINE 授權'); },
+    /* 結帳 */
+    'co-id': ()=>{ state.co.identity = D.v; rerenderCk(); },
+    'fold-date': ()=>{ $('#fold-date').classList.toggle('hidden'); el.classList.toggle('open'); },
+    'fold-inv': ()=>{ $('#fold-inv').classList.toggle('hidden'); el.classList.toggle('open'); },
+    'open-cal': ()=>openCal(el, D.cal),
+    'cal-mv': ()=>{ calState.month = new Date(calState.month.getFullYear(), calState.month.getMonth()+Number(D.d), 1); drawCal(); },
+    'cal-pick': ()=>{ if(calState.type==='delivery'){ state.co.ship.date=D.d; state.co.ship.wantDate=true; const i=$('#ship-date'); if(i) i.value=D.d; const c=$('#fold-date input[data-co-ch="ship.wantDate"]'); if(c) c.checked=true; }
+      else { state.co.inv.date=D.d; state.co.inv.wantDate=true; const i=$('#inv-date'); if(i) i.value=D.d; const c=$('#fold-inv input[data-co-ch="inv.wantDate"]'); if(c) c.checked=true; } closeCal(); },
+    'inv-ch': ()=>{ state.co.inv.channel = D.v; rerenderCk(); },
+    'ck-info-next': ckInfoNext,
+    'ck-save-overwrite': ()=>{ const co=state.co; const label = co.ship.saveLabel || co.ship.name+'的收件資訊';
+      const old = state.user.addrs.shift();
+      state.user.addrs.push({label, name:co.ship.name, tel:[...co.ship.tel], mobile:co.ship.mobile, city:co.ship.city, dist:co.ship.dist, addr:co.ship.addr});
+      closeModal(); toast(`已覆蓋「${old.label}」並儲存為「${label}」`,'ok'); nav('#/checkout/pay'); },
+    'pay-sel': ()=>{ if(el.classList.contains('disabled')){ toast('刷卡需訂單金額滿 $20,000,本筆訂單未達門檻','err'); return; } state.co.payment = D.v; renderCkPay($('#app')); },
+    'ck-pay-next': ()=>{ if(!state.co.payment){ toast('請先選擇付款方式','err'); return; } nav('#/checkout/confirm'); },
+    'ck-submit': submitOrder,
+    /* 銀行 */
+    'bank-next': ()=>{ bankStep='otp'; renderBank($('#app')); },
+    'bank-otp-ok': ()=>{ if($('#bank-otp').value!=='123456'){ toast('OTP 驗證碼錯誤(示範碼 123456)','err'); return; }
+      const o = state.orders.find(x=>x.no===state.lastOrderNo); paySuccess(o); bankStep='card'; nav('#/payresult/credit/'+o.no); },
+    'bank-cancel': ()=>{ bankStep='card'; toast('交易已取消;訂單保留於【待付款】,可由訂單查詢繼續付款'); nav('#/orders'); },
+    'demo-paid': ()=>{ const o = state.orders.find(x=>x.no===D.no); if(o && o.status==='待付款'){ paySuccess(o); } route(); },
+    /* 訂單 */
+    'od-filter': ()=>{ const of = state.of; of.st = $('#of-st').value;
+      let from = $('#of-from').value, to = $('#of-to').value || fmtD(new Date());
+      const yearAgo = fmtD(addDays(new Date(),-365));
+      if(from < yearAgo){ from = yearAgo; toast('可查詢近一年內訂單,若需查詢更早紀錄,請透過官方 LINE 聯繫票務專員','err',5000); }
+      of.from = from; of.to = to; of.page = 1; drawOrders(); },
+    'od-reset': ()=>{ state.of = null; renderOrders($('#app')); },
+    'od-open': ()=>nav('#/order/'+D.no),
+    'od-page': ()=>{ state.of.page = Number(D.p); drawOrders(); },
+    'od-paynow': ()=>{ const o = state.orders.find(x=>x.no===D.no);
+      if(o.pay==='credit'){ state.lastOrderNo=o.no; bankStep='card'; nav('#/bank'); } else nav('#/payresult/'+o.pay+'/'+o.no); },
+    'acc-tg': ()=>$('#acc-'+D.t).classList.toggle('open'),
+    'od-cancel': ()=>cancelModal(D.no),
+    'cx-ok': ()=>{ const r = $('#cx-reason').value; if(!r){ toast('請選擇取消原因','err'); return; }
+      const o = state.orders.find(x=>x.no===D.no); o.status='已取消';
+      o.history.push({st:'已取消', at:new Date(), note:'顧客自行取消:'+r+($('#cx-txt').value?'('+$('#cx-txt').value+')':'')});
+      closeModal(); toast('訂單已取消:已釋放預留庫存、停止自動對帳,並寄送通知 Email','ok',4600); route(); },
+    'od-return': ()=>{ state.retCtx = {from:'order', no:D.no}; nav('#/return/form'); },
+    /* 退換貨 */
+    'ret-other': ()=>{ state.retCtx = {from:'footer'}; nav('#/return/form'); },
+    'rf-same': ()=>{ const rf=state.rf; rf.contact.name=rf.ship.name; rf.contact.tel=[...rf.ship.tel]; rf.contact.mobile=rf.ship.mobile; rerenderRf(); },
+    'photo-add': ()=>$('#photoFile').click(),
+    'photo-demo': ()=>{ const rf=state.rf; if(rf.photos.length>=5) return;
+      rf.photos.push({url:DEMO_TICKET_SVG('王品集團 票券','#7E1523','#EFD79A')}); rerenderRf(); },
+    'photo-del': ()=>{ state.rf.photos.splice(Number(D.i),1); rerenderRf(); },
+    'book-add': ()=>$('#bookFile').click(),
+    'book-demo': ()=>{ state.rf.bank.book = DEMO_TICKET_SVG('存摺封面','#2F4A3C','#E4D9A8'); rerenderRf(); },
+    'book-del': ()=>{ state.rf.bank.book=null; rerenderRf(); },
+    'rf-submit': ()=>{ const errs = rfValidate(); if(errs.length){ toast('⚠ '+errs[0],'err'); return; }
+      openModal(`<div class="dlg-h">確認送出<button class="x" data-action="close-modal">✕</button></div>
+      <div class="dlg-b"><p style="line-height:1.9;text-align:center">請確認您所填寫的退換貨內容無誤,<br><b>一經送出無法修改</b>,謝謝。</p></div>
+      <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">再檢查一次</button><button class="btn btn-main" data-action="rf-confirm-ok">確認送出</button></div>`); },
+    'rf-confirm-ok': ()=>{ const rf = state.rf, now = new Date();
+      const no = 'RT'+genNo(now, Math.floor(Math.random()*90)+10);
+      if(rf.order){ rf.order.returns.push({no, kind:rf.expect, status:'處理中(書審中)', at:now}); }
+      state.rfDone = {no}; state.rf=null; state.retCtx=null; closeModal();
+      toast('已成立退換貨表單,並發送申請成功通知 Email','ok'); nav('#/return/done'); },
+    /* FAQ */
+    'faq-cat': ()=>{ state.faqCat = D.c; renderFaq($('#app')); },
+    'faq-tg': ()=>el.closest('.faq-item').classList.toggle('open'),
+    /* 會員 */
+    'mb-id': ()=>{ state.mb.identity = D.v; rerenderMb(); },
+    'mb-save': ()=>{ const u=state.user, mb=state.mb;
+      if(mb.identity==='company' && !vTaxId(toHalf(mb.company.taxid))){ toast('統一編號格式不符,請重新輸入','err'); return; }
+      if(!vMobile(toHalf(mb[mb.identity].mobile))){ toast('手機號碼格式不符,請重新輸入','err'); return; }
+      u.identity=mb.identity; u.company=JSON.parse(JSON.stringify(mb.company)); u.personal=JSON.parse(JSON.stringify(mb.personal));
+      toast('已儲存變更;訂購時將自動帶入最新資料','ok'); },
+    'pw-modal': pwModal,
+    'pw-save': ()=>{ const oldp=$('#pw-old').value, np=$('#pw-new').value, m=$('#pw-msg');
+      if(oldp!==state.user.pw){ m.className='fmsg bad show'; m.textContent='舊密碼錯誤'; return; }
+      if(!vPw(np).ok){ m.className='fmsg bad show'; m.textContent='密碼需 8-12 碼,含大小寫英文字母與數字'; return; }
+      if(np===oldp){ m.className='fmsg bad show'; m.textContent='新密碼不可與舊密碼相同'; return; }
+      state.user.pw=np; closeModal(); toast('密碼已更新','ok'); },
+    'line-unbind': ()=>openModal(`<div class="dlg-h">解除 LINE 綁定<button class="x" data-action="close-modal">✕</button></div>
+      <div class="dlg-b"><p style="margin-bottom:12px;font-size:14.5px">為確認本人操作,請輸入 Email 帳號密碼進行身分驗證。</p>
+      <div class="field"><label>密碼</label><input class="in" id="ub-pw" type="password" placeholder="請輸入密碼(Demo1234)"><div class="fmsg" id="ub-msg"></div></div></div>
+      <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">取消</button><button class="btn btn-main" data-action="unbind-ok">確認解除</button></div>`),
+    'unbind-ok': ()=>{ const m=$('#ub-msg'); if($('#ub-pw').value!==state.user.pw){ m.className='fmsg bad show'; m.textContent='密碼錯誤,請再試一次'; return; }
+      state.user.line={bound:false,name:''}; closeModal(); toast('已解除 LINE 綁定'); rerenderMb(); },
+    'addr-edit': ()=>addrModal(Number(D.i)),
+    'addr-del': ()=>{ const a = state.user.addrs[Number(D.i)];
+      openModal(`<div class="dlg-h">刪除常用收件資訊<button class="x" data-action="close-modal">✕</button></div>
+      <div class="dlg-b"><p>確定刪除「<b>${a.label}</b>」?</p></div>
+      <div class="dlg-f"><button class="btn btn-sub" data-action="close-modal">取消</button><button class="btn btn-danger-o" data-action="addr-del-ok" data-i="${D.i}">確認刪除</button></div>`); },
+    'addr-del-ok': ()=>{ state.user.addrs.splice(Number(D.i),1); closeModal(); toast('已刪除'); rerenderMb(); },
+    'addr-save': ()=>{ const i=Number(D.i);
+      const a = { label:toHalf($('#ad-label').value.trim()), name:$('#ad-name').value.trim(),
+        tel:[$('#ad-t0').value,$('#ad-t1').value,$('#ad-t2').value].map(toHalf),
+        mobile:toHalf($('#ad-mobile').value.trim()), city:$('#ad-city').value, dist:$('#ad-dist').value, addr:$('#ad-addr').value.trim() };
+      if(!a.label||!a.name||!a.city||!a.dist||!a.addr){ toast('請完整填寫必填欄位','err'); return; }
+      if(!vMobile(a.mobile)){ toast('手機號碼格式不符,請重新輸入','err'); return; }
+      if(i>=0) state.user.addrs[i]=a; else state.user.addrs.push(a);
+      closeModal(); toast('已儲存常用收件資訊','ok'); rerenderMb(); },
+    /* LINE 預覽 & Demo */
+    'line-preview': linePreviewModal,
+    'demo-login': ()=>{ if(!state.loggedIn) loginAs(DEMO_USER); $('#demoPanel').classList.remove('open'); },
+    'demo-logout': ()=>{ if(state.loggedIn) doLogout(); $('#demoPanel').classList.remove('open'); },
+    'demo-cart': ()=>{ state.cart=[{id:'gc1000',qty:80},{id:'gc2000',qty:15},{id:'wp-t',qty:30},{id:'env',qty:5}];
+      state.promoOpen=true; $('#demoPanel').classList.remove('open');
+      toast('已帶入示範購物車:集團卡合計 $110,000(觸發 98 折)+ 王品牛排餐券 30 張(9 折)','ok',4600); nav('#/shop'); updateCart(); },
+    'demo-idle': ()=>{ $('#demoPanel').classList.remove('open'); if(state.loggedIn){ doLogout('閒置超過 30 分鐘,系統已自動登出並返回首頁(票券訂購頁)'); } else toast('目前未登入;請先登入再示範此情境'); },
+    'demo-reset': ()=>{ localStorage.removeItem('wv_board_skip'); location.reload(); },
+  };
+  if(acts[A]) acts[A]();
+});
+
+/* change 委派:核取方塊/下拉 */
+document.addEventListener('change', e => {
+  const t = e.target;
+  if(t.id==='photoFile'){
+    const rf = state.rf;
+    [...t.files].slice(0, 5-rf.photos.length).forEach(f=>{
+      if(f.size > 5*1024*1024){ toast(`「${f.name}」超過 5MB,請壓縮後再上傳`,'err'); return; }
+      rf.photos.push({url:URL.createObjectURL(f)});
+    });
+    t.value=''; rerenderRf(); return;
+  }
+  if(t.id==='bookFile'){
+    const f = t.files[0];
+    if(f){ if(f.size>5*1024*1024){ toast('檔案超過 5MB,請壓縮後再上傳','err'); return; } state.rf.bank.book = URL.createObjectURL(f); }
+    t.value=''; rerenderRf(); return;
+  }
+  if(t.dataset.coCh){ setPath(state.co, t.dataset.coCh, t.checked);
+    if(t.dataset.coCh==='ship.saveCommon') $('#ship-savelabel')?.classList.toggle('hidden', !t.checked);
+    return; }
+  if(t.dataset.rfBool){ setPath(state.rf, t.dataset.rfBool, t.checked); return; }
+  const ach = t.dataset.actionCh || (t.closest('[data-action-ch]')||{}).dataset?.actionCh;
+  if(!ach && !t.dataset.rfCh){ if(t.dataset.co) setPath(state.co, t.dataset.co, t.value); if(t.dataset.rf) setPath(state.rf, t.dataset.rf, t.value); if(t.dataset.mb) setPath(state.mb, t.dataset.mb, t.value); return; }
+  const chActs = {
+    'board-skip': ()=>{ if(t.checked) localStorage.setItem('wv_board_skip', fmtD(new Date())); else localStorage.removeItem('wv_board_skip'); },
+    'ship-same': ()=>{ state.co.ship.same = t.checked; if(t.checked){ const f = state.co.forms[state.co.identity]; fillShipFrom({name:f.name, tel:f.tel, mobile:f.mobile}); } rerenderCk(); },
+    'ship-saved': ()=>{ state.co.ship.saved = t.value; if(t.value!==''){ fillShipFrom(state.user.addrs[Number(t.value)]); state.co.ship.same=false; } rerenderCk(); },
+    'ship-city': ()=>{ state.co.ship.city = t.value; state.co.ship.dist=''; state.co.ship.date=''; rerenderCk(); },
+    'inv-detail': ()=>{ state.co.inv.detail = t.dataset.v || t.closest('[data-v]').dataset.v; rerenderCk(); },
+    'od-size': ()=>{ state.of.size = Number(t.value); state.of.page=1; drawOrders(); },
+    'ad-city': ()=>{ const d=$('#ad-dist'); d.innerHTML = '<option value="">行政區</option>'+(CITIES[t.value]||[]).map(x=>`<option>${x}</option>`).join(''); },
+    'rf-scope': ()=>{ state.rf.scope = t.dataset.v; if(state.rf.scope==='full'&&state.rf.order) state.rf.count=state.rf.order.cc.qty; rerenderRf(); },
+    'rf-expect': ()=>{ state.rf.expect = t.dataset.v; rerenderRf(); },
+    'rf-refund': ()=>{ state.rf.refund = t.dataset.v; rerenderRf(); },
+    'rf-city': ()=>{ state.rf.ship.city = t.value; state.rf.ship.dist=''; rerenderRf(); },
+    'reason': ()=>{ state.rf.reason = t.value; rerenderRf(); },
+  };
+  if(t.dataset.rfCh){ chActs[t.dataset.rfCh] ? chActs[t.dataset.rfCh]() : null; return; }
+  if(chActs[ach]) chActs[ach]();
+});
+
+/* input 委派:即時綁定 */
+document.addEventListener('input', e => {
+  const t = e.target;
+  if(t.id==='kw'){ state.kw = t.value.trim(); drawProducts(); return; }
+  if(t.classList.contains('qty-in')){ const id=t.dataset.id; const v=t.value.replace(/\D/g,''); state.qtySel[id]=Math.max(0,Number(v||0));
+    const pl=$('#pl-'+CSS.escape(id)); if(pl) pl.innerHTML=priceLineHTML(P(id), state.qtySel[id]);
+    $$(`.lad-row[data-id="${id}"]`).forEach(r=>r.classList.toggle('hit', state.qtySel[id]>=Number(r.dataset.q))); return; }
+  if(t.dataset.co) setPath(state.co, t.dataset.co, t.value);
+  if(t.dataset.mb) setPath(state.mb, t.dataset.mb, t.value);
+  if(t.dataset.rf){ setPath(state.rf, t.dataset.rf, t.value);
+    if(t.dataset.rf==='tickets'){ state.rf.count = parseTickets(t.value); const c=$('#rf-count'); if(c) c.value = state.rf.count; } }
+  if(t.id==='rg-pw'){ const r = vPw(t.value); $$('#rg-rules .r').forEach(x=>x.classList.toggle('ok', r[x.dataset.k])); }
+});
+
+/* blur:全形轉半形 + 格式檢查 */
+document.addEventListener('blur', e => {
+  const t = e.target;
+  if(!t.matches || !t.matches('input,textarea') || t.type==='password' || t.type==='file' || t.type==='date') return;
+  const half = toHalf(t.value);
+  if(half !== t.value){ t.value = half;
+    if(t.dataset.co) setPath(state.co, t.dataset.co, half);
+    if(t.dataset.mb) setPath(state.mb, t.dataset.mb, half);
+    if(t.dataset.rf) setPath(state.rf, t.dataset.rf, half); }
+  if(t.classList.contains('qty-in')){ setQty(t.dataset.id, t.value); return; }
+  if(t.dataset.vald){
+    const v = t.value.trim(); const msgEl = t.closest('.field, .dlg-b, div')?.querySelector('.fmsg') || t.parentElement.nextElementSibling;
+    let ok=true, bad='';
+    if(!v){ if(msgEl&&msgEl.classList){ msgEl.className='fmsg'; } t.classList.remove('err','okv'); return; }
+    if(t.dataset.vald==='taxid'){ ok=vTaxId(v); bad='格式不符,請重新輸入'; }
+    if(t.dataset.vald==='mobile'){ ok=vMobile(v); bad='格式不符,請重新輸入'; }
+    if(t.dataset.vald==='carrier'){ ok=vCarrier(v); bad='手機載具格式錯誤,請再次確認'; }
+    t.classList.toggle('err', !ok); t.classList.toggle('okv', ok);
+    if(msgEl && msgEl.classList && msgEl.classList.contains('fmsg')){
+      msgEl.className = 'fmsg show ' + (ok?'good':'bad');
+      msgEl.textContent = ok ? '✓ 格式正確' : bad;
+    }
+  }
+}, true);
+
+window.addEventListener('hashchange', route);
+window.addEventListener('resize', ()=>{ if((location.hash||'#/shop')==='#/shop') updateCart(); });
+
+/* ================= 啟動 ================= */
+seedOrders();
+/* 示範:待配送訂單的收件人資訊異動註記(§6 訂單歷程) */
+(()=>{ const o = state.orders.find(x=>x.status==='待配送'); const h = o && o.history.find(x=>x.st==='待配送');
+  if(h) h.note = '收件人資訊異動:王小明 / 李承翰'; })();
+startMq();
+if(!location.hash) location.hash = '#/shop'; else route();
+</script>
+</body>
+</html>
